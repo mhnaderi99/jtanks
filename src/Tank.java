@@ -19,6 +19,8 @@ public class Tank {
     private double gunAngle;
     private int XPosition;
     private int YPosition;
+    private final int SPEED = 3;
+    private final int DIAGONAL_SPEED = 2;
 
     private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
     private int quarter;
@@ -42,6 +44,7 @@ public class Tank {
         keyHandler = new KeyHandler();
         mouseHandler = new MouseHandler();
     }
+
 
     public int getHealth() {
         return health;
@@ -85,14 +88,26 @@ public class Tank {
 
     public void update() {
 
-        if (keyUP)
-            YPosition -= 2;
-        if (keyDOWN)
-            YPosition += 2;
-        if (keyLEFT)
-            XPosition -= 2;
-        if (keyRIGHT)
-            XPosition += 2;
+        int dx = 0, dy = 0;
+        int u = keyUP ? -1 : 0;
+        int d = keyDOWN ? 1 : 0;
+        int r = keyRIGHT ? 1 : 0;
+        int l = keyLEFT ? -1 : 0;
+
+        int verticalMove = u + d;
+        int horizontalMove = r + l;
+
+        if (horizontalMove == 0 || verticalMove == 0) {
+            dx = horizontalMove*SPEED;
+            dy = verticalMove*SPEED;
+        }
+        else {
+            dx = 2*horizontalMove;
+            dy = 2*verticalMove;
+        }
+
+        XPosition += dx;
+        YPosition += dy;
 
         XPosition = Math.max(XPosition, 0);
         XPosition = Math.min(XPosition, GameConstants.getScreenWidth() - body.getWidth());
@@ -104,7 +119,6 @@ public class Tank {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            //calculateAngle();
             switch (e.getKeyCode())
             {
                 case KeyEvent.VK_UP:
@@ -124,7 +138,6 @@ public class Tank {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            //calculateAngle();
             switch (e.getKeyCode())
             {
                 case KeyEvent.VK_UP:
@@ -147,7 +160,6 @@ public class Tank {
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            //calculateAngle();
             int x = e.getX();
             int y = e.getY();
 
@@ -178,35 +190,6 @@ public class Tank {
                 gunAngle += Math.PI;
             }
         }
-    }
-
-    private void calculateAngle() {
-
-        int x = MouseInfo.getPointerInfo().getLocation().x;
-        int y = MouseInfo.getPointerInfo().getLocation().y;
-        System.out.println(x + "    " + y);
-        int x2 = XPosition + body.getWidth()/2;
-        int y2 = YPosition + body.getHeight()/2;
-
-        double dx = x - x2;
-        double dy = y - y2;
-
-        if (dx >= 0 && dy >= 0) {
-            quarter = 4;
-        }
-        if (dx < 0 && dy > 0) {
-            quarter = 3;
-        }
-        if (dx < 0 && dy < 0) {
-            quarter = 2;
-        }
-        if (dx > 0 && dy < 0) {
-            quarter = 1;
-        }
-
-        //System.out.println(Math.toDegrees(gunAngle) + "     " + quarter);
-        double tan = (-dy) / (dx);
-        gunAngle = Math.atan(tan);
     }
 }
 
