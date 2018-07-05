@@ -1,16 +1,13 @@
 import javax.imageio.ImageIO;
-import javax.swing.plaf.basic.BasicTreeUI;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 public class Tank {
 
@@ -24,6 +21,7 @@ public class Tank {
     private int YPosition;
 
     private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
+    private int quarter;
     private KeyHandler keyHandler;
     private MouseHandler mouseHandler;
 
@@ -73,6 +71,10 @@ public class Tank {
         return YPosition;
     }
 
+    public int getQuarter() {
+        return quarter;
+    }
+
     public KeyHandler getKeyHandler() {
         return keyHandler;
     }
@@ -84,13 +86,13 @@ public class Tank {
     public void update() {
 
         if (keyUP)
-            YPosition -= 8;
+            YPosition -= 2;
         if (keyDOWN)
-            YPosition += 8;
+            YPosition += 2;
         if (keyLEFT)
-            XPosition -= 8;
+            XPosition -= 2;
         if (keyRIGHT)
-            XPosition += 8;
+            XPosition += 2;
 
         XPosition = Math.max(XPosition, 0);
         XPosition = Math.min(XPosition, GameConstants.getScreenWidth() - body.getWidth());
@@ -102,6 +104,7 @@ public class Tank {
 
         @Override
         public void keyPressed(KeyEvent e) {
+            //calculateAngle();
             switch (e.getKeyCode())
             {
                 case KeyEvent.VK_UP:
@@ -121,6 +124,7 @@ public class Tank {
 
         @Override
         public void keyReleased(KeyEvent e) {
+            //calculateAngle();
             switch (e.getKeyCode())
             {
                 case KeyEvent.VK_UP:
@@ -143,15 +147,66 @@ public class Tank {
 
         @Override
         public void mouseMoved(MouseEvent e) {
+            //calculateAngle();
             int x = e.getX();
             int y = e.getY();
 
-            int dx = Math.abs(x - (getXPosition() + getBody().getWidth()/2));
-            int dy = Math.abs(y - (getYPosition() + getBody().getHeight()/2));
+            int x2 = XPosition + body.getWidth()/2;
+            int y2 = YPosition + body.getHeight()/2;
 
-            double tan = ((double) dy) / ((double) dx);
+            double dx = x - x2;
+            double dy = y - y2;
+
+            if (dx >= 0 && dy >= 0) {
+                quarter = 4;
+            }
+            if (dx < 0 && dy > 0) {
+                quarter = 3;
+            }
+            if (dx < 0 && dy < 0) {
+                quarter = 2;
+            }
+            if (dx > 0 && dy < 0) {
+                quarter = 1;
+            }
+            double tan = (-dy) / (dx);
             gunAngle = Math.atan(tan);
+            if ((gunAngle < 0 && quarter == 4)) {
+                gunAngle += 2*Math.PI;
+            }
+            if (quarter == 3 || quarter == 2) {
+                gunAngle += Math.PI;
+            }
         }
+    }
+
+    private void calculateAngle() {
+
+        int x = MouseInfo.getPointerInfo().getLocation().x;
+        int y = MouseInfo.getPointerInfo().getLocation().y;
+        System.out.println(x + "    " + y);
+        int x2 = XPosition + body.getWidth()/2;
+        int y2 = YPosition + body.getHeight()/2;
+
+        double dx = x - x2;
+        double dy = y - y2;
+
+        if (dx >= 0 && dy >= 0) {
+            quarter = 4;
+        }
+        if (dx < 0 && dy > 0) {
+            quarter = 3;
+        }
+        if (dx < 0 && dy < 0) {
+            quarter = 2;
+        }
+        if (dx > 0 && dy < 0) {
+            quarter = 1;
+        }
+
+        //System.out.println(Math.toDegrees(gunAngle) + "     " + quarter);
+        double tan = (-dy) / (dx);
+        gunAngle = Math.atan(tan);
     }
 }
 

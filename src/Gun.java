@@ -11,4 +11,8 @@ public class Gun {
         this.image = image;
         this.numberOfBullets = numberOfBullets;
     }
+
+    public BufferedImage getImage() {
+        return image;
+    }
 }
