@@ -45,6 +45,17 @@ public class Tank {
         mouseHandler = new MouseHandler();
     }
 
+    public void switchGun(){
+        int i = guns.indexOf(activeGun);
+        if(i < guns.size() - 1){
+            i++;
+        }
+        else {
+            i=0;
+        }
+        activeGun = guns.get(i);
+        update();
+    }
 
     public int getHealth() {
         return health;
@@ -157,7 +168,13 @@ public class Tank {
     }
 
     class MouseHandler extends MouseAdapter {
-
+        @Override
+        public void mouseClicked(MouseEvent e){
+            if(e.getButton() == 3){
+                switchGun();
+                update();
+            }
+        }
         @Override
         public void mouseMoved(MouseEvent e) {
             int x = e.getX();

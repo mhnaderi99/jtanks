@@ -12,6 +12,7 @@ public class GameLoop implements Runnable{
         tank = new Tank();
         canvas.addKeyListener(tank.getKeyHandler());
         canvas.addMouseMotionListener(tank.getMouseHandler());
+        canvas.addMouseListener(tank.getMouseHandler());
     }
 
     @Override
