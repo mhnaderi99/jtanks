@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public class MachineGunBullet extends Bullet{
 
-    private static final int SPEED = 20;
+    private static final int SPEED = 10;
     private static final int DAMAGE = 10;
 
     public MachineGunBullet() {

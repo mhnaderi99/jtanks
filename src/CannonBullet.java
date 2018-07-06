@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class CannonBullet extends Bullet {
 
-    private static final int SPEED = 10;
+    private static final int SPEED = 5;
     private static final int DAMAGE = 20;
 
     public CannonBullet() {

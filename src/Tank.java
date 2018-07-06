@@ -98,6 +98,19 @@ public class Tank {
 
     public void update() {
 
+        for(Gun gun : guns){
+            if(gun.getBullets().size() !=0) {
+                for (Bullet bullet : gun.getBullets()) {
+                    if (!bullet.isShoot) {
+                        bullet.setXPosition((int) (XPosition + body.getWidth() / 2 + (activeGun.getImage().getWidth() - 17) * Math.cos(gunAngle)));
+                        bullet.setYPosition((int) (YPosition + body.getHeight() / 2 - (activeGun.getImage().getHeight()) * Math.sin(gunAngle)));
+                        bullet.setAngle(2 * Math.PI - gunAngle);
+                    }
+                }
+            }
+            gun.update();
+        }
+
         int dx = 0, dy = 0;
         int u = keyUP ? -1 : 0;
         int d = keyDOWN ? 1 : 0;
@@ -211,6 +224,7 @@ public class Tank {
                 shoot(theta);
             }
         }
+
         @Override
         public void mouseMoved(MouseEvent e) {
             gunAngle = findAngle(e.getX(), e.getY());
