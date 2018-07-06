@@ -23,7 +23,6 @@ public class Tank {
     private final int DIAGONAL_SPEED = 2;
 
     private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
-    private int quarter;
     private KeyHandler keyHandler;
     private MouseHandler mouseHandler;
 
@@ -57,6 +56,10 @@ public class Tank {
         update();
     }
 
+    public void shoot(double theta) {
+        activeGun.shoot(theta);
+    }
+
     public int getHealth() {
         return health;
     }
@@ -85,10 +88,6 @@ public class Tank {
         return YPosition;
     }
 
-    public int getQuarter() {
-        return quarter;
-    }
-
     public KeyHandler getKeyHandler() {
         return keyHandler;
     }
@@ -113,8 +112,8 @@ public class Tank {
             dy = verticalMove*SPEED;
         }
         else {
-            dx = 2*horizontalMove;
-            dy = 2*verticalMove;
+            dx = DIAGONAL_SPEED*horizontalMove;
+            dy = DIAGONAL_SPEED*verticalMove;
         }
 
         XPosition += dx;
@@ -124,6 +123,38 @@ public class Tank {
         XPosition = Math.min(XPosition, GameConstants.getScreenWidth() - body.getWidth());
         YPosition = Math.max(YPosition, 0);
         YPosition = Math.min(YPosition, GameConstants.getScreenHeight() - body.getHeight());
+    }
+
+    private double findAngle(int x, int y) {
+        int x2 = XPosition + body.getWidth()/2;
+        int y2 = YPosition + body.getHeight()/2;
+
+        double dx = x - x2;
+        double dy = y - y2;
+
+        int quarter = 0;
+
+        if (dx >= 0 && dy >= 0) {
+            quarter = 4;
+        }
+        if (dx < 0 && dy > 0) {
+            quarter = 3;
+        }
+        if (dx < 0 && dy < 0) {
+            quarter = 2;
+        }
+        if (dx > 0 && dy < 0) {
+            quarter = 1;
+        }
+        double tan = (-dy) / (dx);
+        double angle = Math.atan(tan);
+        if ((angle < 0 && quarter == 4)) {
+            angle += 2*Math.PI;
+        }
+        if (quarter == 3 || quarter == 2) {
+            angle += Math.PI;
+        }
+        return angle;
     }
 
     class KeyHandler extends KeyAdapter {
@@ -174,41 +205,15 @@ public class Tank {
                 switchGun();
                 update();
             }
+
+            if (e.getButton() == 1) {
+                double theta = findAngle(e.getX(), e.getY());
+                shoot(theta);
+            }
         }
         @Override
         public void mouseMoved(MouseEvent e) {
-            int x = e.getX();
-            int y = e.getY();
-
-            int x2 = XPosition + body.getWidth()/2;
-            int y2 = YPosition + body.getHeight()/2;
-
-            double dx = x - x2;
-            double dy = y - y2;
-
-            if (dx >= 0 && dy >= 0) {
-                quarter = 4;
-            }
-            if (dx < 0 && dy > 0) {
-                quarter = 3;
-            }
-            if (dx < 0 && dy < 0) {
-                quarter = 2;
-            }
-            if (dx > 0 && dy < 0) {
-                quarter = 1;
-            }
-            double tan = (-dy) / (dx);
-            gunAngle = Math.atan(tan);
-            if ((gunAngle < 0 && quarter == 4)) {
-                gunAngle += 2*Math.PI;
-            }
-            if (quarter == 3 || quarter == 2) {
-                gunAngle += Math.PI;
-            }
+            gunAngle = findAngle(e.getX(), e.getY());
         }
     }
 }
-
-
-
