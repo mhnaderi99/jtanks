@@ -26,6 +26,14 @@ public class GameFrame extends JFrame{
         bufferStrategy = getBufferStrategy();
     }
 
+    public int getXOfFrame() {
+        return getLocationOnScreen().x;
+    }
+
+    public int getYOfFrame() {
+        return getLocationOnScreen().y;
+    }
+
     /**
      * Game rendering with triple-buffering using BufferStrategy.
      */
@@ -70,22 +78,23 @@ public class GameFrame extends JFrame{
 
         double angle = -tank.getGunAngle();
 
-
         transform.rotate(angle, tank.getActiveGun().getImage().getWidth()/2 - 17,tank.getActiveGun().getImage().getHeight()/2);
         g2d.drawImage(tank.getActiveGun().getImage(), transform, this);
 
-        for(Gun gun : tank.getGuns()) {
+
+        for (Gun gun: tank.getGuns()) {
             if (gun.getMovingBullets().size() != 0) {
                 for (Bullet bullet : gun.getMovingBullets()) {
                     if (bullet.isShoot && bullet.isOnTheWay) {
                         AffineTransform bulletTransform = new AffineTransform();
-                        bulletTransform.setToTranslation(bullet.getXPosition(), bullet.getYPosition());
+                        bulletTransform.setToTranslation(bullet.getX(), bullet.getY());
                         bulletTransform.rotate(bullet.getAngle());
-                        g2d.drawImage(bullet.image, bulletTransform, null);
+                        g2d.drawImage(bullet.image, bulletTransform, this);
                     }
                 }
             }
         }
+
     }
 
 }

@@ -12,16 +12,20 @@ public class Gun {
         this.image = image;
         this.type = type;
         bullets = new ArrayList<Bullet>();
-        movingBullets = new ArrayList<>();
+        movingBullets = new ArrayList<Bullet>();
         reload(numberOfBullets);
     }
 
-    public ArrayList<Bullet> getBullets() {
-        return bullets;
+    public ArrayList<Bullet> getMovingBullets() {
+        return movingBullets;
     }
 
     public BufferedImage getImage() {
         return image;
+    }
+
+    public ArrayList<Bullet> getBullets() {
+        return bullets;
     }
 
     public boolean isBulletsEmpty() {
@@ -29,31 +33,33 @@ public class Gun {
     }
 
     public void shoot(double theta) {
+
         if (! isBulletsEmpty()) {
             Bullet bullet = bullets.get(0);
             bullet.isShoot = true;
             bullet.isOnTheWay = true;
-            bullet.XSpeed = (int) (bullet.speed * Math.cos(theta));
-            bullet.YSpeed = -(int) (bullet.speed * Math.sin(theta));
+            bullet.XSpeed = (bullet.speed * Math.cos(theta));
+            bullet.YSpeed = - (bullet.speed * Math.sin(theta));
             movingBullets.add(bullet);
             bullets.remove(0);
-            }
+        }
     }
-    public void update(){
-        ArrayList<Bullet> temp = new ArrayList<>();
-        for(Bullet bullet : movingBullets){
-            if(bullet.isShoot && bullet.isOnTheWay) {
+
+    public void update() {
+        ArrayList<Bullet> temp = new ArrayList<Bullet>();
+        for (Bullet bullet: movingBullets) {
+            if (bullet.isShoot && bullet.isOnTheWay) {
                 bullet.update();
             }
-            if(bullet.isShoot && ! bullet.isOnTheWay){
+            if (bullet.isShoot && ! bullet.isOnTheWay) {
                 temp.add(bullet);
             }
         }
-        for (Bullet bullet :temp){
+        for (Bullet bullet: temp) {
             movingBullets.remove(bullet);
         }
-
     }
+
     public void reload(int number) {
         if (type instanceof CannonBullet) {
             for (int i = 0; i < number; i++) {
@@ -65,9 +71,5 @@ public class Gun {
                 bullets.add(new MachineGunBullet());
             }
         }
-    }
-
-    public ArrayList<Bullet> getMovingBullets() {
-        return movingBullets;
     }
 }

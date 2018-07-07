@@ -44,6 +44,7 @@ public class Tank {
         mouseHandler = new MouseHandler();
     }
 
+
     public void switchGun(){
         int i = guns.indexOf(activeGun);
         if(i < guns.size() - 1){
@@ -98,12 +99,12 @@ public class Tank {
 
     public void update() {
 
-        for(Gun gun : guns){
-            if(gun.getBullets().size() !=0) {
+        for (Gun gun: guns) {
+            if (gun.getBullets().size() != 0) {
                 for (Bullet bullet : gun.getBullets()) {
                     if (!bullet.isShoot) {
-                        bullet.setXPosition((int) (XPosition + body.getWidth() / 2 + (activeGun.getImage().getWidth() - 17) * Math.cos(gunAngle)));
-                        bullet.setYPosition((int) (YPosition + body.getHeight() / 2 - (activeGun.getImage().getHeight()) * Math.sin(gunAngle)));
+                        bullet.setX0((XPosition + body.getWidth() / 2 + (activeGun.getImage().getWidth() - 17) * Math.cos(gunAngle)));
+                        bullet.setY0((YPosition + body.getHeight() / 2 - (activeGun.getImage().getHeight()) * Math.sin(gunAngle)));
                         bullet.setAngle(2 * Math.PI - gunAngle);
                     }
                 }
@@ -111,7 +112,7 @@ public class Tank {
             gun.update();
         }
 
-        int dx = 0, dy = 0;
+        int dx, dy;
         int u = keyUP ? -1 : 0;
         int d = keyDOWN ? 1 : 0;
         int r = keyRIGHT ? 1 : 0;
@@ -173,7 +174,15 @@ public class Tank {
     class KeyHandler extends KeyAdapter {
 
         @Override
+        public void keyTyped(KeyEvent e) {
+            gunAngle = findAngle(MouseInfo.getPointerInfo().getLocation().x - GameLoop.getXOfCanvas(), MouseInfo.getPointerInfo().getLocation().y - GameLoop.getYOfCanvas());
+        }
+
+        @Override
         public void keyPressed(KeyEvent e) {
+
+            gunAngle = findAngle(MouseInfo.getPointerInfo().getLocation().x - GameLoop.getXOfCanvas(), MouseInfo.getPointerInfo().getLocation().y - GameLoop.getYOfCanvas());
+
             switch (e.getKeyCode())
             {
                 case KeyEvent.VK_UP:
@@ -212,13 +221,19 @@ public class Tank {
     }
 
     class MouseHandler extends MouseAdapter {
+
         @Override
         public void mouseClicked(MouseEvent e){
+            gunAngle = findAngle(e.getX(), e.getY());
             if(e.getButton() == 3){
                 switchGun();
                 update();
             }
+        }
 
+        @Override
+        public void mousePressed(MouseEvent e) {
+            gunAngle = findAngle(e.getX(), e.getY());
             if (e.getButton() == 1) {
                 double theta = findAngle(e.getX(), e.getY());
                 shoot(theta);

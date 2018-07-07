@@ -1,7 +1,8 @@
 public class GameLoop implements Runnable{
 
 
-    private GameFrame canvas;
+    private static GameFrame canvas;
+
     private Tank tank;
 
     public GameLoop(GameFrame frame) {
@@ -13,6 +14,14 @@ public class GameLoop implements Runnable{
         canvas.addKeyListener(tank.getKeyHandler());
         canvas.addMouseMotionListener(tank.getMouseHandler());
         canvas.addMouseListener(tank.getMouseHandler());
+    }
+
+    public static int getXOfCanvas() {
+        return canvas.getXOfFrame();
+    }
+
+    public static int getYOfCanvas() {
+        return canvas.getYOfFrame();
     }
 
     @Override

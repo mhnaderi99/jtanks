@@ -1,17 +1,21 @@
+import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
 import java.awt.image.BufferedImage;
 
 public abstract class Bullet {
 
     protected BufferedImage image;
-    private int XPosition;
-    private int YPosition;
-    protected int XSpeed;
-    protected int YSpeed;
+    private double x0;
+    private double y0;
+    private double x;
+    private double y;
+    protected double XSpeed;
+    protected double YSpeed;
     protected boolean isShoot;
     protected boolean isOnTheWay;
     protected int damage;
-    protected double angle;
-    protected int speed;
+    private double time = 0;
+    private double angle;
+    protected double speed;
 
     public Bullet(int damage, int speed){
         this.damage = damage;
@@ -19,39 +23,62 @@ public abstract class Bullet {
         isShoot = false;
         isOnTheWay = false;
     }
-    public void update(){
-        XPosition += XSpeed;
-        YPosition += YSpeed;
-        if(XPosition >= GameConstants.getScreenWidth() || XPosition<=0){
+
+    public void update() {
+
+        x = x0 + XSpeed*time;
+        y = y0 + YSpeed*time;
+
+
+        if (x >= GameConstants.getScreenWidth() || x <= 0) {
             isOnTheWay = false;
 
         }
-        if(YPosition >= GameConstants.getScreenHeight() || YPosition<=0){
+
+        if (y >= GameConstants.getScreenHeight() || y <= 0) {
             isOnTheWay = false;
         }
+
+        time++;
     }
 
-    public void setXPosition(int XPosition) {
-        this.XPosition = XPosition;
+    public void setX(double x) {
+        this.x = x;
     }
 
-    public void setYPosition(int YPosition) {
-        this.YPosition = YPosition;
+    public void setY(double y) {
+        this.y = y;
     }
 
-    public int getXPosition() {
-        return XPosition;
+    public void setX0(double x0) {
+        this.x0 = x0;
     }
 
-    public int getYPosition() {
-        return YPosition;
+    public void setY0(double y0) {
+        this.y0 = y0;
     }
 
-    public void setAngle(double angle) {
-        this.angle = angle;
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getX0() {
+        return x0;
+    }
+
+    public double getY0() {
+        return y0;
     }
 
     public double getAngle() {
         return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
     }
 }
