@@ -8,6 +8,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Iterator;
 
 public class Tank {
 
@@ -100,8 +101,14 @@ public class Tank {
     public void update() {
 
         for (Gun gun: guns) {
-            if (gun.getBullets().size() != 0) {
-                for (Bullet bullet : gun.getBullets()) {
+            Iterator<Bullet> iter = gun.getBullets().iterator();
+            while (iter.hasNext()) {
+                Bullet bullet = null;
+                if (iter.hasNext()) {
+                    bullet = iter.next();
+                }
+
+                if (bullet != null) {
                     if (!bullet.isShoot) {
                         bullet.setX0((XPosition + body.getWidth() / 2 + (activeGun.getImage().getWidth() - 17) * Math.cos(gunAngle)));
                         bullet.setY0((YPosition + body.getHeight() / 2 - (activeGun.getImage().getHeight()) * Math.sin(gunAngle)));

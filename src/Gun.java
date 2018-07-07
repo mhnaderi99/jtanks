@@ -1,5 +1,6 @@
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Gun {
 
@@ -35,17 +36,18 @@ public class Gun {
     public void shoot(double theta) {
 
         if (! isBulletsEmpty()) {
-            Bullet bullet = bullets.get(0);
+            Bullet bullet = bullets.get(bullets.size() - 1);
             bullet.isShoot = true;
             bullet.isOnTheWay = true;
             bullet.XSpeed = (bullet.speed * Math.cos(theta));
             bullet.YSpeed = - (bullet.speed * Math.sin(theta));
             movingBullets.add(bullet);
-            bullets.remove(0);
+            bullets.remove(bullets.size() - 1);
         }
     }
 
     public void update() {
+        /*
         ArrayList<Bullet> temp = new ArrayList<Bullet>();
         for (Bullet bullet: movingBullets) {
             if (bullet.isShoot && bullet.isOnTheWay) {
@@ -57,7 +59,23 @@ public class Gun {
         }
         for (Bullet bullet: temp) {
             movingBullets.remove(bullet);
+        }*/
+
+        Iterator<Bullet> iter = movingBullets.iterator();
+
+        while (iter.hasNext()) {
+            Bullet bullet = iter.next();
+
+            if (bullet.isShoot && bullet.isOnTheWay){
+                bullet.update();
+            }
+            if (bullet.isShoot && ! bullet.isOnTheWay) {
+                iter.remove();
+            }
         }
+
+
+
     }
 
     public void reload(int number) {
