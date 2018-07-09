@@ -1,5 +1,7 @@
 import javax.xml.crypto.dsig.spec.XSLTTransformParameterSpec;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public abstract class Bullet {
 
@@ -29,13 +31,43 @@ public abstract class Bullet {
         x = x0 + XSpeed*time;
         y = y0 + YSpeed*time;
 
+        int xMargin = GameLoop.getState().getTopLeftPoint().x;
+        int yMargin = GameLoop.getState().getTopLeftPoint().y;
 
-        if (x >= GameConstants.getScreenWidth() || x <= 0) {
-            isOnTheWay = false;
+        int xx = (int) Math.ceil(x / GameConstants.getCellWidth());
+        int yy = (int) Math.ceil(y / GameConstants.getCellHeight());
 
+        ArrayList<Point> corners = new ArrayList<>();
+        corners.add(new Point((int)x, (int) y));
+        corners.add(new Point((int) x + image.getWidth(), (int) y));
+        corners.add(new Point((int) x + image.getWidth(), (int) y + image.getHeight()));
+        corners.add(new Point((int) x, (int) y + image.getHeight()));
+
+        boolean flag = false;
+        for (int i = Math.max(0, xx - 2); i < Math.min(xx + 2, GameLoop.getState().getMap().getWidth()); i++) {
+            for (int j = Math.max(0, yy - 2); j < Math.min(yy + 2, GameLoop.getState().getMap().getHeight()); j++) {
+                for (Point p: corners) {
+                    if (GameLoop.getState().getMap().getMap()[i][j].isBarrier()) {
+                        if (p.x >= i * GameConstants.getCellWidth() && p.x <= (i + 1) * GameConstants.getCellWidth()) {
+                            if (p.y >= j * GameConstants.getCellHeight() && p.y <= (j + 1) * GameConstants.getCellHeight()) {
+                                flag = true;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        if (y >= GameConstants.getScreenHeight() || y <= 0) {
+
+        if (flag) {
+            isOnTheWay = false;
+        }
+
+        if (x - xMargin >= GameConstants.getScreenWidth() || x - xMargin<= 0) {
+            isOnTheWay = false;
+        }
+
+        if (y - yMargin>= GameConstants.getScreenHeight() || y - yMargin <= 0) {
             isOnTheWay = false;
         }
 

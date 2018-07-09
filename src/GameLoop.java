@@ -3,17 +3,26 @@ public class GameLoop implements Runnable{
 
     private static GameFrame canvas;
 
-    private Tank tank;
+    private static GameState state;
 
     public GameLoop(GameFrame frame) {
         canvas = frame;
     }
 
     public void init() {
-        tank = new Tank();
+        state = new GameState();
+        Tank tank = state.getTank();
         canvas.addKeyListener(tank.getKeyHandler());
         canvas.addMouseMotionListener(tank.getMouseHandler());
         canvas.addMouseListener(tank.getMouseHandler());
+    }
+
+    public static GameState getState() {
+        return state;
+    }
+
+    public static GameFrame getCanvas() {
+        return canvas;
     }
 
     public static int getXOfCanvas() {
@@ -27,10 +36,11 @@ public class GameLoop implements Runnable{
     @Override
     public void run() {
         boolean gameOver = false;
+        canvas.render(state, true);
         while (!gameOver) {
-            tank.update();
-            canvas.render(tank);
+            state.update();
+            canvas.render(state, false);
         }
-        canvas.render(tank);
+        canvas.render(state, true);
     }
 }

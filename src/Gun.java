@@ -47,20 +47,6 @@ public class Gun {
     }
 
     public void update() {
-        /*
-        ArrayList<Bullet> temp = new ArrayList<Bullet>();
-        for (Bullet bullet: movingBullets) {
-            if (bullet.isShoot && bullet.isOnTheWay) {
-                bullet.update();
-            }
-            if (bullet.isShoot && ! bullet.isOnTheWay) {
-                temp.add(bullet);
-            }
-        }
-        for (Bullet bullet: temp) {
-            movingBullets.remove(bullet);
-        }*/
-
         Iterator<Bullet> iter = movingBullets.iterator();
 
         while (iter.hasNext()) {
@@ -71,6 +57,7 @@ public class Gun {
             }
             if (bullet.isShoot && ! bullet.isOnTheWay) {
                 iter.remove();
+                bullet = null;
             }
         }
 

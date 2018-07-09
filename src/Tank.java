@@ -24,6 +24,7 @@ public class Tank {
     private final int DIAGONAL_SPEED = 2;
 
     private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
+    private boolean keyW, keyS, keyD, keyA;
     private KeyHandler keyHandler;
     private MouseHandler mouseHandler;
 
@@ -43,6 +44,14 @@ public class Tank {
         YPosition = (GameConstants.getScreenHeight() - body.getHeight()) / 2;
         keyHandler = new KeyHandler();
         mouseHandler = new MouseHandler();
+    }
+
+    public void setYPosition(int YPosition) {
+        this.YPosition = YPosition;
+    }
+
+    public void setXPosition(int XPosition) {
+        this.XPosition = XPosition;
     }
 
 
@@ -99,14 +108,16 @@ public class Tank {
     }
 
     public void update() {
+        gunAngle = findAngle(MouseInfo.getPointerInfo().getLocation().x - GameLoop.getXOfCanvas(), MouseInfo.getPointerInfo().getLocation().y - GameLoop.getYOfCanvas());
 
         for (Gun gun: guns) {
             Iterator<Bullet> iter = gun.getBullets().iterator();
             while (iter.hasNext()) {
+
                 Bullet bullet = null;
-                if (iter.hasNext()) {
+                try {
                     bullet = iter.next();
-                }
+                } catch (Exception e){ }
 
                 if (bullet != null) {
                     if (!bullet.isShoot) {
@@ -117,6 +128,19 @@ public class Tank {
                 }
             }
             gun.update();
+        }
+
+        if (keyA) {
+            GameLoop.getState().getMap().changeView(-1,0);
+        }
+        if (keyS) {
+            GameLoop.getState().getMap().changeView(0,1);
+        }
+        if (keyD) {
+            GameLoop.getState().getMap().changeView(1,0);
+        }
+        if (keyW) {
+            GameLoop.getState().getMap().changeView(0,-1);
         }
 
         int dx, dy;
@@ -137,18 +161,62 @@ public class Tank {
             dy = DIAGONAL_SPEED*verticalMove;
         }
 
-        XPosition += dx;
-        YPosition += dy;
+        int w = (XPosition + dx) / GameConstants.getCellWidth();
+        int h = (YPosition + dy) / GameConstants.getCellHeight();
+        int x1 = XPosition + dx, y1 = YPosition + dy;
+        int x2 = XPosition + body.getWidth() + dx, y2 = YPosition + dy;
+        int x3 = XPosition + body.getWidth() + dx, y3 = YPosition + body.getHeight() + dy;
+        int x4 = XPosition + dx, y4 = YPosition + body.getHeight() + dy;
+        ArrayList<Point> corners = new ArrayList<>();
+        corners.add(new Point(x1,y1));
+        corners.add(new Point(x2,y2));
+        corners.add(new Point(x3,y3));
+        corners.add(new Point(x4,y4));
+        boolean flag = false;
+        for (int i = Math.max(0, w - 1); i < Math.min(w + 2, GameLoop.getState().getMap().getWidth()); i++) {
+            for (int j = Math.max(0, h - 1); j < Math.min(h + 2, GameLoop.getState().getMap().getHeight()); j++) {
+                if (GameLoop.getState().getMap().getMap()[i][j].isBarrier()) {
+                    for (Point p: corners) {
+                        if (p.x >= i * GameConstants.getCellWidth() && p.x <= (i + 1) * GameConstants.getCellWidth()) {
+                            if (p.y >= j * GameConstants.getCellHeight() && p.y <= (j + 1) * GameConstants.getCellHeight()) {
+                                //System.out.println(i + "," + j);
+                                flag = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-        XPosition = Math.max(XPosition, 0);
+        if (! flag) {
+            XPosition += dx;
+            YPosition += dy;
+        }
+        if (XPosition - GameLoop.getState().getTopLeftPoint().x <= GameConstants.getScreenWidth() / GameConstants.getNum()) {
+            GameLoop.getState().getMap().changeView(-1,0);
+        }
+
+        if (XPosition + body.getWidth() - GameLoop.getState().getTopLeftPoint().x > GameConstants.getScreenWidth() * (GameConstants.getNum() -1) / GameConstants.getNum()) {
+            GameLoop.getState().getMap().changeView(1,0);
+        }
+        if (YPosition - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenHeight() / GameConstants.getNum()) {
+            GameLoop.getState().getMap().changeView(0,-1);
+        }
+
+        if (YPosition + body.getHeight() - GameLoop.getState().getTopLeftPoint().y > GameConstants.getScreenHeight() * (GameConstants.getNum() - 1) / GameConstants.getNum()) {
+            GameLoop.getState().getMap().changeView(0,1);
+        }
+
+        /*XPosition = Math.max(XPosition, 0);
         XPosition = Math.min(XPosition, GameConstants.getScreenWidth() - body.getWidth());
         YPosition = Math.max(YPosition, 0);
         YPosition = Math.min(YPosition, GameConstants.getScreenHeight() - body.getHeight());
+        */
     }
 
     private double findAngle(int x, int y) {
-        int x2 = XPosition + body.getWidth()/2;
-        int y2 = YPosition + body.getHeight()/2;
+        int x2 = XPosition - GameLoop.getState().getTopLeftPoint().x + body.getWidth()/2;
+        int y2 = YPosition - GameLoop.getState().getTopLeftPoint().y + body.getHeight()/2;
 
         double dx = x - x2;
         double dy = y - y2;
@@ -181,14 +249,7 @@ public class Tank {
     class KeyHandler extends KeyAdapter {
 
         @Override
-        public void keyTyped(KeyEvent e) {
-            gunAngle = findAngle(MouseInfo.getPointerInfo().getLocation().x - GameLoop.getXOfCanvas(), MouseInfo.getPointerInfo().getLocation().y - GameLoop.getYOfCanvas());
-        }
-
-        @Override
         public void keyPressed(KeyEvent e) {
-
-            gunAngle = findAngle(MouseInfo.getPointerInfo().getLocation().x - GameLoop.getXOfCanvas(), MouseInfo.getPointerInfo().getLocation().y - GameLoop.getYOfCanvas());
 
             switch (e.getKeyCode())
             {
@@ -203,6 +264,18 @@ public class Tank {
                     break;
                 case KeyEvent.VK_RIGHT:
                     keyRIGHT = true;
+                    break;
+                case KeyEvent.VK_D:
+                    keyD = true;
+                    break;
+                case KeyEvent.VK_A:
+                    keyA = true;
+                    break;
+                case KeyEvent.VK_S:
+                    keyS = true;
+                    break;
+                case KeyEvent.VK_W:
+                    keyW = true;
                     break;
             }
         }
@@ -222,6 +295,18 @@ public class Tank {
                     break;
                 case KeyEvent.VK_RIGHT:
                     keyRIGHT = false;
+                    break;
+                case KeyEvent.VK_A:
+                    keyA = false;
+                    break;
+                case KeyEvent.VK_S:
+                    keyS = false;
+                    break;
+                case KeyEvent.VK_D:
+                    keyD = false;
+                    break;
+                case KeyEvent.VK_W:
+                    keyW = false;
                     break;
             }
         }
