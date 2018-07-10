@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import java.util.Timer;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -9,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Iterator;
+import java.util.TimerTask;
 
 public class Tank {
 
@@ -20,7 +22,7 @@ public class Tank {
     private double gunAngle;
     private int XPosition;
     private int YPosition;
-    private final int SPEED = 3;
+    private final int SPEED = 2;
     private final int DIAGONAL_SPEED = 2;
 
     private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
@@ -42,6 +44,7 @@ public class Tank {
         gunAngle = 0;
         XPosition = (GameConstants.getScreenWidth() - body.getWidth()) / 2;
         YPosition = (GameConstants.getScreenHeight() - body.getHeight()) / 2;
+
         keyHandler = new KeyHandler();
         mouseHandler = new MouseHandler();
     }
@@ -117,7 +120,9 @@ public class Tank {
                 Bullet bullet = null;
                 try {
                     bullet = iter.next();
-                } catch (Exception e){ }
+                } catch (Exception e){
+                    break;
+                }
 
                 if (bullet != null) {
                     if (!bullet.isShoot) {
@@ -177,8 +182,8 @@ public class Tank {
             for (int j = Math.max(0, h - 1); j < Math.min(h + 2, GameLoop.getState().getMap().getHeight()); j++) {
                 if (GameLoop.getState().getMap().getMap()[i][j].isBarrier()) {
                     for (Point p: corners) {
-                        if (p.x >= i * GameConstants.getCellWidth() && p.x <= (i + 1) * GameConstants.getCellWidth()) {
-                            if (p.y >= j * GameConstants.getCellHeight() && p.y <= (j + 1) * GameConstants.getCellHeight()) {
+                        if (p.x > i * GameConstants.getCellWidth() && p.x < (i + 1) * GameConstants.getCellWidth()) {
+                            if (p.y > j * GameConstants.getCellHeight() && p.y < (j + 1) * GameConstants.getCellHeight()) {
                                 //System.out.println(i + "," + j);
                                 flag = true;
                             }
@@ -312,29 +317,52 @@ public class Tank {
         }
     }
 
-    class MouseHandler extends MouseAdapter {
+
+    private class MyTimerTask extends TimerTask{
 
         @Override
-        public void mouseClicked(MouseEvent e){
+        public void run() {
+            double theta = findAngle(MouseInfo.getPointerInfo().getLocation().x - GameLoop.getXOfCanvas(), MouseInfo.getPointerInfo().getLocation().y - GameLoop.getYOfCanvas());
+            shoot(theta);
+        }
+    }
+
+    class MouseHandler extends MouseAdapter {
+
+        Timer timer;
+        TimerTask task;
+
+
+
+        @Override
+        public void mousePressed(MouseEvent e) {
             gunAngle = findAngle(e.getX(), e.getY());
-            if(e.getButton() == 3){
+            if (e.getButton() == 1) {
+                timer = new Timer();
+                task = new MyTimerTask();
+                timer.scheduleAtFixedRate(task, 0, activeGun.getType().getReloadPeriod());
+            }
+            if (e.getButton() == 3) {
                 switchGun();
                 update();
             }
         }
 
         @Override
-        public void mousePressed(MouseEvent e) {
-            gunAngle = findAngle(e.getX(), e.getY());
-            if (e.getButton() == 1) {
-                double theta = findAngle(e.getX(), e.getY());
-                shoot(theta);
+        public void mouseReleased(MouseEvent e) {
+            if (task != null) {
+                task.cancel();
+            }
+            else {
+                timer.purge();
             }
         }
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            gunAngle = findAngle(e.getX(), e.getY());
+            int x = e.getX();
+            int y = e.getY();
+            gunAngle = findAngle(x,y);
         }
     }
 }

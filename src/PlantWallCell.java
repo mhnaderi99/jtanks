@@ -2,18 +2,17 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
-public class SoilCell extends MapCell {
+public class PlantWallCell extends MapCell{
 
-    public SoilCell() {
+    public PlantWallCell() {
         try {
-            setImage(ImageIO.read(new File("res/images/map/soilCell.png")));
+            setImage(ImageIO.read(new File("res/images/map/plantWallCell.png")));
         }
         catch (IOException e) { }
         setDestroyable(false);
-        setBarrier(false);
-        setBarrierForBullet(false);
+        setBarrier(true);
+        setBarrierForBullet(true);
         setTransparent(false);
-
     }
 
     @Override

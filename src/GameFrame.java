@@ -10,7 +10,7 @@ import java.util.HashSet;
 public class GameFrame extends JFrame {
 
     private BufferStrategy bufferStrategy;
-
+    private static ArrayList<Point> updated;
     public GameFrame(String title) {
         super(title);
         setResizable(false);
@@ -27,6 +27,7 @@ public class GameFrame extends JFrame {
         createBufferStrategy(3);
         bufferStrategy = getBufferStrategy();
     }
+
 
     public int getXOfFrame() {
         return getLocationOnScreen().x;
@@ -82,11 +83,12 @@ public class GameFrame extends JFrame {
         int x2 = Math.min(((ox + GameConstants.getScreenWidth()) / GameConstants.getCellWidth() + 1), state.getMap().getWidth() - 1);
         int y2 = Math.min(((oy + GameConstants.getScreenHeight()) / GameConstants.getCellHeight() + 1), state.getMap().getHeight());
 
+
         if (isInitial) {
 
-            for (int i = x1; i <= x2; i++) {
-                for (int j = y1; j <= y2; j++) {
-                    if (state.getMap().getMap()[i][j] instanceof TeazelCell) {
+            for (int i = x1; i <= Math.min(x2, map.getWidth() - 1); i++) {
+                for (int j = y1; j <= Math.min(y2, map.getHeight() - 1); j++) {
+                    if (state.getMap().getMap()[i][j].isTransparent()) {
                         g2d.drawImage(GameConstants.getCellByCode(4).getImage(), i*GameConstants.getCellWidth() - ox, j*GameConstants.getCellHeight() - oy, this);
                     }
                     g2d.drawImage(state.getMap().getMap()[i][j].getImage(), i*GameConstants.getCellWidth() - ox, j*GameConstants.getCellHeight() - oy, this);
@@ -108,10 +110,17 @@ public class GameFrame extends JFrame {
         int w = x / GameConstants.getCellWidth(), h = y / GameConstants.getCellHeight();
 
         HashSet<Point> refreshBackground = new HashSet<Point>();
+        HashSet<Point> refreshForeGround = new HashSet<Point>();
 
-        for (int i = Math.max(x1, w - 1); i < Math.min(w + 3, x2); i++) {
-            for (int j = Math.max(y1, h - 1); j < Math.min(h + 3, y2); j++) {
-                refreshBackground.add(new Point(i,j));
+
+        for (int i = Math.max(x1, w - 1); i < Math.min(w + 2, x2); i++) {
+            for (int j = Math.max(y1, h - 1); j < Math.min(h + 2, y2); j++) {
+                if (! map.getMap()[i][j].isTransparent()) {
+                    refreshBackground.add(new Point(i,j));
+                }
+                else {
+                    refreshForeGround.add(new Point(i,j));
+                }
             }
         }
 
@@ -121,9 +130,14 @@ public class GameFrame extends JFrame {
                 int yy = (int) bullet.getY();
                 int ww = xx / GameConstants.getCellWidth();
                 int hh = yy / GameConstants.getCellHeight();
-                for (int i = Math.max(x1, ww - 1); i < Math.min(ww + 2, x2); i++) {
-                    for (int j = Math.max(y1, hh - 1); j < Math.min(hh + 2, y2); j++) {
-                        refreshBackground.add(new Point(i,j));
+                for (int i = Math.max(x1, ww - 1); i < Math.min(ww + 3, x2); i++) {
+                    for (int j = Math.max(y1, hh - 1); j < Math.min(hh + 3, y2); j++) {
+                        if (! map.getMap()[i][j].isTransparent()) {
+                            refreshBackground.add(new Point(i,j));
+                        }
+                        else {
+                            refreshForeGround.add(new Point(i,j));
+                        }
                     }
                 }
             }
@@ -131,12 +145,16 @@ public class GameFrame extends JFrame {
 
         for (Point p : refreshBackground) {
             int i = p.x, j = p.y;
-            if (map.getMap()[i][j] instanceof TeazelCell) {
+            if (map.getMap()[i][j].isTransparent()) {
                 g2d.drawImage(GameConstants.getCellByCode(4).getImage(), GameConstants.getCellWidth()*i - ox, GameConstants.getCellHeight()*j - oy, this);
             }
             g2d.drawImage(map.getMap()[i][j].getImage(), GameConstants.getCellWidth()*i - ox, GameConstants.getCellHeight()*j - oy, this);
         }
 
+        for (Point p : refreshForeGround) {
+            int i = p.x, j = p.y;
+            g2d.drawImage(GameConstants.getCellByCode(4).getImage(), GameConstants.getCellWidth()*i - ox, GameConstants.getCellHeight()*j - oy, this);
+        }
 
         //Draw tank
 
@@ -162,6 +180,13 @@ public class GameFrame extends JFrame {
                     }
                 }
             }
+        }
+
+        //Draw Foreground Layer
+        for (Point p : refreshForeGround) {
+            int i = p.x, j = p.y;
+
+            g2d.drawImage(map.getMap()[i][j].getImage(), GameConstants.getCellWidth()*i - ox, GameConstants.getCellHeight()*j - oy, this);
         }
 
     }

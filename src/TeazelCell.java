@@ -11,6 +11,12 @@ public class TeazelCell extends MapCell {
         catch (IOException e) { }
         setDestroyable(false);
         setBarrier(true);
+        setBarrierForBullet(false);
+        setTransparent(true);
     }
 
+    @Override
+    public void destroy(Bullet bullet) {
+
+    }
 }

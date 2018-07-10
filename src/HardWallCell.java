@@ -11,5 +11,12 @@ public class HardWallCell extends MapCell{
         catch (IOException e) { }
         setDestroyable(false);
         setBarrier(true);
+        setBarrierForBullet(true);
+        setTransparent(false);
+    }
+
+    @Override
+    public void destroy(Bullet bullet) {
+
     }
 }

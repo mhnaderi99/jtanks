@@ -11,5 +11,12 @@ public class PlantCell extends MapCell {
         catch (IOException e) { }
         setDestroyable(false);
         setBarrier(false);
+        setBarrierForBullet(false);
+        setTransparent(true);
+    }
+
+    @Override
+    public void destroy(Bullet bullet) {
+
     }
 }

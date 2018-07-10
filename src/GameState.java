@@ -7,9 +7,8 @@ public class GameState {
     private Point topLeftPoint;
 
     public GameState() {
-        tank = new Tank();
         map = new Map("res/maps/map1(27,27).txt");
-        System.out.println(map.getWidth() + " " + map.getHeight());
+        tank = new Tank();
         topLeftPoint = new Point(0,0);
     }
 

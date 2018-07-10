@@ -1,10 +1,12 @@
 import java.awt.image.BufferedImage;
 
-public class MapCell {
+public abstract class MapCell {
 
     private BufferedImage image;
     private boolean isDestroyable;
     private boolean isBarrier;
+    private boolean isBarrierForBullet;
+    private boolean isTransparent;
 
 
     public BufferedImage getImage() {
@@ -30,4 +32,22 @@ public class MapCell {
     public boolean isBarrier() {
         return isBarrier;
     }
+
+    public boolean isBarrierForBullet() {
+        return isBarrierForBullet;
+    }
+
+    public void setBarrierForBullet(boolean barrierForBullet) {
+        isBarrierForBullet = barrierForBullet;
+    }
+
+    public boolean isTransparent() {
+        return isTransparent;
+    }
+
+    public void setTransparent(boolean transparent) {
+        isTransparent = transparent;
+    }
+
+    public abstract void destroy(Bullet bullet);
 }

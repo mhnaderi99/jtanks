@@ -7,15 +7,20 @@ public class GameConstants {
     private static final double SCREEN_RATIO = 9/16;
     private static final int SCREEN_WIDTH = 1280;
     private static final int SCREEN_HEIGHT = 720;
-    private static final int CELL_WIDTH = 150;
-    private static final int CELL_HEIGHT = 150;
+    private static final int CELL_WIDTH = 120;
+    private static final int CELL_HEIGHT = 120;
     private static final int STEP = 10;
     private static final int AMOUNT = 300;
-    private static final int NUM = 18;
+    private static final int NUM = 8;
+    private static final int SOFT_WALL_CELL_HEALTH = 40;
+    private static final int CANNON_PERIOD = 500;
+    private static final int MACHINE_GUN_PERIOD = 200;
+
     private static Gun cannon;
     private static Gun machineGun;
     private static Bullet cannonBullet;
     private static Bullet machineGunBullet;
+    private static final SoilCell soilCell = new SoilCell();
 
     public static int getStep() {
         return STEP;
@@ -33,6 +38,10 @@ public class GameConstants {
         return SCREEN_WIDTH;
     }
 
+    public static int getSoftWallCellHealth() {
+        return SOFT_WALL_CELL_HEALTH;
+    }
+
     public static int getScreenHeight() {
         return SCREEN_HEIGHT;
     }
@@ -43,6 +52,14 @@ public class GameConstants {
 
     public static int getCellHeight() {
         return CELL_HEIGHT;
+    }
+
+    public static int getCannonPeriod() {
+        return CANNON_PERIOD;
+    }
+
+    public static int getMachineGunPeriod() {
+        return MACHINE_GUN_PERIOD;
     }
 
     public static Gun getCannon() {
@@ -86,7 +103,7 @@ public class GameConstants {
         }
 
         if (code == 4) {
-            return new SoilCell();
+            return soilCell;
         }
 
         if (code == 5) {
@@ -94,7 +111,7 @@ public class GameConstants {
         }
 
         if (code == 6) {
-            return new HardWallCell();
+            return new PlantWallCell();
         }
 
         return null;

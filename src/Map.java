@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public class Map {
 
     private MapCell[][] map;
+    private Point startPoint;
+    private Point endPoint;
     private int width;
     private int height;
 
@@ -17,6 +19,7 @@ public class Map {
         map = new MapCell[width][height];
         loadMap(filePath);
     }
+
 
     public int getWidth() {
         return width;

@@ -1,5 +1,6 @@
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 public class Gun {
@@ -15,6 +16,11 @@ public class Gun {
         bullets = new ArrayList<Bullet>();
         movingBullets = new ArrayList<Bullet>();
         reload(numberOfBullets);
+    }
+
+
+    public Bullet getType() {
+        return type;
     }
 
     public ArrayList<Bullet> getMovingBullets() {
@@ -56,8 +62,11 @@ public class Gun {
                 bullet.update();
             }
             if (bullet.isShoot && ! bullet.isOnTheWay) {
-                iter.remove();
-                bullet = null;
+                try {
+                    iter.remove();
+                } catch (ConcurrentModificationException e) {
+                    break;
+                }
             }
         }
 

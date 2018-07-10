@@ -18,6 +18,7 @@ public abstract class Bullet {
     private double time = 0;
     private double angle;
     protected double speed;
+    private int reloadPeriod;
 
     public Bullet(int damage, int speed){
         this.damage = damage;
@@ -47,10 +48,15 @@ public abstract class Bullet {
         for (int i = Math.max(0, xx - 2); i < Math.min(xx + 2, GameLoop.getState().getMap().getWidth()); i++) {
             for (int j = Math.max(0, yy - 2); j < Math.min(yy + 2, GameLoop.getState().getMap().getHeight()); j++) {
                 for (Point p: corners) {
-                    if (GameLoop.getState().getMap().getMap()[i][j].isBarrier()) {
+                    if (GameLoop.getState().getMap().getMap()[i][j].isBarrierForBullet()) {
                         if (p.x >= i * GameConstants.getCellWidth() && p.x <= (i + 1) * GameConstants.getCellWidth()) {
                             if (p.y >= j * GameConstants.getCellHeight() && p.y <= (j + 1) * GameConstants.getCellHeight()) {
                                 flag = true;
+
+                                if (GameLoop.getState().getMap().getMap()[i][j].isDestroyable()) {
+                                    GameLoop.getState().getMap().getMap()[i][j].destroy(this);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -61,6 +67,7 @@ public abstract class Bullet {
 
         if (flag) {
             isOnTheWay = false;
+            GameLoop.getCanvas().render(GameLoop.getState(), true);
         }
 
         if (x - xMargin >= GameConstants.getScreenWidth() || x - xMargin<= 0) {
@@ -72,6 +79,14 @@ public abstract class Bullet {
         }
 
         time++;
+    }
+
+    public int getReloadPeriod() {
+        return reloadPeriod;
+    }
+
+    public void setReloadPeriod(int reloadPeriod) {
+        this.reloadPeriod = reloadPeriod;
     }
 
     public void setX(double x) {
