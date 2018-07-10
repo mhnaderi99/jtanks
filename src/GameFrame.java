@@ -80,7 +80,7 @@ public class GameFrame extends JFrame {
         int oy = state.getTopLeftPoint().y;
         int x1 = ox / GameConstants.getCellWidth();
         int y1 = oy / GameConstants.getCellHeight();
-        int x2 = Math.min(((ox + GameConstants.getScreenWidth()) / GameConstants.getCellWidth() + 1), state.getMap().getWidth() - 1);
+        int x2 = Math.min(((ox + GameConstants.getScreenWidth()) / GameConstants.getCellWidth() + 1), state.getMap().getWidth());
         int y2 = Math.min(((oy + GameConstants.getScreenHeight()) / GameConstants.getCellHeight() + 1), state.getMap().getHeight());
 
 

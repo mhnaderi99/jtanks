@@ -18,7 +18,7 @@ public class Main {
                 frame.initBufferStrategy();
 
                 GameLoop game = new GameLoop(frame);
-                game.init();
+                //game.init();
                 ThreadPool.execute(game);
             }
         });

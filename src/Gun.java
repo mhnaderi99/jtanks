@@ -56,7 +56,13 @@ public class Gun {
         Iterator<Bullet> iter = movingBullets.iterator();
 
         while (iter.hasNext()) {
-            Bullet bullet = iter.next();
+            Bullet bullet = null;
+            try {
+                bullet = iter.next();
+            }
+            catch (ConcurrentModificationException e) {
+                break;
+            }
 
             if (bullet.isShoot && bullet.isOnTheWay){
                 bullet.update();

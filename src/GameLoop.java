@@ -2,11 +2,13 @@ public class GameLoop implements Runnable{
 
 
     private static GameFrame canvas;
+    private static boolean gameOver = false;
 
     private static GameState state;
 
     public GameLoop(GameFrame frame) {
         canvas = frame;
+        init();
     }
 
     public void init() {
@@ -33,9 +35,12 @@ public class GameLoop implements Runnable{
         return canvas.getYOfFrame();
     }
 
+    public static void setGameOver(boolean gameOver) {
+        GameLoop.gameOver = gameOver;
+    }
+
     @Override
     public void run() {
-        boolean gameOver = false;
         canvas.render(state, true);
         while (!gameOver) {
             state.update();

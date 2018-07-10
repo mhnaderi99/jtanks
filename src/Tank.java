@@ -42,8 +42,10 @@ public class Tank {
         activeGun = guns.get(0);
 
         gunAngle = 0;
-        XPosition = (GameConstants.getScreenWidth() - body.getWidth()) / 2;
-        YPosition = (GameConstants.getScreenHeight() - body.getHeight()) / 2;
+        XPosition = Map.getStartPoint().x * GameConstants.getCellWidth() + (GameConstants.getCellWidth() - body.getWidth()) / 2;
+        YPosition = Map.getStartPoint().y * GameConstants.getCellHeight() + (GameConstants.getCellHeight() - body.getHeight()) / 2;
+        //XPosition = (GameConstants.getScreenWidth() - body.getWidth()) / 2;
+        //YPosition = (GameConstants.getScreenHeight() - body.getHeight()) / 2;
 
         keyHandler = new KeyHandler();
         mouseHandler = new MouseHandler();
@@ -168,6 +170,9 @@ public class Tank {
 
         int w = (XPosition + dx) / GameConstants.getCellWidth();
         int h = (YPosition + dy) / GameConstants.getCellHeight();
+        if (w == Map.getEndPoint().x && h == Map.getEndPoint().y) {
+            GameLoop.setGameOver(true);
+        }
         int x1 = XPosition + dx, y1 = YPosition + dy;
         int x2 = XPosition + body.getWidth() + dx, y2 = YPosition + dy;
         int x3 = XPosition + body.getWidth() + dx, y3 = YPosition + body.getHeight() + dy;

@@ -5,14 +5,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Map {
 
     private MapCell[][] map;
-    private Point startPoint;
-    private Point endPoint;
-    private int width;
-    private int height;
+    private static Point startPoint;
+    private static Point endPoint;
+    private static Point topLeftPoint;
+    private static int width;
+    private static int height;
 
     public Map(String filePath) {
         readDimensions(filePath);
@@ -21,12 +23,20 @@ public class Map {
     }
 
 
-    public int getWidth() {
+    public static int getWidth() {
         return width;
     }
 
-    public int getHeight() {
+    public static int getHeight() {
         return height;
+    }
+
+    public static Point getStartPoint() {
+        return startPoint;
+    }
+
+    public static Point getEndPoint() {
+        return endPoint;
     }
 
     public MapCell[][] getMap() {
@@ -39,19 +49,31 @@ public class Map {
             FileInputStream stream = new FileInputStream(file);
             char current;
             int x = 0, y = 0;
-            while (stream.available() > 0) {
-                current = (char) stream.read();
-                int code = Character.getNumericValue(current);
-                if (code != -1) {
-                    placeCell(GameConstants.getCellByCode(code), x, y/2);
-                    //System.out.print(current + " ");
-                    x++;
+            boolean flag = false;
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                //System.out.println(line);
+                if (line.startsWith("s")) {
+                    flag = true;
+                    String start = line.substring(0, line.lastIndexOf("."));
+                    String end = line.substring(line.lastIndexOf(".") + 1, line.length());
+                    startPoint = point("s", start);
+                    endPoint = point("e", end);
                 }
-                else {
-                    //System.out.println();
-                    y++;
-                    x=0;
+
+                if(! flag) {
+                    for (int i = 0; i < line.length(); i++) {
+                        x = i;
+                        current = line.charAt(i);
+                        int code = Character.getNumericValue(current);
+                        if (code != -1) {
+                            placeCell(GameConstants.getCellByCode(code), x, y);
+                            //System.out.print(current + " ");
+                        }
+                    }
                 }
+                y++;
             }
             stream.close();
             return true;
@@ -60,6 +82,14 @@ public class Map {
         catch (IOException e) {return false;}
     }
 
+    private Point point(String ch, String line) {
+        line = line.replaceAll(ch, "");
+        line = line.replaceAll("\\(", "");
+        line = line.replaceAll("\\)", "");
+        int x = Integer.parseInt(line.substring(0, line.lastIndexOf(",")));
+        int y = Integer.parseInt(line.substring(line.lastIndexOf(",") + 1, line.length()));
+        return new Point(x,y);
+    }
     public boolean placeCell(MapCell cell, int x, int y) {
         if (x >= 0 && x < width && y >= 0 && y < height) {
             map[x][y] = cell;
