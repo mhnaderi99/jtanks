@@ -1,4 +1,7 @@
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -47,8 +50,13 @@ public class Gun {
             bullet.isOnTheWay = true;
             bullet.XSpeed = (bullet.speed * Math.cos(theta));
             bullet.YSpeed = - (bullet.speed * Math.sin(theta));
+            AudioPlayer.playSound(getType().getShootSound());
             movingBullets.add(bullet);
+
             bullets.remove(bullets.size() - 1);
+        }
+        else {
+            AudioPlayer.playSound("emptyGun.wav");
         }
     }
 
@@ -92,4 +100,6 @@ public class Gun {
             }
         }
     }
+
+
 }

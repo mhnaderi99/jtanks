@@ -46,6 +46,7 @@ public class GameLoop implements Runnable{
             state.update();
             canvas.render(state, false);
         }
+        AudioPlayer.playSound("endOfGame.wav");
         canvas.render(state, true);
     }
 }

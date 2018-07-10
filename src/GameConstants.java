@@ -12,6 +12,8 @@ public class GameConstants {
     private static final int STEP = 10;
     private static final int AMOUNT = 300;
     private static final int NUM = 8;
+    private static final int INITIAL_NUMBER_OF_CANNON_BULLETS = 100;
+    private static final int INITIAL_NUMBER_OF_MACHINE_GUN_BULLETS = 200;
     private static final int SOFT_WALL_CELL_HEALTH = 40;
     private static final int CANNON_PERIOD = 500;
     private static final int MACHINE_GUN_PERIOD = 200;
@@ -64,7 +66,7 @@ public class GameConstants {
 
     public static Gun getCannon() {
         try {
-            cannon = new Gun(ImageIO.read(new File("res/images/tanks/guns/cannon.png")),100, new CannonBullet());
+            cannon = new Gun(ImageIO.read(new File("res/images/tanks/guns/cannon.png")),INITIAL_NUMBER_OF_CANNON_BULLETS, new CannonBullet());
         }
         catch (IOException e) { }
         return cannon;
@@ -72,7 +74,7 @@ public class GameConstants {
 
     public static Gun getMachineGun() {
         try {
-            machineGun = new Gun(ImageIO.read(new File("res/images/tanks/guns/machineGun.png")), 200, new MachineGunBullet());
+            machineGun = new Gun(ImageIO.read(new File("res/images/tanks/guns/machineGun.png")), INITIAL_NUMBER_OF_MACHINE_GUN_BULLETS, new MachineGunBullet());
         }
         catch (IOException e) { }
         return machineGun;

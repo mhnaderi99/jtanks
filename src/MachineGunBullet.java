@@ -9,6 +9,7 @@ public class MachineGunBullet extends Bullet{
 
     public MachineGunBullet() {
         super(DAMAGE, SPEED);
+        setShootSound("machineGun.wav");
         setReloadPeriod(GameConstants.getMachineGunPeriod());
         try {
             image = ImageIO.read(new File("res/images/tanks/bullets/machineGunBullet.png"));

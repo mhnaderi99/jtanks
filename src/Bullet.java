@@ -19,6 +19,7 @@ public abstract class Bullet {
     private double angle;
     protected double speed;
     private int reloadPeriod;
+    private String shootSound;
 
     public Bullet(int damage, int speed){
         this.damage = damage;
@@ -79,6 +80,14 @@ public abstract class Bullet {
         }
 
         time++;
+    }
+
+    public String getShootSound() {
+        return shootSound;
+    }
+
+    public void setShootSound(String shootSound) {
+        this.shootSound = shootSound;
     }
 
     public int getReloadPeriod() {

@@ -22,19 +22,22 @@ public class SoftWallCell extends MapCell {
 
     @Override
     public void destroy(Bullet bullet) {
-        health -= bullet.damage;
-        double h = (double) health / (double) (DEFAULT_HEALTH / NUMBER_OF_STATES);
-        int index = (int) Math.ceil(h);
-        index = NUMBER_OF_STATES - index;
-        if (index == NUMBER_OF_STATES) {
-            setBarrier(false);
-            setBarrierForBullet(false);
-            setTransparent(false);
+        if (health > 0) {
+            health -= bullet.damage;
+            AudioPlayer.playSound("softWallDamage.wav");
+            double h = (double) health / (double) (DEFAULT_HEALTH / NUMBER_OF_STATES);
+            int index = (int) Math.ceil(h);
+            index = NUMBER_OF_STATES - index;
+            if (index == NUMBER_OF_STATES) {
+                setBarrier(false);
+                setBarrierForBullet(false);
+                setTransparent(false);
+            }
+            try {
+                setImage(ImageIO.read(new File("res/images/map/softWallCell" + index + ".png")));
+                GameLoop.getCanvas().render(GameLoop.getState(), true);
+            } catch (IOException e) {
+            }
         }
-        try {
-            setImage(ImageIO.read(new File("res/images/map/softWallCell" + index + ".png")));
-            GameLoop.getCanvas().render(GameLoop.getState(), true);
-        }
-        catch (IOException e) { }
     }
 }
