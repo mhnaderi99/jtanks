@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -20,6 +21,8 @@ public class GameConstants {
     private static final int MACHINE_GUN_PERIOD = 200;
     private static final int ENEMY_FIRING_PEROID = 500;
     private static final int ENEMY_FIRING_ERROR = 0;
+    private static final int BORDER_MARGIN = 10;
+    private static final int HEALTH_CELLS = 5;
 
     private static Gun cannon;
     private static Gun machineGun;
@@ -78,6 +81,48 @@ public class GameConstants {
 
     public static int getEnemyFiringError() {
         return ENEMY_FIRING_ERROR;
+    }
+
+    public static int getBorderMargin() {
+        return BORDER_MARGIN;
+    }
+
+    public static int getHealthCells() {
+        return HEALTH_CELLS;
+    }
+
+    public static BufferedImage getCannonNumber(boolean isGrayscale) {
+        try {
+            if (isGrayscale) {
+                return ImageIO.read(new File("res/images/ui/cannonG.png"));
+            }
+            else {
+                return ImageIO.read(new File("res/images/ui/cannon.png"));
+            }
+        } catch (IOException e) { return null;}
+    }
+
+    public static BufferedImage getMachineGunNumber(boolean isGrayscale) {
+        try {
+            if (isGrayscale) {
+                return ImageIO.read(new File("res/images/ui/machineGunG.png"));
+            }
+            else {
+                return ImageIO.read(new File("res/images/ui/machineGun.png"));
+            }
+        } catch (IOException e) { return null;}
+    }
+
+    public static BufferedImage getHealth() {
+        try {
+            return ImageIO.read(new File("res/images/ui/health.png"));
+        } catch (IOException e) { return null;}
+    }
+
+    public static BufferedImage getEmpty() {
+        try {
+            return ImageIO.read(new File("res/images/ui/empty.png"));
+        } catch (IOException e) { return null;}
     }
 
     public static Gun getCannon() {

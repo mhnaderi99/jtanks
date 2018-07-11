@@ -17,7 +17,8 @@ public class GameState {
         int height = (int)Math.ceil((double)GameConstants.getScreenHeight() / (double) GameConstants.getCellHeight());
         int x = Math.max(0, map.getStartPoint().x - width/2) * GameConstants.getCellWidth();
         int y = Math.max(0, map.getStartPoint().y - height/2) * GameConstants.getCellHeight();
-        topLeftPoint = new Point(x, Math.min(y, GameConstants.getCellHeight()*Map.getHeight() - GameConstants.getScreenHeight()));
+        topLeftPoint = new Point(x , Math.min(y + GameConstants.getScreenHeight() - GameLoop.getCanvas().getContentPane().getSize().height,
+                GameConstants.getCellHeight()*Map.getHeight() - GameConstants.getScreenHeight()));
         tank = new Tank();
     }
 

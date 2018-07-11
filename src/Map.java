@@ -164,6 +164,7 @@ public class Map {
             if (GameLoop.getState().getTopLeftPoint().x + GameConstants.getStep() <= GameConstants.getCellWidth() * GameLoop.getState().getMap().width - GameConstants.getScreenWidth()) {
                 GameLoop.getState().getTopLeftPoint().x += GameConstants.getStep();
                 GameLoop.getCanvas().render(GameLoop.getState(), true);
+                GameLoop.getCanvas().renderDetails();
             }
         }
     }
@@ -173,6 +174,7 @@ public class Map {
             if (GameLoop.getState().getTopLeftPoint().x >= GameConstants.getStep()) {
                 GameLoop.getState().getTopLeftPoint().x -= GameConstants.getStep();
                 GameLoop.getCanvas().render(GameLoop.getState(), true);
+                GameLoop.getCanvas().renderDetails();
             }
         }
     }
@@ -182,6 +184,7 @@ public class Map {
             if (GameLoop.getState().getTopLeftPoint().y >= GameConstants.getStep()) {
                 GameLoop.getState().getTopLeftPoint().y -= GameConstants.getStep();
                 GameLoop.getCanvas().render(GameLoop.getState(), true);
+                GameLoop.getCanvas().renderDetails();
             }
         }
     }
@@ -191,6 +194,7 @@ public class Map {
             if (GameLoop.getState().getTopLeftPoint().y + GameConstants.getStep() <= GameLoop.getState().getMap().height * GameConstants.getCellHeight() - GameConstants.getScreenHeight()) {
                 GameLoop.getState().getTopLeftPoint().y += GameConstants.getStep();
                 GameLoop.getCanvas().render(GameLoop.getState(), true);
+                GameLoop.getCanvas().renderDetails();
             }
         }
     }

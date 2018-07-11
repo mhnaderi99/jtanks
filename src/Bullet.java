@@ -48,7 +48,6 @@ public abstract class Bullet {
     }
 
     public void update() {
-
         x = x0 + XSpeed*time;
         y = y0 + YSpeed*time;
 
@@ -115,7 +114,16 @@ public abstract class Bullet {
 
         if (flag) {
             isOnTheWay = false;
-            GameLoop.getCanvas().render(GameLoop.getState(), true);
+
+            /*int x = (int)getX() / GameConstants.getCellWidth();
+            int y = (int)getY() / GameConstants.getCellHeight();
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    GameLoop.getCanvas().renderCell(x + i,y + j);
+                }
+            }
+            */
+            //GameLoop.getCanvas().render(GameLoop.getState(), true);
         }
 
         if (x - xMargin >= GameConstants.getScreenWidth() || x - xMargin<= 0) {

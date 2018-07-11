@@ -43,6 +43,10 @@ public class Tank extends CombatVehicle{
     }
 
 
+    public static int getDefaultHealth() {
+        return HEALTH;
+    }
+
     public void switchGun(){
         int i = getGuns().indexOf(getActiveGun());
         if(i < getGuns().size() - 1){
@@ -52,7 +56,10 @@ public class Tank extends CombatVehicle{
             i=0;
         }
         setActiveGun(getGuns().get(i));
+        int x = GameLoop.getState().getTopLeftPoint().x / GameConstants.getCellWidth();
+        int y = GameLoop.getState().getTopLeftPoint().y / GameConstants.getCellHeight();
         update();
+
     }
 
 
@@ -137,6 +144,8 @@ public class Tank extends CombatVehicle{
             setXPosition(getXPosition() + dx);
             setYPosition(getYPosition() + dy);
         }
+        //GameLoop.getState().getMap().changeView(horizontalMove,verticalMove);
+
         if (getXPosition() - GameLoop.getState().getTopLeftPoint().x <= GameConstants.getScreenWidth() / GameConstants.getNum()) {
             GameLoop.getState().getMap().changeView(-1,0);
         }
@@ -302,7 +311,9 @@ public class Tank extends CombatVehicle{
                 task.cancel();
             }
             else {
-                timer.purge();
+                if (timer != null) {
+                    timer.purge();
+                }
             }
         }
 
