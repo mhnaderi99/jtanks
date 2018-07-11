@@ -8,12 +8,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-/**
- * @author Mohammadhossein Naderi 9631815
- * @author Mahsa Bazzaz 9631405
- * this class inherits the combat vehicle
- */
-
 public class Tank extends CombatVehicle{
 
     private static final int HEALTH = 100;
@@ -25,9 +19,6 @@ public class Tank extends CombatVehicle{
     private KeyHandler keyHandler;
     private MouseHandler mouseHandler;
 
-    /**
-     * the constructor of the tank
-     */
     public Tank() {
         setMobile(true);
         setHealth(HEALTH);
@@ -51,9 +42,7 @@ public class Tank extends CombatVehicle{
         mouseHandler = new MouseHandler();
     }
 
-    /**
-     * to switch gun
-     */
+
     public void switchGun(){
         int i = getGuns().indexOf(getActiveGun());
         if(i < getGuns().size() - 1){
@@ -66,25 +55,17 @@ public class Tank extends CombatVehicle{
         update();
     }
 
-    /**
-     * to get the key handler
-     * @return the key handler
-     */
+
+
+
     public KeyHandler getKeyHandler() {
         return keyHandler;
     }
 
-    /**
-     * to get the mouse handler
-     * @return the mouse handler
-     */
     public MouseHandler getMouseHandler() {
         return mouseHandler;
     }
 
-    /**
-     * //todo
-     */
     @Override
     public void update() {
         setGunAngle(findAngle(MouseInfo.getPointerInfo().getLocation().x - GameLoop.getXOfCanvas(),
@@ -170,18 +151,18 @@ public class Tank extends CombatVehicle{
         if (getYPosition() + getBody().getHeight() - GameLoop.getState().getTopLeftPoint().y > GameConstants.getScreenHeight() * (GameConstants.getNum() - 1) / GameConstants.getNum()) {
             GameLoop.getState().getMap().changeView(0,1);
         }
+
+        /*XPosition = Math.max(XPosition, 0);
+        XPosition = Math.min(XPosition, GameConstants.getScreenWidth() - body.getWidth());
+        YPosition = Math.max(YPosition, 0);
+        YPosition = Math.min(YPosition, GameConstants.getScreenHeight() - body.getHeight());
+        */
     }
 
-    /**
-     * to find the angle between two points
-     * @param x x of first point
-     * @param y y of first point
-     * @param x2 x of second point
-     * @param y2 y of second point
-     * @param error error of shoot
-     * @return the angle
-     */
     public static double findAngle(int x, int y, int x2, int y2, int error) {
+
+        //int x2 = getXPosition() - GameLoop.getState().getTopLeftPoint().x + getBody().getWidth()/2;
+        //int y2 = getYPosition() - GameLoop.getState().getTopLeftPoint().y + getBody().getHeight()/2;
 
         double dx = x - x2;
         double dy = y - y2;
@@ -213,9 +194,6 @@ public class Tank extends CombatVehicle{
         return angle + errorAngle;
     }
 
-    /**
-     * the key handler
-     */
     class KeyHandler extends KeyAdapter {
 
         @Override
@@ -282,9 +260,7 @@ public class Tank extends CombatVehicle{
         }
     }
 
-    /**
-     * to handle continues shooting
-     */
+
     private class MyTimerTask extends TimerTask{
 
         @Override
@@ -297,9 +273,6 @@ public class Tank extends CombatVehicle{
         }
     }
 
-    /**
-     * the mouse handler
-     */
     class MouseHandler extends MouseAdapter {
 
         Timer timer;

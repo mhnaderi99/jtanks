@@ -1,11 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-
-/**
- * @author Mohammadhossein Naderi 9631815
- * @author Mahsa Bazzaz 9631405
- * game starts here
- */
+import java.util.EventListener;
 
 public class Main {
 

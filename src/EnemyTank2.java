@@ -5,25 +5,25 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-public class SmallEnemyTank extends CombatVehicle {
+public class EnemyTank2 extends CombatVehicle {
 
-    private static final int HEALTH = 30;
+    private static final int HEALTH = 50;
     private static final int SPEED = 3;
 
 
-    public SmallEnemyTank() {
+    public EnemyTank2() {
 
-        setMobile(true);
+        setMobile(false);
         setHealth(HEALTH);
         setEnemy(true);
 
         try {
-            setBody(ImageIO.read(new File("res/images/tanks/bodies/smallEnemy.png")));
+            setBody(ImageIO.read(new File("res/images/tanks/bodies/enemy2.png")));
         } catch (IOException e) {
         }
 
         setGuns(new ArrayList<Gun>());
-        getGuns().add(GameConstants.getSmallEnemyGun());
+        getGuns().add(GameConstants.getEnemyGun2());
         setActiveGun(getGuns().get(0));
         setGunAngle(0);
 

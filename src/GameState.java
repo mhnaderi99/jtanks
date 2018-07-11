@@ -2,12 +2,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * @author Mohammadhossein Naderi 9631815
- * @author Mahsa Bazzaz 9631405
- *
- */
-
 public class GameState {
 
     private Tank tank;

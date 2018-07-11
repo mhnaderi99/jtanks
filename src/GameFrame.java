@@ -1,15 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashSet;
-
-/**
- * @author Mohammadhossein Naderi 9631815
- * @author Mahsa Bazzaz 9631405
- *
- */
 
 public class GameFrame extends JFrame {
 
