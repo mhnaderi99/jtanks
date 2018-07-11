@@ -14,12 +14,18 @@ public class GameConstants {
     private static final int NUM = 8;
     private static final int INITIAL_NUMBER_OF_CANNON_BULLETS = 100;
     private static final int INITIAL_NUMBER_OF_MACHINE_GUN_BULLETS = 200;
+    private static final int INITIAL_NUMBER_OF_ENEMY_GUN_BULLETS = Integer.MAX_VALUE;
     private static final int SOFT_WALL_CELL_HEALTH = 40;
     private static final int CANNON_PERIOD = 500;
     private static final int MACHINE_GUN_PERIOD = 200;
+    private static final int ENEMY_FIRING_PEROID = 500;
+    private static final int ENEMY_FIRING_ERROR = 0;
 
     private static Gun cannon;
     private static Gun machineGun;
+    private static Gun enemyGun1;
+    private static Gun smallEnemyGun;
+
     private static Bullet cannonBullet;
     private static Bullet machineGunBullet;
     private static final SoilCell soilCell = new SoilCell();
@@ -64,6 +70,14 @@ public class GameConstants {
         return MACHINE_GUN_PERIOD;
     }
 
+    public static int getEnemyFiringPeroid() {
+        return ENEMY_FIRING_PEROID;
+    }
+
+    public static int getEnemyFiringError() {
+        return ENEMY_FIRING_ERROR;
+    }
+
     public static Gun getCannon() {
         try {
             cannon = new Gun(ImageIO.read(new File("res/images/tanks/guns/cannon.png")),INITIAL_NUMBER_OF_CANNON_BULLETS, new CannonBullet());
@@ -78,6 +92,24 @@ public class GameConstants {
         }
         catch (IOException e) { }
         return machineGun;
+    }
+
+    public static Gun getEnemyGun1() {
+
+        try {
+            enemyGun1 = new Gun(ImageIO.read(new File("res/images/tanks/guns/enemyGun1.png")), INITIAL_NUMBER_OF_ENEMY_GUN_BULLETS, new EnemyGunBullet1());
+        }
+        catch (IOException e) { }
+        return enemyGun1;
+    }
+
+    public static Gun getSmallEnemyGun() {
+
+        try {
+            smallEnemyGun = new Gun(ImageIO.read(new File("res/images/tanks/guns/smallEnemyGun.png")), INITIAL_NUMBER_OF_ENEMY_GUN_BULLETS, new SmallEnemyGunBullet());
+        }
+        catch (IOException e) { }
+        return smallEnemyGun;
     }
 
     public static Bullet getCannonBullet() {
@@ -116,6 +148,16 @@ public class GameConstants {
             return new PlantWallCell();
         }
 
+        return null;
+    }
+
+    public static CombatVehicle getEnemyByCode(int code) {
+        if (code == 1) {
+            return new EnemyTank1();
+        }
+        if (code == 2) {
+            return new SmallEnemyTank();
+        }
         return null;
     }
 }

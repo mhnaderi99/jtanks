@@ -42,6 +42,7 @@ public class GameLoop implements Runnable{
     @Override
     public void run() {
         canvas.render(state, true);
+        AudioPlayer.playSound("gameSound1.wav");
         while (!gameOver) {
             state.update();
             canvas.render(state, false);

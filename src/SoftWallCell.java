@@ -23,7 +23,7 @@ public class SoftWallCell extends MapCell {
     @Override
     public void destroy(Bullet bullet) {
         if (health > 0) {
-            health -= bullet.damage;
+            health -= bullet.getDamage();
             AudioPlayer.playSound("softWallDamage.wav");
             double h = (double) health / (double) (DEFAULT_HEALTH / NUMBER_OF_STATES);
             int index = (int) Math.ceil(h);

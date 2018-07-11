@@ -10,22 +10,41 @@ public abstract class Bullet {
     private double y0;
     private double x;
     private double y;
-    protected double XSpeed;
-    protected double YSpeed;
-    protected boolean isShoot;
-    protected boolean isOnTheWay;
-    protected int damage;
+    private double XSpeed;
+    private double YSpeed;
+    private boolean isShoot;
+    private boolean isOnTheWay;
+    private int damage;
     private double time = 0;
     private double angle;
-    protected double speed;
+    private double speed;
     private int reloadPeriod;
     private String shootSound;
+    private boolean isEnemyBullet;
 
     public Bullet(int damage, int speed){
         this.damage = damage;
         this.speed = speed;
         isShoot = false;
         isOnTheWay = false;
+    }
+
+    public Bullet(Bullet bullet) {
+        image = bullet.image;
+        x0 = bullet.x0;
+        y0 = bullet.y0;
+        x = bullet.x;
+        y = bullet.y;
+        XSpeed = bullet.XSpeed;
+        YSpeed = bullet.YSpeed;
+        isShoot = bullet.isShoot;
+        isOnTheWay = bullet.isOnTheWay;
+        damage = bullet.damage;
+        time = bullet.time;
+        angle = bullet.angle;
+        speed = bullet.speed;
+        reloadPeriod = bullet.reloadPeriod;
+        shootSound = bullet.shootSound;
     }
 
     public void update() {
@@ -60,6 +79,34 @@ public abstract class Bullet {
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        if (isEnemyBullet) {
+            for (Point p: corners) {
+                if (p.x >= GameLoop.getState().getTank().getXPosition() &&
+                        p.x <= GameLoop.getState().getTank().getXPosition() + GameLoop.getState().getTank().getBody().getWidth() &&
+                        p.y >= GameLoop.getState().getTank().getYPosition() &&
+                        p.y <= GameLoop.getState().getTank().getYPosition() + GameLoop.getState().getTank().getBody().getHeight()) {
+                    flag = true;
+                    AudioPlayer.playSound("enemyBulletToMyTank.wav");
+                    GameLoop.getState().getTank().setHealth(GameLoop.getState().getTank().getHealth() - damage);
+                    break;
+                }
+            }
+        }
+        else {
+            for (CombatVehicle enemy: GameState.getEnemies()) {
+                for (Point p: corners) {
+                    if (p.x >= enemy.getXPosition() &&
+                            p.x <= enemy.getXPosition() + enemy.getBody().getWidth() &&
+                            p.y >= enemy.getYPosition() &&
+                            p.y <= enemy.getYPosition() + enemy.getBody().getHeight()) {
+                        flag = true;
+                        enemy.setHealth(enemy.getHealth() - damage);
+                        break;
                     }
                 }
             }
@@ -134,7 +181,81 @@ public abstract class Bullet {
         return angle;
     }
 
+    public boolean isOnTheWay() {
+        return isOnTheWay;
+    }
+
+    public boolean isShoot() {
+        return isShoot;
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public double getTime() {
+        return time;
+    }
+
+    public double getXSpeed() {
+        return XSpeed;
+    }
+
+    public double getYSpeed() {
+        return YSpeed;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public boolean isEnemyBullet() {
+        return isEnemyBullet;
+    }
+
     public void setAngle(double angle) {
         this.angle = angle;
     }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public void setOnTheWay(boolean onTheWay) {
+        isOnTheWay = onTheWay;
+    }
+
+    public void setShoot(boolean shoot) {
+        isShoot = shoot;
+    }
+
+    public void setTime(double time) {
+        this.time = time;
+    }
+
+    public void setXSpeed(double XSpeed) {
+        this.XSpeed = XSpeed;
+    }
+
+    public void setYSpeed(double YSpeed) {
+        this.YSpeed = YSpeed;
+    }
+
+    public void setEnemyBullet(boolean enemyBullet) {
+        isEnemyBullet = enemyBullet;
+    }
+
+    public abstract Bullet getBullet();
 }

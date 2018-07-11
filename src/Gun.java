@@ -9,6 +9,7 @@ import java.util.Iterator;
 public class Gun {
 
     private BufferedImage image;
+    private boolean infinityBullets;
     private Bullet type;
     private ArrayList<Bullet> bullets;
     private ArrayList<Bullet> movingBullets;
@@ -16,9 +17,17 @@ public class Gun {
     public Gun(BufferedImage image, int numberOfBullets, Bullet type) {
         this.image = image;
         this.type = type;
+        if (numberOfBullets == Integer.MAX_VALUE) {
+            infinityBullets = true;
+        }
+        else {
+            infinityBullets = false;
+        }
         bullets = new ArrayList<Bullet>();
         movingBullets = new ArrayList<Bullet>();
-        reload(numberOfBullets);
+        if (! infinityBullets) {
+            reload(numberOfBullets);
+        }
     }
 
 
@@ -39,17 +48,25 @@ public class Gun {
     }
 
     public boolean isBulletsEmpty() {
+        if (infinityBullets) {
+            return false;
+        }
         return bullets.isEmpty();
     }
 
     public void shoot(double theta) {
 
         if (! isBulletsEmpty()) {
+            if (infinityBullets) {
+                if (bullets.isEmpty()) {
+                    reload(GameConstants.getAmount());
+                }
+            }
             Bullet bullet = bullets.get(bullets.size() - 1);
-            bullet.isShoot = true;
-            bullet.isOnTheWay = true;
-            bullet.XSpeed = (bullet.speed * Math.cos(theta));
-            bullet.YSpeed = - (bullet.speed * Math.sin(theta));
+            bullet.setShoot(true);
+            bullet.setOnTheWay(true);
+            bullet.setXSpeed (bullet.getSpeed() * Math.cos(theta));
+            bullet.setYSpeed(-(bullet.getSpeed() * Math.sin(theta)));
             AudioPlayer.playSound(getType().getShootSound());
             movingBullets.add(bullet);
 
@@ -72,10 +89,10 @@ public class Gun {
                 break;
             }
 
-            if (bullet.isShoot && bullet.isOnTheWay){
+            if (bullet.isShoot() && bullet.isOnTheWay()){
                 bullet.update();
             }
-            if (bullet.isShoot && ! bullet.isOnTheWay) {
+            if (bullet.isShoot() && ! bullet.isOnTheWay()) {
                 try {
                     iter.remove();
                 } catch (ConcurrentModificationException e) {
@@ -89,15 +106,11 @@ public class Gun {
     }
 
     public void reload(int number) {
-        if (type instanceof CannonBullet) {
-            for (int i = 0; i < number; i++) {
-                bullets.add(new CannonBullet());
-            }
+        if (number == (int)Double.POSITIVE_INFINITY) {
+            return;
         }
-        if (type instanceof MachineGunBullet) {
-            for (int i = 0; i < number; i++) {
-                bullets.add(new MachineGunBullet());
-            }
+        for (int i = 0; i < number; i++) {
+            bullets.add(getType().getBullet());
         }
     }
 

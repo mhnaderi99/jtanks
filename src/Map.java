@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class Map {
 
     private MapCell[][] map;
+    private int[][] enemiesAndArsenals;
     private static Point startPoint;
     private static Point endPoint;
     private static Point topLeftPoint;
@@ -19,6 +20,7 @@ public class Map {
     public Map(String filePath) {
         readDimensions(filePath);
         map = new MapCell[width][height];
+        enemiesAndArsenals = new int[width][height];
         loadMap(filePath);
     }
 
@@ -60,6 +62,19 @@ public class Map {
                     String end = line.substring(line.lastIndexOf(".") + 1, line.length());
                     startPoint = point("s", start);
                     endPoint = point("e", end);
+                    y = 0;
+                }
+                else if (flag) {
+                    x = 0;
+                    for (int i = 0; i < line.length(); i++) {
+                        x = i;
+                        current = line.charAt(i);
+                        int code = Character.getNumericValue(current);
+                        if (code != 0) {
+                            placeEnemy(GameConstants.getEnemyByCode(code), x, y);
+                        }
+                    }
+                    y++;
                 }
 
                 if(! flag) {
@@ -69,11 +84,10 @@ public class Map {
                         int code = Character.getNumericValue(current);
                         if (code != -1) {
                             placeCell(GameConstants.getCellByCode(code), x, y);
-                            //System.out.print(current + " ");
                         }
                     }
+                    y++;
                 }
-                y++;
             }
             stream.close();
             return true;
@@ -96,6 +110,26 @@ public class Map {
             return true;
         }
         return false;
+    }
+
+    public boolean placeEnemy(CombatVehicle enemy, int x, int y) {
+        if (enemy == null) {
+            return false;
+        }
+        if (x >= 0 && x <width &&  y>= 0 && y < height) {
+            if (! map[x][y].isBarrier()) {
+                enemy.setXPosition(x*GameConstants.getCellWidth() + (GameConstants.getCellWidth() - enemy.getBody().getWidth()) / 2);
+                enemy.setYPosition(y*GameConstants.getCellHeight() + (GameConstants.getCellHeight() - enemy.getBody().getHeight()) / 2);
+                GameState.getEnemies().add(enemy);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
     }
 
     public void readDimensions(String filePath) {

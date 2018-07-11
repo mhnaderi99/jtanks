@@ -74,7 +74,9 @@ public class GameFrame extends JFrame {
     private void doRendering(Graphics2D g2d, GameState state, boolean isInitial) {
         // Draw background
         Map map = state.getMap();
+        ArrayList<CombatVehicle> allVehicles = new ArrayList<CombatVehicle>(state.getEnemies());
         Tank tank = state.getTank();
+        allVehicles.add(tank);
 
         int ox = state.getTopLeftPoint().x;
         int oy = state.getTopLeftPoint().y;
@@ -95,88 +97,90 @@ public class GameFrame extends JFrame {
                 }
             }
 
-            g2d.drawImage(tank.getBody(), tank.getXPosition() - ox, tank.getYPosition() - oy, this);
-            AffineTransform transform = new AffineTransform();
-            transform.setToTranslation(tank.getXPosition() - ox+ 17, tank.getYPosition() - oy + tank.getBody().getHeight() / 2 - tank.getActiveGun().getImage().getHeight() / 2);
+            for(CombatVehicle vehicle: allVehicles) {
+                g2d.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
+                AffineTransform transform = new AffineTransform();
+                transform.setToTranslation(vehicle.getXPosition() - ox + 17, vehicle.getYPosition() - oy + vehicle.getBody().getHeight() / 2 - vehicle.getActiveGun().getImage().getHeight() / 2);
 
-            double angle = -tank.getGunAngle();
+                double angle = -vehicle.getGunAngle();
 
-            transform.rotate(angle, tank.getActiveGun().getImage().getWidth() / 2 - 17, tank.getActiveGun().getImage().getHeight() / 2);
-            g2d.drawImage(tank.getActiveGun().getImage(), transform, this);
+                transform.rotate(angle, vehicle.getActiveGun().getImage().getWidth() / 2 - 17, vehicle.getActiveGun().getImage().getHeight() / 2);
+                g2d.drawImage(vehicle.getActiveGun().getImage(), transform, this);
+            }
             return;
         }
 
-        int x = tank.getXPosition(), y = tank.getYPosition();
-        int w = x / GameConstants.getCellWidth(), h = y / GameConstants.getCellHeight();
-
         HashSet<Point> refreshBackground = new HashSet<Point>();
         HashSet<Point> refreshForeGround = new HashSet<Point>();
+        for (CombatVehicle vehicle: allVehicles) {
+            int x = vehicle.getXPosition(), y = vehicle.getYPosition();
+            int w = x / GameConstants.getCellWidth(), h = y / GameConstants.getCellHeight();
 
-
-        for (int i = Math.max(x1, w - 1); i < Math.min(w + 2, x2); i++) {
-            for (int j = Math.max(y1, h - 1); j < Math.min(h + 2, y2); j++) {
-                if (! map.getMap()[i][j].isTransparent()) {
-                    refreshBackground.add(new Point(i,j));
-                }
-                else {
-                    refreshForeGround.add(new Point(i,j));
+            for (int i = Math.max(x1, w - 1); i < Math.min(w + 2, x2); i++) {
+                for (int j = Math.max(y1, h - 1); j < Math.min(h + 2, y2); j++) {
+                    if (!map.getMap()[i][j].isTransparent()) {
+                        refreshBackground.add(new Point(i, j));
+                    } else {
+                        refreshForeGround.add(new Point(i, j));
+                    }
                 }
             }
-        }
 
-        for (Gun gun: tank.getGuns()) {
-            for (Bullet bullet: gun.getMovingBullets()) {
-                int xx = (int) bullet.getX();
-                int yy = (int) bullet.getY();
-                int ww = xx / GameConstants.getCellWidth();
-                int hh = yy / GameConstants.getCellHeight();
-                for (int i = Math.max(x1, ww - 1); i < Math.min(ww + 3, x2); i++) {
-                    for (int j = Math.max(y1, hh - 1); j < Math.min(hh + 3, y2); j++) {
-                        if (! map.getMap()[i][j].isTransparent()) {
-                            refreshBackground.add(new Point(i,j));
-                        }
-                        else {
-                            refreshForeGround.add(new Point(i,j));
+            for (Gun gun : vehicle.getGuns()) {
+                for (Bullet bullet : gun.getMovingBullets()) {
+                    int xx = (int) bullet.getX();
+                    int yy = (int) bullet.getY();
+                    int ww = xx / GameConstants.getCellWidth();
+                    int hh = yy / GameConstants.getCellHeight();
+                    for (int i = Math.max(x1, ww - 1); i < Math.min(ww + 3, x2); i++) {
+                        for (int j = Math.max(y1, hh - 1); j < Math.min(hh + 3, y2); j++) {
+                            if (!map.getMap()[i][j].isTransparent()) {
+                                refreshBackground.add(new Point(i, j));
+                            } else {
+                                refreshForeGround.add(new Point(i, j));
+                            }
                         }
                     }
                 }
             }
-        }
 
-        for (Point p : refreshBackground) {
-            int i = p.x, j = p.y;
-            if (map.getMap()[i][j].isTransparent()) {
-                g2d.drawImage(GameConstants.getCellByCode(4).getImage(), GameConstants.getCellWidth()*i - ox, GameConstants.getCellHeight()*j - oy, this);
+            for (Point p : refreshBackground) {
+                int i = p.x, j = p.y;
+                if (map.getMap()[i][j].isTransparent()) {
+                    g2d.drawImage(GameConstants.getCellByCode(4).getImage(), GameConstants.getCellWidth() * i - ox, GameConstants.getCellHeight() * j - oy, this);
+                }
+                g2d.drawImage(map.getMap()[i][j].getImage(), GameConstants.getCellWidth() * i - ox, GameConstants.getCellHeight() * j - oy, this);
             }
-            g2d.drawImage(map.getMap()[i][j].getImage(), GameConstants.getCellWidth()*i - ox, GameConstants.getCellHeight()*j - oy, this);
+
+            for (Point p : refreshForeGround) {
+                int i = p.x, j = p.y;
+                g2d.drawImage(GameConstants.getCellByCode(4).getImage(), GameConstants.getCellWidth() * i - ox, GameConstants.getCellHeight() * j - oy, this);
+            }
         }
 
-        for (Point p : refreshForeGround) {
-            int i = p.x, j = p.y;
-            g2d.drawImage(GameConstants.getCellByCode(4).getImage(), GameConstants.getCellWidth()*i - ox, GameConstants.getCellHeight()*j - oy, this);
-        }
+        //Draw tanks
 
-        //Draw tank
+        for (CombatVehicle vehicle: allVehicles) {
+            g2d.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
+            AffineTransform transform = new AffineTransform();
+            transform.setToTranslation(vehicle.getXPosition() - ox + 17, vehicle.getYPosition() - oy + vehicle.getBody().getHeight() / 2 - vehicle.getActiveGun().getImage().getHeight() / 2);
 
-        g2d.drawImage(tank.getBody(), tank.getXPosition() - ox, tank.getYPosition() - oy, this);
-        AffineTransform transform = new AffineTransform();
-        transform.setToTranslation(tank.getXPosition() - ox+ 17, tank.getYPosition() - oy + tank.getBody().getHeight() / 2 - tank.getActiveGun().getImage().getHeight() / 2);
+            double angle = -vehicle.getGunAngle();
 
-        double angle = -tank.getGunAngle();
-
-        transform.rotate(angle, tank.getActiveGun().getImage().getWidth() / 2 - 17, tank.getActiveGun().getImage().getHeight() / 2);
-        g2d.drawImage(tank.getActiveGun().getImage(), transform, this);
+            transform.rotate(angle, vehicle.getActiveGun().getImage().getWidth() / 2 - 17, vehicle.getActiveGun().getImage().getHeight() / 2);
+            g2d.drawImage(vehicle.getActiveGun().getImage(), transform, this);
 
 
-        //Draw bullets
-        for (Gun gun : tank.getGuns()) {
-            if (gun.getMovingBullets().size() != 0) {
-                for (Bullet bullet : gun.getMovingBullets()) {
-                    if (bullet.isShoot && bullet.isOnTheWay) {
-                        AffineTransform bulletTransform = new AffineTransform();
-                        bulletTransform.setToTranslation(bullet.getX() - ox, bullet.getY() - oy);
-                        bulletTransform.rotate(bullet.getAngle());
-                        g2d.drawImage(bullet.image, bulletTransform, this);
+            //Draw bullets
+            for (Gun gun : vehicle.getGuns()) {
+                if (gun.getMovingBullets().size() != 0) {
+                    for (Bullet bullet : gun.getMovingBullets()) {
+                        if (bullet.isShoot() && bullet.isOnTheWay()) {
+                            AffineTransform bulletTransform = new AffineTransform();
+                            bulletTransform.setToTranslation(bullet.getX() - ox, bullet.getY() - oy);
+                            bulletTransform.rotate(bullet.getAngle());
+                            g2d.drawImage(bullet.image, bulletTransform, this);
+                        }
                     }
                 }
             }

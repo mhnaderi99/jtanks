@@ -10,10 +10,16 @@ public class MachineGunBullet extends Bullet{
     public MachineGunBullet() {
         super(DAMAGE, SPEED);
         setShootSound("machineGun.wav");
+        setEnemyBullet(false);
         setReloadPeriod(GameConstants.getMachineGunPeriod());
         try {
             image = ImageIO.read(new File("res/images/tanks/bullets/machineGunBullet.png"));
         }
         catch (IOException e) { }
+    }
+
+    @Override
+    public Bullet getBullet() {
+        return new MachineGunBullet();
     }
 }

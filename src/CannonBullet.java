@@ -11,10 +11,16 @@ public class CannonBullet extends Bullet {
     public CannonBullet() {
         super(DAMAGE, SPEED);
         setShootSound("cannon.wav");
+        setEnemyBullet(false);
         setReloadPeriod(GameConstants.getCannonPeriod());
         try {
             image = ImageIO.read(new File("res/images/tanks/bullets/cannonBullet.png"));
         }
         catch (IOException e) { }
+    }
+
+    @Override
+    public Bullet getBullet() {
+        return new CannonBullet();
     }
 }
