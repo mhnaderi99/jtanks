@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ *
+ */
+
 public abstract class CombatVehicle {
 
     private int health;
@@ -18,59 +24,114 @@ public abstract class CombatVehicle {
     private boolean isEnemy;
     private int diagonalSpeed;
 
-
+    /**
+     * to set the health of the combat vehicle
+     * @param health the health of the combat vehicle
+     */
     public void setHealth(int health) {
         this.health = health;
     }
 
+    /**
+     * to set whether the vehicle is mobile or not
+     * @param mobile true or false
+     */
     public void setMobile(boolean mobile) {
         isMobile = mobile;
     }
 
+    /**
+     * to set the body of the vehicle
+     * @param body body of the vehicle
+     */
     public void setBody(BufferedImage body) {
         this.body = body;
     }
 
+    /**
+     * to set the guns of the vehicle
+     * @param guns the guns
+     */
     public void setGuns(ArrayList<Gun> guns) {
         this.guns = guns;
     }
 
+    /**
+     * to set the active gun
+     * @param activeGun the active gun
+     */
     public void setActiveGun(Gun activeGun) {
         this.activeGun = activeGun;
     }
 
+    /**
+     * to set the gun angle
+     * @param gunAngle the gun angle
+     */
     public void setGunAngle(double gunAngle) {
         this.gunAngle = gunAngle;
     }
 
+    /**
+     * to set x position of the vehicle
+     * @param XPosition the x position
+     */
     public void setXPosition(int XPosition) {
         this.XPosition = XPosition;
     }
 
+    /**
+     * to set y position of the vehicle
+     * @param YPosition the y position
+     */
     public void setYPosition(int YPosition) {
         this.YPosition = YPosition;
     }
 
+    /**
+     * to set the speed of the vehicle
+     * @param speed the speed of the vehicle
+     */
     public void setSpeed(int speed) {
         this.speed = speed;
     }
 
+    /**
+     * to set the diagonal speed of the vehicle
+     * @param diagonalSpeed the diagonal speed of the vehicle
+     */
     public void setDiagonalSpeed(int diagonalSpeed) {
         this.diagonalSpeed = diagonalSpeed;
     }
 
+    /**
+     * to set the vehicle as enemy's vehicle or not
+     * @param enemy true or false
+     */
     public void setEnemy(boolean enemy) {
         isEnemy = enemy;
     }
 
+    /**
+     * to check if the vehicle belongs to enemies or not
+     * @return true or false
+     */
     public boolean isEnemy() {
         return isEnemy;
     }
 
+    /**
+     * to get the health of the vehicle
+     * @return the health of the vehicle
+     */
     public int getHealth() {
         return health;
     }
 
+    /**
+     * to check whether the vehicle is mobile or not
+     * @return true or false
+     */
     public boolean isMobile() {
         return isMobile;
     }
@@ -79,40 +140,76 @@ public abstract class CombatVehicle {
         return body;
     }
 
+    /**
+     * to get the guns of the vehicle
+     * @return the guns of the vehicle
+     */
     public ArrayList<Gun> getGuns() {
         return guns;
     }
 
+    /**
+     * to get the active gun of the vehicle
+     * @return the active gun of the vehicle
+     */
     public Gun getActiveGun() {
         return activeGun;
     }
 
+    /**
+     * to get the gun angle of the vehicle
+     * @return the gun angle
+     */
     public double getGunAngle() {
         return gunAngle;
     }
 
+    /**
+     * to get the x position of the vehicle
+     * @return the x position of the vehicle
+     */
     public int getXPosition() {
         return XPosition;
     }
 
+    /**
+     * to get the y position of the vehicle
+     * @return the y position of the vehicle
+     */
     public int getYPosition() {
         return YPosition;
     }
 
+    /**
+     * to get the speed of the vehicle
+     * @return the speed of the vehicle
+     */
     public int getSpeed() {
         return speed;
     }
 
+    /**
+     * to check whether the vehicle in alive or not
+     * @return true or false
+     */
     public boolean isAlive() {
         return health > 0;
     }
 
+    /**
+     * to get the diagonal speed of the vehicle
+     * @return the diagonal speed of the vehicle
+     */
     public int getDiagonalSpeed() {
         return diagonalSpeed;
     }
 
     public abstract void update();
 
+    /**
+     * to check if the vehicle is in the screen bounds or not
+     * @return true or false
+     */
     public boolean isInScreenBounds() {
         if (XPosition + body.getWidth() - GameLoop.getState().getTopLeftPoint().x >= 0 &&
                 XPosition - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenWidth() &&
@@ -123,10 +220,20 @@ public abstract class CombatVehicle {
 
         return false;
     }
+
+    /**
+     * to shoot
+     * @param theta the angle of the gun
+     */
     public void shoot(double theta) {
         getActiveGun().shoot(theta);
     }
 
+    /**
+     * check if the vehicle can see the other one
+     * @param vehicle the vehicle to be seen
+     * @return true or false
+     */
     public boolean ifCanSee(CombatVehicle vehicle) {
         if (vehicle.isInScreenBounds() && isInScreenBounds()) {
             Point a = new Point(getXPosition() - GameLoop.getState().getTopLeftPoint().x + getBody().getWidth() / 2,
@@ -156,12 +263,23 @@ public abstract class CombatVehicle {
         }
     }
 
+    /**
+     * to get the distance to vehicle
+     * @param vehicle th vehicle
+     * @return the distance
+     */
     public int distanceToVehicle(CombatVehicle vehicle) {
         int dx = getXPosition() + getBody().getWidth() / 2 - vehicle.getXPosition() - vehicle.getBody().getWidth() / 2;
         int dy = getYPosition() + getBody().getHeight() / 2 - vehicle.getYPosition() - vehicle.getBody().getHeight() / 2;
         return (int) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
     }
 
+    /**
+     * to check wheter the vehicle collided with the barriers or not
+     * @param dx x speed
+     * @param dy y speed
+     * @return true or false
+     */
     public boolean checkColision(int dx, int dy) {
         int w = (getXPosition() + dx) / GameConstants.getCellWidth();
         int h = (getYPosition() + dy) / GameConstants.getCellHeight();
@@ -195,6 +313,10 @@ public abstract class CombatVehicle {
         return (int) (GameConstants.getEnemyFiringPeroid() / getActiveGun().getType().getSpeed());
     }
 
+    /**
+     * //todo
+     * @param SPEED
+     */
     public void update(int SPEED) {
         if (ifCanSee(GameLoop.getState().getTank())){
             if (distanceToVehicle(GameLoop.getState().getTank()) < GameConstants.getAmount()) {
@@ -212,7 +334,7 @@ public abstract class CombatVehicle {
         else {
             setSpeed(0);
         }
-        if (! checkColision(getSpeed(),getSpeed()) && isMobile) {
+        if (! checkColision(getSpeed(),getSpeed())) {
             setXPosition(getXPosition() + (int) ((double) getSpeed() * Math.cos(getGunAngle())));
             setYPosition(getYPosition() + (int) ((double) getSpeed() * -Math.sin(getGunAngle())));
         }

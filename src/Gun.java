@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ *
+ */
 public class Gun {
 
     private BufferedImage image;
@@ -14,6 +19,12 @@ public class Gun {
     private ArrayList<Bullet> bullets;
     private ArrayList<Bullet> movingBullets;
 
+    /**
+     * the constructor of the gun
+     * @param image the image of the gun
+     * @param numberOfBullets the number of bullets of the gun
+     * @param type the type of the gun
+     */
     public Gun(BufferedImage image, int numberOfBullets, Bullet type) {
         this.image = image;
         this.type = type;
@@ -31,22 +42,42 @@ public class Gun {
     }
 
 
+    /**
+     * to get the type of the gun
+     * @return the type
+     */
     public Bullet getType() {
         return type;
     }
 
+    /**
+     * to get moving bullets (bullets on the way)  of a gun
+     * @return moving bullets
+     */
     public ArrayList<Bullet> getMovingBullets() {
         return movingBullets;
     }
 
+    /**
+     * to get the image of the gun
+     * @return image of the gun
+     */
     public BufferedImage getImage() {
         return image;
     }
 
+    /**
+     * to get bullets of the gun
+     * @return the bullets
+     */
     public ArrayList<Bullet> getBullets() {
         return bullets;
     }
 
+    /**
+     * to check if the gun bullets are finished or not
+     * @return true or false
+     */
     public boolean isBulletsEmpty() {
         if (infinityBullets) {
             return false;
@@ -54,6 +85,10 @@ public class Gun {
         return bullets.isEmpty();
     }
 
+    /**
+     * to shoot
+     * @param theta the angle of shooting
+     */
     public void shoot(double theta) {
 
         if (! isBulletsEmpty()) {
@@ -77,6 +112,9 @@ public class Gun {
         }
     }
 
+    /**
+     * //todo
+     */
     public void update() {
         Iterator<Bullet> iter = movingBullets.iterator();
 

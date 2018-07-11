@@ -12,6 +12,11 @@ import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Random;
 
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ *
+ */
 public class GameFrame extends JFrame {
 
     private BufferStrategy bufferStrategy;

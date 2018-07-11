@@ -2,12 +2,21 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ * this class inherits the map cell
+ */
+
 public class SoftWallCell extends MapCell {
 
     private int health;
     private static final int DEFAULT_HEALTH = 40;
     private static final int NUMBER_OF_STATES = 4;
 
+    /**
+     * the constructor of the soft wall cell
+     */
     public SoftWallCell() {
         try {
             setImage(ImageIO.read(new File("res/images/map/softWallCell0.png")));
@@ -20,6 +29,10 @@ public class SoftWallCell extends MapCell {
         health = GameConstants.getSoftWallCellHealth();
     }
 
+    /**
+     * the soft wall cell is the only map cell can be destroyed
+     * @param bullet the bullet the bullet
+     */
     @Override
     public void destroy(Bullet bullet) {
         if (health > 0) {

@@ -1,3 +1,8 @@
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ *
+ */
 public class GameLoop implements Runnable{
 
 

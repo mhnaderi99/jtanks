@@ -1,6 +1,12 @@
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ *
+ */
+
 public class ThreadPool {
     private static ExecutorService executor;
 
