@@ -2,15 +2,21 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Random;
+
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ * this class inherits the combat vehicle
+ */
 
 public class SmallEnemyTank extends CombatVehicle {
 
     private static final int HEALTH = 30;
     private static final int SPEED = 3;
 
-
+    /**
+     * the constructor of small enemy tank
+     */
     public SmallEnemyTank() {
 
         setMobile(true);
@@ -30,6 +36,9 @@ public class SmallEnemyTank extends CombatVehicle {
         setSpeed(SPEED);
     }
 
+    /**
+     * //todo
+     */
     @Override
     public void update() {
         super.update(SPEED);
