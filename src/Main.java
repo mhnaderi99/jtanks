@@ -10,6 +10,11 @@ import java.awt.*;
 public class Main {
 
     public static void main(String[] args) {
+        MenuFrame menu = new MenuFrame("JTanks");
+        menu.start();
+        menu.initBufferstrategy();
+        menu.draw();
+        /*
         ThreadPool.init();
 
         EventQueue.invokeLater(new Runnable() {
@@ -26,6 +31,6 @@ public class Main {
                 //game.init();
                 ThreadPool.execute(game);
             }
-        });
+        });*/
     }
 }
