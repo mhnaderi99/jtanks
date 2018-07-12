@@ -98,5 +98,5 @@ public abstract class MapCell {
      * to destroy a map cell
      * @param bullet the bullet
      */
-    public abstract void destroy(Bullet bullet);
+    public abstract void destroy(Bullet bullet, int i, int j);
 }

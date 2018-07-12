@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * @author Mohammadhossein Naderi 9631815
@@ -30,6 +31,8 @@ public class GameConstants {
     private static final int BORDER_MARGIN = 10;
     private static final int HEALTH_CELLS = 5;
     private static final int ENEMY_TYPES = 4;
+    private static final int PRIZE_TYPES = 4;
+    private static final int PRIZE_CHANCE = 4;
 
     private static Gun cannon;
     private static Gun machineGun;
@@ -148,6 +151,10 @@ public class GameConstants {
 
     public static int getEnemyTypes() {
         return ENEMY_TYPES;
+    }
+
+    public static int getPrizeChance() {
+        return PRIZE_CHANCE;
     }
 
     public static BufferedImage getCannonNumber(boolean isGrayscale) {
@@ -335,6 +342,24 @@ public class GameConstants {
             return new MachineGunFood();
         }
         if (code == 8) {
+            return new ActiveGunUpgrade();
+        }
+        return null;
+    }
+
+    public static Prize randomPrize() {
+        int n = PRIZE_TYPES;
+        int rand = new Random().nextInt(n) + 1;
+        if (rand == 1) {
+            return new HealthPrize();
+        }
+        if (rand == 2) {
+            return new CannonFood();
+        }
+        if (rand == 3) {
+            return new MachineGunFood();
+        }
+        if (rand == 4) {
             return new ActiveGunUpgrade();
         }
         return null;

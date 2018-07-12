@@ -26,6 +26,9 @@ public class GameFrame extends JFrame {
         super(title);
         setResizable(false);
         setSize(GameConstants.getScreenWidth(), GameConstants.getScreenHeight());
+        setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+                new ImageIcon("res/images/ui/cursor.png").getImage(),
+                new Point(0,0),"cursor"));
     }
 
     /**

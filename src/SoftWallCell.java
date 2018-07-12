@@ -1,6 +1,7 @@
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * @author Mohammadhossein Naderi 9631815
@@ -34,7 +35,7 @@ public class SoftWallCell extends MapCell {
      * @param bullet the bullet the bullet
      */
     @Override
-    public void destroy(Bullet bullet) {
+    public void destroy(Bullet bullet, int i, int j) {
         if (health > 0) {
             health -= bullet.getDamage();
             AudioPlayer.playSound("softWallDamage.wav");
@@ -42,9 +43,14 @@ public class SoftWallCell extends MapCell {
             int index = (int) Math.ceil(h);
             index = NUMBER_OF_STATES - index;
             if (index == NUMBER_OF_STATES) {
+                Random random = new Random();
                 setBarrier(false);
                 setBarrierForBullet(false);
                 setTransparent(false);
+                if (random.nextInt(100) % GameConstants.getPrizeChance() == 0) {
+                    Prize prize = GameConstants.randomPrize();
+                    GameLoop.getState().getMap().placePrize(prize, i, j);
+                }
             }
             try {
                 setImage(ImageIO.read(new File("res/images/map/softWallCell" + index + ".png")));

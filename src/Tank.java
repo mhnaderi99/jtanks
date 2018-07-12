@@ -186,6 +186,12 @@ public class Tank extends CombatVehicle{
             Prize prize = iterator.next();
             if (checkPrize(prize)) {
                 prize.work(this);
+                if (prize instanceof CannonFood || prize instanceof MachineGunFood) {
+                    AudioPlayer.playSound("recosh.wav");
+                }
+                else {
+                    AudioPlayer.playSound("repair.wav");
+                }
                 iterator.remove();
             }
         }

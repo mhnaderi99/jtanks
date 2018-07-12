@@ -91,7 +91,7 @@ public abstract class Bullet {
                                 flag = true;
 
                                 if (GameLoop.getState().getMap().getMap()[i][j].isDestroyable()) {
-                                    GameLoop.getState().getMap().getMap()[i][j].destroy(this);
+                                    GameLoop.getState().getMap().getMap()[i][j].destroy(this, i, j);
                                     break;
                                 }
                             }

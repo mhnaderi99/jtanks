@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * @author Mohammadhossein Naderi 9631815
@@ -58,8 +59,13 @@ public class GameState {
         while (iterator.hasNext()) {
             CombatVehicle vehicle = iterator.next();
             if (! vehicle.isAlive()) {
-                iterator.remove();
                 GameLoop.getCanvas().render(this, true);
+                Random random = new Random();
+                if (random.nextInt(100) % GameConstants.getPrizeChance() == 0) {
+                    Prize prize = GameConstants.randomPrize();
+                    map.placePrize(prize, vehicle.getXPosition() / GameConstants.getCellWidth(), vehicle.getYPosition() / GameConstants.getCellHeight());
+                }
+                iterator.remove();
             }
             else {
                 vehicle.update();

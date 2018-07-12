@@ -29,7 +29,7 @@ public class TeazelCell extends MapCell {
      * @param bullet the bullet
      */
     @Override
-    public void destroy(Bullet bullet) {
+    public void destroy(Bullet bullet, int i, int j) {
 
     }
 }
