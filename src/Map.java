@@ -101,7 +101,12 @@ public class Map {
                         current = line.charAt(i);
                         int code = Character.getNumericValue(current);
                         if (code != 0) {
-                            placeEnemy(GameConstants.getEnemyByCode(code), x, y);
+                            if (code <= GameConstants.getEnemyTypes()) {
+                                placeEnemy(GameConstants.getEnemyByCode(code), x, y);
+                            }
+                            else {
+                                placePrize(GameConstants.getPrizeByCode(code), x, y);
+                            }
                         }
                     }
                     y++;
@@ -172,6 +177,26 @@ public class Map {
                 enemy.setXPosition(x*GameConstants.getCellWidth() + (GameConstants.getCellWidth() - enemy.getBody().getWidth()) / 2);
                 enemy.setYPosition(y*GameConstants.getCellHeight() + (GameConstants.getCellHeight() - enemy.getBody().getHeight()) / 2);
                 GameState.getEnemies().add(enemy);
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean placePrize(Prize prize, int x, int y) {
+        if (prize == null) {
+            return false;
+        }
+        if (x >= 0 && x <width &&  y>= 0 && y < height) {
+            if (! map[x][y].isBarrier()) {
+                prize.setXPosition(x*GameConstants.getCellWidth() + (GameConstants.getCellWidth() - prize.getImage().getWidth()) / 2);
+                prize.setYPosition(y*GameConstants.getCellHeight() + (GameConstants.getCellHeight() - prize.getImage().getHeight()) / 2);
+                GameState.getPrizes().add(prize);
                 return true;
             }
             else {

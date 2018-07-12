@@ -122,6 +122,7 @@ public abstract class Bullet {
                             p.y <= enemy.getYPosition() + enemy.getBody().getHeight()) {
                         flag = true;
                         enemy.setHealth(enemy.getHealth() - damage);
+
                         break;
                     }
                 }
@@ -139,7 +140,7 @@ public abstract class Bullet {
                 }
             }
             */
-            //GameLoop.getCanvas().render(GameLoop.getState(), true);
+            GameLoop.getCanvas().render(GameLoop.getState(), true);
         }
 
         if (x - xMargin >= GameConstants.getScreenWidth() || x - xMargin <= 0) {

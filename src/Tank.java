@@ -19,6 +19,7 @@ public class Tank extends CombatVehicle{
     private static final int SPEED = 2;
     private static final int DIAGONAL_SPEED = 2;
 
+    private Point direction;
     private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
     private boolean keyW, keyS, keyD, keyA;
     private KeyHandler keyHandler;
@@ -36,6 +37,7 @@ public class Tank extends CombatVehicle{
         }
         catch (IOException e) {}
 
+        direction = new Point(1,0);
         setGuns(new ArrayList<Gun>());
         getGuns().add(GameConstants.getCannon());
         getGuns().add(GameConstants.getMachineGun());
@@ -73,8 +75,25 @@ public class Tank extends CombatVehicle{
 
     }
 
+    public Point getDirection() {
+        return direction;
+    }
 
+    public boolean isKeyUP() {
+        return keyUP;
+    }
 
+    public boolean isKeyDOWN() {
+        return keyDOWN;
+    }
+
+    public boolean isKeyLEFT() {
+        return keyLEFT;
+    }
+
+    public boolean isKeyRIGHT() {
+        return keyRIGHT;
+    }
 
     /**
      * to get the key handler
@@ -162,6 +181,15 @@ public class Tank extends CombatVehicle{
             GameLoop.setGameOver(true);
         }
 
+        Iterator<Prize> iterator = GameState.getPrizes().iterator();
+        while (iterator.hasNext()) {
+            Prize prize = iterator.next();
+            if (checkPrize(prize)) {
+                prize.work(this);
+                iterator.remove();
+            }
+        }
+
         if (! checkColision(dx, dy)) {
             setXPosition(getXPosition() + dx);
             setYPosition(getYPosition() + dy);
@@ -246,15 +274,19 @@ public class Tank extends CombatVehicle{
             {
                 case KeyEvent.VK_UP:
                     keyUP = true;
+                    direction.setLocation(0, -1);
                     break;
                 case KeyEvent.VK_DOWN:
                     keyDOWN = true;
+                    direction.setLocation(0, 1);
                     break;
                 case KeyEvent.VK_LEFT:
                     keyLEFT = true;
+                    direction.setLocation(-1, 0);
                     break;
                 case KeyEvent.VK_RIGHT:
                     keyRIGHT = true;
+                    direction.setLocation(1, 0);
                     break;
                 case KeyEvent.VK_D:
                     keyD = true;

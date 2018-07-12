@@ -29,6 +29,7 @@ public class GameConstants {
     private static final int ENEMY_FIRING_ERROR = 0;
     private static final int BORDER_MARGIN = 10;
     private static final int HEALTH_CELLS = 5;
+    private static final int ENEMY_TYPES = 4;
 
     private static Gun cannon;
     private static Gun machineGun;
@@ -143,6 +144,10 @@ public class GameConstants {
 
     public static int getHealthCells() {
         return HEALTH_CELLS;
+    }
+
+    public static int getEnemyTypes() {
+        return ENEMY_TYPES;
     }
 
     public static BufferedImage getCannonNumber(boolean isGrayscale) {
@@ -316,6 +321,21 @@ public class GameConstants {
         }
         if (code == 4) {
             return new EnemyTank2();
+        }
+        return null;
+    }
+    public static Prize getPrizeByCode(int code) {
+        if (code == 5) {
+            return new HealthPrize();
+        }
+        if (code == 6) {
+            return new CannonFood();
+        }
+        if (code == 7) {
+            return new MachineGunFood();
+        }
+        if (code == 8) {
+            return new ActiveGunUpgrade();
         }
         return null;
     }

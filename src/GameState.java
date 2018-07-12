@@ -11,11 +11,13 @@ public class GameState {
 
     private Tank tank;
     private static ArrayList<CombatVehicle> enemies;
+    private static ArrayList<Prize> prizes;
     private Map map;
     private Point topLeftPoint;
 
     public GameState() {
         enemies = new ArrayList<CombatVehicle>();
+        prizes = new ArrayList<Prize>();
         map = new Map("res/maps/map1(27,27).txt");
 
         int width = (int)Math.ceil((double)GameConstants.getScreenWidth() / (double) GameConstants.getCellWidth());
@@ -25,6 +27,10 @@ public class GameState {
         topLeftPoint = new Point(x , Math.min(y + GameConstants.getScreenHeight() - GameLoop.getCanvas().getContentPane().getSize().height,
                 GameConstants.getCellHeight()*Map.getHeight() - GameConstants.getScreenHeight()));
         tank = new Tank();
+    }
+
+    public static ArrayList<Prize> getPrizes() {
+        return prizes;
     }
 
     public Map getMap() {

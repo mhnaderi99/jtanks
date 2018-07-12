@@ -309,6 +309,21 @@ public abstract class CombatVehicle {
         return false;
     }
 
+    public boolean checkPrize(Prize prize) {
+        ArrayList<Point> corners = new ArrayList<>();
+        corners.add(new Point(prize.getXPosition(), prize.getYPosition()));
+        corners.add(new Point(prize.getXPosition() + prize.getImage().getWidth(), prize.getYPosition()));
+        corners.add(new Point(prize.getXPosition() + prize.getImage().getWidth(), prize.getYPosition() + prize.getImage().getHeight()));
+        corners.add(new Point(prize.getXPosition(), prize.getYPosition() + prize.getImage().getHeight()));
+
+        for (Point p: corners) {
+            if (p.x >= getXPosition() && p.x <= getXPosition() + getBody().getWidth() && p.y >= getYPosition() && p.y <= getYPosition() + getBody().getHeight()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public int getPeriod() {
         return (int) (GameConstants.getEnemyFiringPeroid() / getActiveGun().getType().getSpeed());
     }

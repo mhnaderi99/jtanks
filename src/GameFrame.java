@@ -15,7 +15,6 @@ import java.util.Random;
 /**
  * @author Mohammadhossein Naderi 9631815
  * @author Mahsa Bazzaz 9631405
- *
  */
 public class GameFrame extends JFrame {
 
@@ -67,7 +66,7 @@ public class GameFrame extends JFrame {
                 // to make sure the strategy is validated
                 graphics = (Graphics2D) bufferStrategy.getDrawGraphics();
                 try {
-                    doRendering(graphics, state, isInitial);
+                    doRendering(state, isInitial);
                 } finally {
                     // Dispose the graphics
                     graphics.dispose();
@@ -88,7 +87,7 @@ public class GameFrame extends JFrame {
     /**
      * Rendering all game elements based on the game state.
      */
-    private void doRendering(Graphics2D g2d, GameState state, boolean isInitial) {
+    private void doRendering(GameState state, boolean isInitial) {
         // Draw background
         Map map = state.getMap();
         ArrayList<CombatVehicle> allVehicles = new ArrayList<CombatVehicle>(state.getEnemies());
@@ -107,19 +106,17 @@ public class GameFrame extends JFrame {
 
             for (int i = x1; i <= Math.min(x2, map.getWidth() - 1); i++) {
                 for (int j = y1; j <= Math.min(y2, map.getHeight() - 1); j++) {
-                    renderCell(i,j);
+                    renderCell(i, j);
                 }
             }
 
             for (CombatVehicle vehicle : allVehicles) {
-                g2d.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
+                graphics.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
                 AffineTransform transform = new AffineTransform();
                 transform.setToTranslation(vehicle.getXPosition() - ox + 17, vehicle.getYPosition() - oy + vehicle.getBody().getHeight() / 2 - vehicle.getActiveGun().getImage().getHeight() / 2);
-
                 double angle = -vehicle.getGunAngle();
-
                 transform.rotate(angle, vehicle.getActiveGun().getImage().getWidth() / 2 - 17, vehicle.getActiveGun().getImage().getHeight() / 2);
-                g2d.drawImage(vehicle.getActiveGun().getImage(), transform, this);
+                graphics.drawImage(vehicle.getActiveGun().getImage(), transform, this);
                 //renderDetails(g2d);
             }
             renderDetails();
@@ -166,29 +163,30 @@ public class GameFrame extends JFrame {
 
             for (Point p : refreshBackground) {
                 int i = p.x, j = p.y;
-               renderCell(i,j);
+                renderCell(i, j);
             }
 
             for (Point p : refreshForeGround) {
                 int i = p.x, j = p.y;
-                g2d.drawImage(GameConstants.getCellByCode(4).getImage(), GameConstants.getCellWidth() * i - ox, GameConstants.getCellHeight() * j - oy, this);
+                graphics.drawImage(GameConstants.getCellByCode(4).getImage(), GameConstants.getCellWidth() * i - ox, GameConstants.getCellHeight() * j - oy, this);
                 //renderDetails(g2d);
             }
         }
 
-        //Draw tanks
+        //Draw prizes
 
+        for (Prize prize: GameState.getPrizes()) {
+            graphics.drawImage(prize.getImage(), prize.getXPosition() - ox, prize.getYPosition() - oy, this);
+        }
+
+        //Draw tanks
         for (CombatVehicle vehicle : allVehicles) {
-            g2d.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
+            graphics.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
             AffineTransform transform = new AffineTransform();
             transform.setToTranslation(vehicle.getXPosition() - ox + 17, vehicle.getYPosition() - oy + vehicle.getBody().getHeight() / 2 - vehicle.getActiveGun().getImage().getHeight() / 2);
-
             double angle = -vehicle.getGunAngle();
-
             transform.rotate(angle, vehicle.getActiveGun().getImage().getWidth() / 2 - 17, vehicle.getActiveGun().getImage().getHeight() / 2);
-            g2d.drawImage(vehicle.getActiveGun().getImage(), transform, this);
-            //renderDetails(g2d);
-
+            graphics.drawImage(vehicle.getActiveGun().getImage(), transform, this);
             //Draw bullets
             for (Gun gun : vehicle.getGuns()) {
                 if (gun.getMovingBullets().size() != 0) {
@@ -201,7 +199,7 @@ public class GameFrame extends JFrame {
                                 AffineTransform bulletTransform = new AffineTransform();
                                 bulletTransform.setToTranslation(bullet.getX() - ox, bullet.getY() - oy);
                                 bulletTransform.rotate(bullet.getAngle());
-                                g2d.drawImage(bullet.image, bulletTransform, this);
+                                graphics.drawImage(bullet.image, bulletTransform, this);
                                 //renderDetails(g2d);
                             }
                         }
@@ -216,7 +214,7 @@ public class GameFrame extends JFrame {
         for (Point p : refreshForeGround) {
             int i = p.x, j = p.y;
 
-            g2d.drawImage(map.getMap()[i][j].getImage(), GameConstants.getCellWidth() * i - ox, GameConstants.getCellHeight() * j - oy, this);
+            graphics.drawImage(map.getMap()[i][j].getImage(), GameConstants.getCellWidth() * i - ox, GameConstants.getCellHeight() * j - oy, this);
             //
         }
 
@@ -233,8 +231,7 @@ public class GameFrame extends JFrame {
         boolean isCannonActive;
         if (GameLoop.getState().getTank().getGuns().get(0) == GameLoop.getState().getTank().getActiveGun()) {
             isCannonActive = true;
-        }
-        else {
+        } else {
             isCannonActive = false;
         }
 
@@ -255,8 +252,7 @@ public class GameFrame extends JFrame {
             graphics.drawImage(machineGun, GameConstants.getBorderMargin() + extraW, 2 * GameConstants.getBorderMargin() + cannon.getHeight() + extraH, null);
             graphics.setColor(Color.GRAY);
             graphics.drawString("" + machineGunNumber, GameConstants.getBorderMargin() + extraW, 2 * GameConstants.getBorderMargin() + extraH + machineGun.getHeight() + machineGun.getHeight());
-        }
-        else {
+        } else {
             cannon = GameConstants.getCannonNumber(true);
             machineGun = GameConstants.getMachineGunNumber(false);
             graphics.drawImage(cannon, GameConstants.getBorderMargin() + extraW, GameConstants.getBorderMargin() + extraH, null);
@@ -275,6 +271,7 @@ public class GameFrame extends JFrame {
         int dh = Tank.getDefaultHealth();
         int healthPercentage = (int) ((double) h / (double) dh * 100);
         int num = (int) Math.round((double) healthPercentage / ((double) 100 / (double) GameConstants.getHealthCells()));
+
         int mid = GameConstants.getHealthCells() / 2;
         for (int i = 0; i < GameConstants.getHealthCells(); i++) {
             BufferedImage image;
@@ -306,6 +303,10 @@ public class GameFrame extends JFrame {
         }
         graphics.drawImage(GameLoop.getState().getMap().getMap()[x][y].getImage(), x * GameConstants.getCellWidth() - ox, y * GameConstants.getCellHeight() - oy, this);
         //renderDetails(g2d);
+    }
+
+    public void renderTanks() {
+
     }
 
 }
