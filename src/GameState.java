@@ -18,7 +18,6 @@ public class GameState {
     private Point topLeftPoint;
 
     public GameState() {
-        tank2 = null;
         enemies = new ArrayList<CombatVehicle>();
         prizes = new ArrayList<Prize>();
         map = new Map("res/maps/map1(27,27).txt");
@@ -29,7 +28,8 @@ public class GameState {
         int y = Math.max(0, map.getStartPoint().y - height/2) * GameConstants.getCellHeight();
         topLeftPoint = new Point(x , Math.min(y + GameConstants.getScreenHeight() - GameLoop.getCanvas().getContentPane().getSize().height,
                 GameConstants.getCellHeight()*Map.getHeight() - GameConstants.getScreenHeight()));
-        tank = new Tank();
+        tank = new Tank(true);
+        tank2 = new Tank(false);
     }
 
     public static ArrayList<Prize> getPrizes() {
@@ -66,10 +66,13 @@ public class GameState {
             GameLoop.setGameOver(true);
         }
         tank.update();
+        if (GameLoop.isMultiplayer()) {
+            tank2.update();
+        }
         while (iterator.hasNext()) {
             CombatVehicle vehicle = iterator.next();
             if (! vehicle.isAlive()) {
-                Random random = new Random();
+                Random random = GameConstants.getRandom();
                 if (random.nextInt(100) % GameConstants.getPrizeChance() == 0) {
                     Prize prize = GameConstants.randomPrize();
                     map.placePrize(prize, vehicle.getXPosition() / GameConstants.getCellWidth(), vehicle.getYPosition() / GameConstants.getCellHeight());

@@ -97,7 +97,6 @@ public class Gun implements Serializable {
      * @param theta the angle of shooting
      */
     public void shoot(double theta) {
-
         if (! isBulletsEmpty()) {
             if (infinityBullets) {
                 if (bullets.isEmpty()) {
@@ -117,6 +116,10 @@ public class Gun implements Serializable {
         else {
             AudioPlayer.playSound("emptyGun.wav");
         }
+    }
+
+    public void setMovingBullets(ArrayList<Bullet> movingBullets) {
+        this.movingBullets = movingBullets;
     }
 
     /**

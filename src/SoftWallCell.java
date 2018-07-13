@@ -48,7 +48,7 @@ public class SoftWallCell extends MapCell {
             int index = (int) Math.ceil(h);
             index = NUMBER_OF_STATES - index;
             if (index == NUMBER_OF_STATES) {
-                Random random = new Random();
+                Random random = GameConstants.getRandom();
                 setBarrier(false);
                 setBarrierForBullet(false);
                 setTransparent(false);

@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="JTanks:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/JTanks_jar</output-path>
+    <root id="archive" name="JTanks.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$USER_HOME$/Desktop/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="JTanks" />
+    </root>
+  </artifact>
+</component>

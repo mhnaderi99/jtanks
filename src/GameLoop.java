@@ -13,12 +13,27 @@ public class GameLoop implements Runnable{
 
     private static GameFrame canvas;
     private static boolean gameOver = false;
+    private static boolean multiplayer = false;
+    private static int mode;
 
     private static GameState state;
 
-    public GameLoop(GameFrame frame, int mode) {
+    public GameLoop(GameFrame frame, int mod) {
         canvas = frame;
-        init(mode);
+        init(mod);
+        mode = mod;
+    }
+
+    public static int getMode() {
+        return mode;
+    }
+
+    public static void setMultiplayer(boolean multiplayer) {
+        GameLoop.multiplayer = multiplayer;
+    }
+
+    public static boolean isMultiplayer() {
+        return multiplayer;
     }
 
     public static boolean isGameOver() {
@@ -33,13 +48,14 @@ public class GameLoop implements Runnable{
         canvas.addMouseListener(tank.getMouseHandler());
         ExecutorService service = Executors.newFixedThreadPool(2);
         if (mode == 1) {
-            //new Server(2018).run();
+            setMultiplayer(true);
             service.execute(new Server(2018));
         }
         if (mode == 2) {
-            //new Client("127.0.0.1", 2018).run();
-            service.execute(new Client("127.0.0.1", 2018));
+            setMultiplayer(true);
+            service.execute(new Client("localhost", 2018));
         }
+
         service.execute(this);
     }
 

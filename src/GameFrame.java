@@ -96,10 +96,8 @@ public class GameFrame extends JFrame {
         ArrayList<CombatVehicle> allVehicles = new ArrayList<CombatVehicle>(state.getEnemies());
         Tank tank = state.getTank();
         allVehicles.add(tank);
-        if (state.getTank2() != null) {
-            if (state.getTank2().getBody() != null) {
-                allVehicles.add(state.getTank2());
-            }
+        if (GameLoop.isMultiplayer() && GameLoop.getState().getTank2() != null) {
+            allVehicles.add(state.getTank2());
         }
 
         int ox = state.getTopLeftPoint().x;
@@ -119,13 +117,15 @@ public class GameFrame extends JFrame {
             }
 
             for (CombatVehicle vehicle : allVehicles) {
-                graphics.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
-                AffineTransform transform = new AffineTransform();
-                transform.setToTranslation(vehicle.getXPosition() - ox + 17, vehicle.getYPosition() - oy + vehicle.getBody().getHeight() / 2 - vehicle.getActiveGun().getImage().getHeight() / 2);
-                double angle = -vehicle.getGunAngle();
-                transform.rotate(angle, vehicle.getActiveGun().getImage().getWidth() / 2 - 17, vehicle.getActiveGun().getImage().getHeight() / 2);
-                graphics.drawImage(vehicle.getActiveGun().getImage(), transform, this);
-                //renderDetails(g2d);
+                if (vehicle.isInScreenBounds()) {
+                    graphics.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
+                    AffineTransform transform = new AffineTransform();
+                    transform.setToTranslation(vehicle.getXPosition() - ox + 17, vehicle.getYPosition() - oy + vehicle.getBody().getHeight() / 2 - vehicle.getActiveGun().getImage().getHeight() / 2);
+                    double angle = -vehicle.getGunAngle();
+                    transform.rotate(angle, vehicle.getActiveGun().getImage().getWidth() / 2 - 17, vehicle.getActiveGun().getImage().getHeight() / 2);
+                    graphics.drawImage(vehicle.getActiveGun().getImage(), transform, this);
+                    //renderDetails(g2d);
+                }
             }
             renderDetails();
             renderPrizes();
@@ -188,21 +188,23 @@ public class GameFrame extends JFrame {
 
         //Draw tanks
         for (CombatVehicle vehicle : allVehicles) {
-            if (vehicle.getBody() == null) {
-                return;
+            if (vehicle.isInScreenBounds()) {
+                graphics.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
+                AffineTransform transform = new AffineTransform();
+                transform.setToTranslation(vehicle.getXPosition() - ox + 17, vehicle.getYPosition() - oy + vehicle.getBody().getHeight() / 2 - vehicle.getActiveGun().getImage().getHeight() / 2);
+                double angle = -vehicle.getGunAngle();
+                transform.rotate(angle, vehicle.getActiveGun().getImage().getWidth() / 2 - 17, vehicle.getActiveGun().getImage().getHeight() / 2);
+                graphics.drawImage(vehicle.getActiveGun().getImage(), transform, this);
             }
-            graphics.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
-            AffineTransform transform = new AffineTransform();
-            transform.setToTranslation(vehicle.getXPosition() - ox + 17, vehicle.getYPosition() - oy + vehicle.getBody().getHeight() / 2 - vehicle.getActiveGun().getImage().getHeight() / 2);
-            double angle = -vehicle.getGunAngle();
-            transform.rotate(angle, vehicle.getActiveGun().getImage().getWidth() / 2 - 17, vehicle.getActiveGun().getImage().getHeight() / 2);
-            graphics.drawImage(vehicle.getActiveGun().getImage(), transform, this);
             //Draw bullets
             for (Gun gun : vehicle.getGuns()) {
                 if (gun.getMovingBullets().size() != 0) {
                     try {
                         for (Bullet bullet : gun.getMovingBullets()) {
                             if (bullet.isShoot() && !bullet.isOnTheWay()) {
+                                continue;
+                            }
+                            if (! bullet.isInScreenBounds()) {
                                 continue;
                             }
                             if (bullet.isShoot() && bullet.isOnTheWay()) {

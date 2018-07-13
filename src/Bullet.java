@@ -102,16 +102,32 @@ public abstract class Bullet implements Serializable{
             }
         }
 
+        ArrayList<Tank> tanks = new ArrayList<>();
+
+        if (GameLoop.getMode() == 1) {
+            tanks.add(GameLoop.getState().getTank());
+            tanks.add(GameLoop.getState().getTank2());
+        }
+        else if(GameLoop.getMode() == 2) {
+            tanks.add(GameLoop.getState().getTank2());
+            tanks.add(GameLoop.getState().getTank());
+        }
+        else {
+            tanks.add(GameLoop.getState().getTank());
+        }
+
         if (isEnemyBullet) {
-            for (Point p : corners) {
-                if (p.x >= GameLoop.getState().getTank().getXPosition() &&
-                        p.x <= GameLoop.getState().getTank().getXPosition() + GameLoop.getState().getTank().getBody().getWidth() &&
-                        p.y >= GameLoop.getState().getTank().getYPosition() &&
-                        p.y <= GameLoop.getState().getTank().getYPosition() + GameLoop.getState().getTank().getBody().getHeight()) {
-                    flag = true;
-                    AudioPlayer.playSound("enemyBulletToMyTank.wav");
-                    GameLoop.getState().getTank().setHealth(GameLoop.getState().getTank().getHealth() - damage);
-                    break;
+            for (Tank tank : tanks) {
+                for (Point p : corners) {
+                    if (p.x >= tank.getXPosition() &&
+                            p.x <= tank.getXPosition() + tank.getBody().getWidth() &&
+                            p.y >= tank.getYPosition() &&
+                            p.y <= tank.getYPosition() + tank.getBody().getHeight()) {
+                        flag = true;
+                        AudioPlayer.playSound("enemyBulletToMyTank.wav");
+                        tank.setHealth(GameLoop.getState().getTank().getHealth() - damage);
+                        break;
+                    }
                 }
             }
         } else {
@@ -419,4 +435,25 @@ public abstract class Bullet implements Serializable{
      * @return the bullet
      */
     public abstract Bullet getBullet();
+
+    public boolean isInScreenBounds() {
+        if (getX() + image.getWidth() - GameLoop.getState().getTopLeftPoint().x >= 0 &&
+                getX() - GameLoop.getState().getTopLeftPoint().x <= GameConstants.getScreenWidth() &&
+                getY() + image.getHeight() - GameLoop.getState().getTopLeftPoint().y >= 0 &&
+                getY() - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenHeight()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public int getIndex() {
+        if (this instanceof CannonBullet) {
+            return 0;
+        }
+        if (this instanceof MachineGunBullet) {
+            return 1;
+        }
+        return 0;
+    }
 }

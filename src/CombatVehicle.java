@@ -227,7 +227,28 @@ public abstract class CombatVehicle implements Serializable{
      * @param theta the angle of the gun
      */
     public void shoot(double theta) {
+        if (! isEnemy) {
+            Tank tank = (Tank) this;
+            if (tank == GameLoop.getState().getTank() && GameLoop.isMultiplayer()) {
+                double angle = (double)(((int)(theta * Math.pow(10,4))) / Math.pow(10,4));
+                String message = "" + angle;
+                sendShoot(message);
+            }
+        }
         getActiveGun().shoot(theta);
+    }
+
+    private void sendShoot(String message) {
+        String pre = "S-";
+        String sender = "";
+        if (GameLoop.getMode() == 1) {
+            sender = "SERVER-";
+            ClientHandler.writeOnStream(sender + pre + message);
+        }
+        if (GameLoop.getMode() == 2) {
+            sender = "CLIENT-";
+            Client.writeOnStream(sender + pre + message);
+        }
     }
 
     /**
@@ -334,22 +355,38 @@ public abstract class CombatVehicle implements Serializable{
      * @param SPEED
      */
     public void update(int SPEED) {
-        if (ifCanSee(GameLoop.getState().getTank())){
-            if (distanceToVehicle(GameLoop.getState().getTank()) < GameConstants.getAmount()) {
-                setSpeed(0);
-            }
-            else {
-                setSpeed(SPEED);
-            }
-            setGunAngle(Tank.findAngle(GameLoop.getState().getTank().getXPosition() - GameLoop.getState().getTopLeftPoint().x + GameLoop.getState().getTank().getBody().getWidth() / 2,
-                    GameLoop.getState().getTank().getYPosition() - GameLoop.getState().getTopLeftPoint().y + GameLoop.getState().getTank().getBody().getHeight() / 2,
-                    getXPosition() - GameLoop.getState().getTopLeftPoint().x + getBody().getWidth()/2,
-                    getYPosition() - GameLoop.getState().getTopLeftPoint().y + getBody().getHeight()/2, GameConstants.getEnemyFiringError()));
+        ArrayList<Tank> tanks = new ArrayList<>();
 
+        if (GameLoop.getMode() == 1) {
+            tanks.add(GameLoop.getState().getTank());
+            tanks.add(GameLoop.getState().getTank2());
+        }
+        else if(GameLoop.getMode() == 2) {
+            tanks.add(GameLoop.getState().getTank2());
+            tanks.add(GameLoop.getState().getTank());
         }
         else {
-            setSpeed(0);
+            tanks.add(GameLoop.getState().getTank());
         }
+
+        for (Tank tank: tanks) {
+            if (ifCanSee(tank)) {
+                if (distanceToVehicle(tank) < GameConstants.getAmount()) {
+                    setSpeed(0);
+                }
+                else {
+                    setSpeed(SPEED);
+                }
+                setGunAngle(Tank.findAngle(tank.getXPosition() - GameLoop.getState().getTopLeftPoint().x + tank.getBody().getWidth() / 2,
+                        tank.getYPosition() - GameLoop.getState().getTopLeftPoint().y + tank.getBody().getHeight() / 2,
+                        getXPosition() - GameLoop.getState().getTopLeftPoint().x + getBody().getWidth() / 2,
+                        getYPosition() - GameLoop.getState().getTopLeftPoint().y + getBody().getHeight() / 2, GameConstants.getEnemyFiringError()));
+                break;
+            } else {
+                setSpeed(0);
+            }
+        }
+
         if (! checkColision(getSpeed(),getSpeed())) {
             setXPosition(getXPosition() + (int) ((double) getSpeed() * Math.cos(getGunAngle())));
             setYPosition(getYPosition() + (int) ((double) getSpeed() * -Math.sin(getGunAngle())));
@@ -365,10 +402,13 @@ public abstract class CombatVehicle implements Serializable{
                 }
             }
         }
-        if (isInScreenBounds() && GameLoop.getState().getTank().isInScreenBounds() && ifCanSee(GameLoop.getState().getTank())) {
-            int r = new Random().nextInt(Integer.MAX_VALUE);
-            if (r % getPeriod() == 0) {
-                getActiveGun().shoot(getGunAngle());
+        for (Tank tank : tanks) {
+            if (isInScreenBounds() && tank.isInScreenBounds() && ifCanSee(tank)) {
+                int r = GameConstants.getRandom().nextInt(Integer.MAX_VALUE);
+                if (r % getPeriod() == 0) {
+                    getActiveGun().shoot(getGunAngle());
+                    break;
+                }
             }
         }
         for (Gun gun : getGuns()) {

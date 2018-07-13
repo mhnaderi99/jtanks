@@ -20,17 +20,19 @@ public class Tank extends CombatVehicle implements Serializable{
     private static final int SPEED = 2;
     private static final int DIAGONAL_SPEED = 2;
     private int activeGunIndex = 0;
+    private boolean isPlayer;
 
-    private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
-    private boolean keyW, keyS, keyD, keyA;
+    private transient boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
+    private transient boolean keyW, keyS, keyD, keyA;
     private transient KeyHandler keyHandler;
     private transient MouseHandler mouseHandler;
 
     /**
      * the constructor of the tank
      */
-    public Tank() {
+    public Tank(boolean isPlayer) {
         setMobile(true);
+        setPlayer(isPlayer);
         setHealth(HEALTH);
         setEnemy(false);
         try {
@@ -53,6 +55,30 @@ public class Tank extends CombatVehicle implements Serializable{
     }
 
 
+    public boolean isPlayer() {
+        return isPlayer;
+    }
+
+    public void setPlayer(boolean player) {
+        isPlayer = player;
+    }
+
+    public void setKeyUP(boolean keyUP) {
+        this.keyUP = keyUP;
+    }
+
+    public void setKeyDOWN(boolean keyDOWN) {
+        this.keyDOWN = keyDOWN;
+    }
+
+    public void setKeyLEFT(boolean keyLEFT) {
+        this.keyLEFT = keyLEFT;
+    }
+
+    public void setKeyRIGHT(boolean keyRIGHT) {
+        this.keyRIGHT = keyRIGHT;
+    }
+
     public static int getHEALTH() {
         return HEALTH;
     }
@@ -64,7 +90,7 @@ public class Tank extends CombatVehicle implements Serializable{
     /**
      * to switch gun
      */
-    public void switchGun(){
+    public void switchGun(boolean shouldBeSent){
         int i = getGuns().indexOf(getActiveGun());
         if(i < getGuns().size() - 1){
             i++;
@@ -76,7 +102,54 @@ public class Tank extends CombatVehicle implements Serializable{
         activeGunIndex = i;
         int x = GameLoop.getState().getTopLeftPoint().x / GameConstants.getCellWidth();
         int y = GameLoop.getState().getTopLeftPoint().y / GameConstants.getCellHeight();
-        update();
+        //update();
+        if (shouldBeSent) {
+            sendSwitchGun();
+        }
+        //send switch gun
+
+    }
+
+    private void sendSwitchGun() {
+        String message = "SW";
+        String sender = "";
+        if (GameLoop.getMode() == 1) {
+            sender = "SERVER-";
+            ClientHandler.writeOnStream(sender + message);
+        }
+        if (GameLoop.getMode() == 2) {
+            sender = "CLIENT-";
+            Client.writeOnStream(sender + message);
+        }
+    }
+
+    private void sendKeyboard(String message) {
+        String pre = "KB-";
+        String sender = "";
+        if (GameLoop.getMode() == 1) {
+            sender = "SERVER-";
+            ClientHandler.writeOnStream(sender + pre + message);
+        }
+        if (GameLoop.getMode() == 2) {
+            sender = "CLIENT-";
+            Client.writeOnStream(sender + pre + message);
+        }
+    }
+
+    private void sendAngle(String message) {
+        String pre = "M-";
+        String sender = "";
+        if (GameLoop.getMode() == 1) {
+            sender = "SERVER-";
+            ClientHandler.writeOnStream(sender + pre + message);
+        }
+        if (GameLoop.getMode() == 2) {
+            sender = "CLIENT-";
+            Client.writeOnStream(sender + pre + message);
+        }
+    }
+
+    private void setShoot(String message) {
 
     }
 
@@ -121,10 +194,16 @@ public class Tank extends CombatVehicle implements Serializable{
      */
     @Override
     public void update() {
-        setGunAngle(findAngle(MouseInfo.getPointerInfo().getLocation().x - GameLoop.getXOfCanvas(),
-                MouseInfo.getPointerInfo().getLocation().y - GameLoop.getYOfCanvas(),
-                getXPosition() - GameLoop.getState().getTopLeftPoint().x + getBody().getWidth()/2,
-                getYPosition() - GameLoop.getState().getTopLeftPoint().y + getBody().getHeight()/2, 0));
+        if (this == GameLoop.getState().getTank()) {
+            setGunAngle(findAngle(MouseInfo.getPointerInfo().getLocation().x - GameLoop.getXOfCanvas(),
+                    MouseInfo.getPointerInfo().getLocation().y - GameLoop.getYOfCanvas(),
+                    getXPosition() - GameLoop.getState().getTopLeftPoint().x + getBody().getWidth() / 2,
+                    getYPosition() - GameLoop.getState().getTopLeftPoint().y + getBody().getHeight() / 2, 0));
+        }
+        else if (GameLoop.isMultiplayer()){
+        }
+        //send gunAngle
+
 
         for (Gun gun: getGuns()) {
             Iterator<Bullet> iter = gun.getBullets().iterator();
@@ -207,20 +286,24 @@ public class Tank extends CombatVehicle implements Serializable{
         }
         //GameLoop.getState().getMap().changeView(horizontalMove,verticalMove);
 
-        if (getXPosition() - GameLoop.getState().getTopLeftPoint().x <= GameConstants.getScreenWidth() / GameConstants.getNum()) {
-            GameLoop.getState().getMap().changeView(-1,0);
+        if (this == GameLoop.getState().getTank()) {
+            if (getXPosition() - GameLoop.getState().getTopLeftPoint().x <= GameConstants.getScreenWidth() / GameConstants.getNum()) {
+                GameLoop.getState().getMap().changeView(-1, 0);
+            }
+
+            if (getXPosition() + getBody().getWidth() - GameLoop.getState().getTopLeftPoint().x > GameConstants.getScreenWidth() * (GameConstants.getNum() - 1) / GameConstants.getNum()) {
+                GameLoop.getState().getMap().changeView(1, 0);
+            }
+            if (getYPosition() - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenHeight() / GameConstants.getNum()) {
+                GameLoop.getState().getMap().changeView(0, -1);
+            }
+
+            if (getYPosition() + getBody().getHeight() - GameLoop.getState().getTopLeftPoint().y > GameConstants.getScreenHeight() * (GameConstants.getNum() - 1) / GameConstants.getNum()) {
+                GameLoop.getState().getMap().changeView(0, 1);
+            }
         }
 
-        if (getXPosition() + getBody().getWidth() - GameLoop.getState().getTopLeftPoint().x > GameConstants.getScreenWidth() * (GameConstants.getNum() -1) / GameConstants.getNum()) {
-            GameLoop.getState().getMap().changeView(1,0);
-        }
-        if (getYPosition() - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenHeight() / GameConstants.getNum()) {
-            GameLoop.getState().getMap().changeView(0,-1);
-        }
-
-        if (getYPosition() + getBody().getHeight() - GameLoop.getState().getTopLeftPoint().y > GameConstants.getScreenHeight() * (GameConstants.getNum() - 1) / GameConstants.getNum()) {
-            GameLoop.getState().getMap().changeView(0,1);
-        }
+        //send position
 
         /*XPosition = Math.max(XPosition, 0);
         XPosition = Math.min(XPosition, GameConstants.getScreenWidth() - body.getWidth());
@@ -280,20 +363,28 @@ public class Tank extends CombatVehicle implements Serializable{
 
         @Override
         public void keyPressed(KeyEvent e) {
-
+            String u, d, l, r;
+            u = keyUP ? "1" : "0";
+            d = keyDOWN ? "1" : "0";
+            l = keyLEFT ? "1" : "0";
+            r = keyRIGHT ? "1" : "0";
             switch (e.getKeyCode())
             {
                 case KeyEvent.VK_UP:
                     keyUP = true;
+                    u = "1";
                     break;
                 case KeyEvent.VK_DOWN:
                     keyDOWN = true;
+                    d = "1";
                     break;
                 case KeyEvent.VK_LEFT:
                     keyLEFT = true;
+                    l = "1";
                     break;
                 case KeyEvent.VK_RIGHT:
                     keyRIGHT = true;
+                    r = "1";
                     break;
                 case KeyEvent.VK_D:
                     keyD = true;
@@ -308,23 +399,35 @@ public class Tank extends CombatVehicle implements Serializable{
                     keyW = true;
                     break;
             }
+            String message = u + d + l + r;
+            sendKeyboard(message);
+
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
+            String u = "", d = "", l = "", r = "";
+            u = keyUP ? "1" : "0";
+            d = keyDOWN ? "1" : "0";
+            l = keyLEFT ? "1" : "0";
+            r = keyRIGHT ? "1" : "0";
             switch (e.getKeyCode())
             {
                 case KeyEvent.VK_UP:
                     keyUP = false;
+                    u = "0";
                     break;
                 case KeyEvent.VK_DOWN:
                     keyDOWN = false;
+                    d = "0";
                     break;
                 case KeyEvent.VK_LEFT:
                     keyLEFT = false;
+                    l = "0";
                     break;
                 case KeyEvent.VK_RIGHT:
                     keyRIGHT = false;
+                    r = "0";
                     break;
                 case KeyEvent.VK_A:
                     keyA = false;
@@ -339,6 +442,8 @@ public class Tank extends CombatVehicle implements Serializable{
                     keyW = false;
                     break;
             }
+            String message = u + d + l + r;
+            sendKeyboard(message);
         }
     }
 
@@ -379,7 +484,7 @@ public class Tank extends CombatVehicle implements Serializable{
                 timer.scheduleAtFixedRate(task, 0, getActiveGun().getType().getReloadPeriod());
             }
             if (e.getButton() == 3) {
-                switchGun();
+                switchGun(true);
                 update();
             }
         }
@@ -400,9 +505,13 @@ public class Tank extends CombatVehicle implements Serializable{
         public void mouseMoved(MouseEvent e) {
             int x = e.getX();
             int y = e.getY();
-            setGunAngle(findAngle(x,y,
+            double theta = findAngle(x,y,
                     getXPosition() - GameLoop.getState().getTopLeftPoint().x + getBody().getWidth()/2,
-                    getYPosition() - GameLoop.getState().getTopLeftPoint().y + getBody().getHeight()/2, 0));
+                    getYPosition() - GameLoop.getState().getTopLeftPoint().y + getBody().getHeight()/2, 0);
+            setGunAngle(theta);
+            theta = (double)(((int)(theta * Math.pow(10,4))) / Math.pow(10,4));
+            String message = "" + theta;
+            sendAngle(message);
         }
     }
 

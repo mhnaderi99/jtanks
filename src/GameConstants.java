@@ -33,6 +33,7 @@ public class GameConstants {
     private static final int ENEMY_TYPES = 4;
     private static final int PRIZE_TYPES = 4;
     private static final int PRIZE_CHANCE = 4;
+    private static final Random random = new Random(2018);
 
     private static Gun cannon;
     private static Gun machineGun;
@@ -155,6 +156,10 @@ public class GameConstants {
 
     public static int getPrizeChance() {
         return PRIZE_CHANCE;
+    }
+
+    public static Random getRandom() {
+        return random;
     }
 
     public static BufferedImage getTankBody() {
