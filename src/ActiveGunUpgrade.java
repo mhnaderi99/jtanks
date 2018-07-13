@@ -4,8 +4,8 @@ import java.io.IOException;
 
 public class ActiveGunUpgrade extends Prize{
 
-    private static final int SPEED_UPGRADE = 2;
-    private static final int DAMAGE_UPGRADE = 2;
+    private static final int SPEED_UPGRADE = 5;
+    private static final int DAMAGE_UPGRADE = 5;
 
     public ActiveGunUpgrade() {
         try {
@@ -16,7 +16,11 @@ public class ActiveGunUpgrade extends Prize{
 
     @Override
     public void work(CombatVehicle vehicle) {
-        vehicle.getActiveGun().getType().setSpeed(vehicle.getActiveGun().getType().getSpeed() + SPEED_UPGRADE);
-        vehicle.getActiveGun().getType().setDamage(vehicle.getActiveGun().getType().getDamage() + DAMAGE_UPGRADE);
+        for(Bullet bullet: vehicle.getActiveGun().getBullets()) {
+            bullet.setSpeed(bullet.getSpeed() + SPEED_UPGRADE);
+            bullet.setDamage(bullet.getDamage() + DAMAGE_UPGRADE);
+        }
+        vehicle.getActiveGun().getType().getBullet().setSpeed(vehicle.getActiveGun().getType().getBullet().getSpeed() + SPEED_UPGRADE);
+        vehicle.getActiveGun().getType().getBullet().setDamage(vehicle.getActiveGun().getType().getBullet().getDamage() + DAMAGE_UPGRADE);
     }
 }

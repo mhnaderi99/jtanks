@@ -36,10 +36,15 @@ public class SoftWallCell extends MapCell {
      */
     @Override
     public void destroy(Bullet bullet, int i, int j) {
+
         if (health > 0) {
             health -= bullet.getDamage();
+            health = Math.max(health, 0);
             AudioPlayer.playSound("softWallDamage.wav");
             double h = (double) health / (double) (DEFAULT_HEALTH / NUMBER_OF_STATES);
+            if (health < 0) {
+
+            }
             int index = (int) Math.ceil(h);
             index = NUMBER_OF_STATES - index;
             if (index == NUMBER_OF_STATES) {
@@ -57,6 +62,8 @@ public class SoftWallCell extends MapCell {
                 GameLoop.getCanvas().render(GameLoop.getState(), true);
             } catch (IOException e) {
             }
+        }
+        else {
         }
     }
 }

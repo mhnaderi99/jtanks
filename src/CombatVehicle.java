@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
@@ -10,11 +11,11 @@ import java.util.Random;
  *
  */
 
-public abstract class CombatVehicle {
+public abstract class CombatVehicle implements Serializable{
 
     private int health;
     private boolean isMobile;
-    private BufferedImage body;
+    private transient BufferedImage body;
     private ArrayList<Gun> guns;
     private Gun activeGun;
     private double gunAngle;

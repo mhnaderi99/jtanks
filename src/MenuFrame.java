@@ -7,6 +7,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.ServerSocket;
 
 public class MenuFrame extends JFrame{
 
@@ -16,11 +17,18 @@ public class MenuFrame extends JFrame{
     private BufferedImage easy;
     private BufferedImage normal;
     private BufferedImage hard;
+    private BufferedImage single;
+    private BufferedImage multi;
+    private BufferedImage create;
+    private BufferedImage join;
     private BufferedImage mh;
+    private boolean flag = true;
+    private int difficulty;
+    private boolean isMultiplayer = false;
+    private boolean isJoin = false;
 
 
     private MouseHandler handler;
-
 
     public MenuFrame(String title) {
         super(title);
@@ -61,9 +69,21 @@ public class MenuFrame extends JFrame{
         int extraW = GameConstants.getScreenWidth() - getContentPane().getSize().width;
         int extraH = GameConstants.getScreenHeight() - getContentPane().getSize().height;
         g2d.drawImage(background, 0,0, this);
-        g2d.drawImage(easy, 100, 250, this);
-        g2d.drawImage(normal, 90, 310, this);
-        g2d.drawImage(hard, 100, 370, this);
+        if (flag) {
+            g2d.drawImage(easy, 100, 250, this);
+            g2d.drawImage(normal, 90, 310, this);
+            g2d.drawImage(hard, 100, 370, this);
+        }
+        else if(! isMultiplayer){
+            g2d.drawImage(single, 40, 300, this);
+            g2d.drawImage(multi, 40, 360, this);
+        }
+        else {
+            //232,40
+            //184,40
+            g2d.drawImage(create, 40,300, this);
+            g2d.drawImage(join, 40,350, this);
+        }
         g2d.drawImage(mh, 300, 510, this);
 
     }
@@ -71,7 +91,9 @@ public class MenuFrame extends JFrame{
     private void initImages() {
         try {
             background = ImageIO.read(new File("res/images/menu/startup.png"));
-            drawButtons("1", "1", "1");
+            drawDiffButtons("1", "1", "1");
+            drawSingleMulti("1", "1");
+            drawCreateJoin("1", "1");
             mh = ImageIO.read(new File("res/images/menu/mh.jpg"));
 
         }
@@ -88,63 +110,176 @@ public class MenuFrame extends JFrame{
         public void mouseMoved(MouseEvent e) {
             int x = e.getX();
             int y = e.getY();
-            String e1 = "1", n = "1", h = "1";
-            if (isInBoundsOfEasy(x, y)) {
-                e1 = "2";
+            if (flag) {
+                String e1 = "1", n = "1", h = "1";
+                if (isInBoundsOfEasy(x, y)) {
+                    e1 = "2";
+                } else if (isInBoundsOfNormal(x, y)) {
+                    n = "2";
+                } else if (isInBoundsOfHard(x, y)) {
+                    h = "2";
+                }
+                drawDiffButtons(e1, n, h);
             }
-            else if (isInBoundsOfNormal(x, y)) {
-                n = "2";
+            else if (! isMultiplayer){
+                String s = "1", m = "1";
+                if (isInBoundsOfSingle(x, y)) {
+                    s = "2";
+                }
+                else if (isInBoundsOfMulti(x,y)) {
+                    m = "2";
+                }
+                drawSingleMulti(s,m);
             }
-            else if (isInBoundsOfHard(x, y)) {
-                h = "2";
+            else {
+                String c = "1", j = "1";
+                if (isInBoundsOfCreate(x, y)) {
+                    c = "2";
+                }
+                else if (isInBoundsOfJoin(x, y)) {
+                    j = "2";
+                }
+                drawCreateJoin(c,j);
             }
-            drawButtons(e1,n,h);
             draw();
         }
 
         @Override
         public void mouseClicked(MouseEvent e) {
             int x = e.getX(), y = e.getY();
-            int difficulty = 1;
-            String e1 = "1", n = "1", h = "1";
-            if (isInBoundsOfEasy(x, y)) {
-                e1 = "3";
+            if (flag) {
+                difficulty = 1;
+                boolean f = true;
+                String e1 = "1", n = "1", h = "1";
+                if (isInBoundsOfEasy(x, y)) {
+                    e1 = "3";
+                }
+                else if (isInBoundsOfNormal(x, y)) {
+                    n = "3";
+                    difficulty = 2;
+                }
+                else if (isInBoundsOfHard(x, y)) {
+                    h = "3";
+                    difficulty = 3;
+                }
+                else {
+                    f = false;
+                }
+                drawDiffButtons(e1, n, h);
+                draw();
+                if (f) {
+                    flag = false;
+                    delay();
+                    draw();
+                }
             }
-            else if (isInBoundsOfNormal(x, y)) {
-                n = "3";
-                difficulty = 2;
+            else if (!isMultiplayer){
+                String s = "1", m = "1";
+                boolean f = true;
+                if (isInBoundsOfSingle(x,y)) {
+                    s = "3";
+                    isMultiplayer = false;
+                }
+                else if (isInBoundsOfMulti(x,y)) {
+                    m = "3";
+                    isMultiplayer = true;
+                }
+                else {
+                    f = false;
+                }
+                drawSingleMulti(s,m);
+                draw();
+                delay();
+                if (f && ! isMultiplayer) {
+                    startGame(0);
+                }
             }
-            else if (isInBoundsOfHard(x, y)) {
-                h = "3";
-                difficulty = 3;
+            else {
+                boolean f = true;
+                String c = "1", j = "1";
+                if (isInBoundsOfCreate(x, y)) {
+                    c = "3";
+                    isJoin = false;
+                }
+                else if (isInBoundsOfJoin(x, y)) {
+                    j = "3";
+                    isJoin = true;
+                }
+                else {
+                    f = false;
+                }
+                drawCreateJoin(c, j);
+                draw();
+                delay();
+                if (f) {
+                    if (isJoin) {
+                        startGame(2);
+                    }
+                    else {
+                        startGame(1);
+                    }
+                }
             }
-            drawButtons(e1, n, h);
-            draw();
-            startGame(difficulty);
+
         }
     }
 
+    private void delay() {
+        try {
+            Thread.sleep(150);
+        }
+        catch (InterruptedException e) {}
+    }
+
     private boolean isInBoundsOfEasy(int x, int y) {
-        if (x >= 100 && y >= 250 && x <= 210 && y <= 295) {
+        if (x >= 100 && y >= 250 && x <= 210 && y <= 295 && flag && !isMultiplayer) {
             return true;
         }
         return false;
     }
     private boolean isInBoundsOfNormal(int x, int y) {
-        if (x >= 90 && y >= 310 && x <= 290 && y <= 355) {
+        if (x >= 90 && y >= 310 && x <= 290 && y <= 355 && flag && !isMultiplayer) {
             return true;
         }
         return false;
     }
 
     private boolean isInBoundsOfHard(int x, int y) {
-        if (x >= 100 && y >= 370 && x <= 220 && y <= 415) {
+        if (x >= 100 && y >= 370 && x <= 220 && y <= 415 && flag && !isMultiplayer) {
             return true;
         }
         return false;
     }
 
-    private void drawButtons(String e, String n, String h) {
+    private boolean isInBoundsOfSingle(int x, int y) {
+        if (x >= 40 && x <= 304 && y >= 300 && y <= 336 && !flag && !isMultiplayer) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isInBoundsOfMulti(int x, int y) {
+        if (x >= 40 && x <= 280 && y >= 360 && y <= 396 && ! flag && !isMultiplayer) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isInBoundsOfCreate(int x, int y) {
+        if (x >= 40 && x <=272 && y >= 300 && y <= 340 && !flag && isMultiplayer) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isInBoundsOfJoin(int x, int y) {
+        if (x >= 40 && x <= 224 && y >= 350 && y <= 390 && !flag && isMultiplayer) {
+            return true;
+        }
+        return false;
+    }
+
+    private void drawDiffButtons(String e, String n, String h) {
         try {
             easy = ImageIO.read(new File("res/images/menu/easy" + e + ".png"));
             normal = ImageIO.read(new File("res/images/menu/normal" + n + ".png"));
@@ -153,7 +288,23 @@ public class MenuFrame extends JFrame{
         catch (IOException e2) { }
     }
 
-    private void startGame(int difficulty) {
+    private void drawSingleMulti(String s, String m) {
+        try {
+            single = ImageIO.read(new File("res/images/menu/single" + s + ".png"));
+            multi = ImageIO.read(new File("res/images/menu/multi" + m + ".png"));
+        }
+        catch (IOException e) { }
+    }
+
+    private void drawCreateJoin(String c, String j) {
+        try {
+            create = ImageIO.read(new File("res/images/menu/create" + c + ".png"));
+            join = ImageIO.read(new File("res/images/menu/join" + j + ".png"));
+        }
+        catch (IOException e) { }
+    }
+
+    private void startGame(int mode) {
         ThreadPool.init();
 
         EventQueue.invokeLater(new Runnable() {
@@ -166,10 +317,8 @@ public class MenuFrame extends JFrame{
                 dispose();
                 frame.setVisible(true);
                 frame.initBufferStrategy();
-
-                GameLoop game = new GameLoop(frame);
-                //game.init();
-                ThreadPool.execute(game);
+                GameLoop game = new GameLoop(frame, mode);
+                //ThreadPool.execute(game);
             }
         });
     }

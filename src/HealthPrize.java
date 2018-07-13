@@ -21,6 +21,6 @@ public class HealthPrize extends Prize {
         }
         catch (IOException e) { }
 
-        vehicle.setHealth(vehicle.getHealth() + AMOUNT);
+        vehicle.setHealth(Math.max(vehicle.getHealth() + AMOUNT, Tank.getHEALTH()));
     }
 }

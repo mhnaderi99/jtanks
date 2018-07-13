@@ -1,3 +1,8 @@
+import java.awt.*;
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * @author Mohammadhossein Naderi 9631815
  * @author Mahsa Bazzaz 9631405
@@ -11,17 +16,31 @@ public class GameLoop implements Runnable{
 
     private static GameState state;
 
-    public GameLoop(GameFrame frame) {
+    public GameLoop(GameFrame frame, int mode) {
         canvas = frame;
-        init();
+        init(mode);
     }
 
-    public void init() {
+    public static boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void init(int mode) {
         state = new GameState();
         Tank tank = state.getTank();
         canvas.addKeyListener(tank.getKeyHandler());
         canvas.addMouseMotionListener(tank.getMouseHandler());
         canvas.addMouseListener(tank.getMouseHandler());
+        ExecutorService service = Executors.newFixedThreadPool(2);
+        if (mode == 1) {
+            //new Server(2018).run();
+            service.execute(new Server(2018));
+        }
+        if (mode == 2) {
+            //new Client("127.0.0.1", 2018).run();
+            service.execute(new Client("127.0.0.1", 2018));
+        }
+        service.execute(this);
     }
 
     public static GameState getState() {

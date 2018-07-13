@@ -2,6 +2,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -11,9 +12,9 @@ import java.util.Iterator;
  * @author Mahsa Bazzaz 9631405
  *
  */
-public class Gun {
+public class Gun implements Serializable {
 
-    private BufferedImage image;
+    private transient BufferedImage image;
     private boolean infinityBullets;
     private Bullet type;
     private ArrayList<Bullet> bullets;
@@ -42,10 +43,16 @@ public class Gun {
     }
 
 
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
+
     /**
      * to get the type of the gun
      * @return the type
      */
+
+
     public Bullet getType() {
         return type;
     }

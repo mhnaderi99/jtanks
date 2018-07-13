@@ -96,6 +96,11 @@ public class GameFrame extends JFrame {
         ArrayList<CombatVehicle> allVehicles = new ArrayList<CombatVehicle>(state.getEnemies());
         Tank tank = state.getTank();
         allVehicles.add(tank);
+        if (state.getTank2() != null) {
+            if (state.getTank2().getBody() != null) {
+                allVehicles.add(state.getTank2());
+            }
+        }
 
         int ox = state.getTopLeftPoint().x;
         int oy = state.getTopLeftPoint().y;
@@ -123,6 +128,7 @@ public class GameFrame extends JFrame {
                 //renderDetails(g2d);
             }
             renderDetails();
+            renderPrizes();
             return;
         }
 
@@ -177,13 +183,14 @@ public class GameFrame extends JFrame {
         }
 
         //Draw prizes
+        renderPrizes();
 
-        for (Prize prize: GameState.getPrizes()) {
-            graphics.drawImage(prize.getImage(), prize.getXPosition() - ox, prize.getYPosition() - oy, this);
-        }
 
         //Draw tanks
         for (CombatVehicle vehicle : allVehicles) {
+            if (vehicle.getBody() == null) {
+                return;
+            }
             graphics.drawImage(vehicle.getBody(), vehicle.getXPosition() - ox, vehicle.getYPosition() - oy, this);
             AffineTransform transform = new AffineTransform();
             transform.setToTranslation(vehicle.getXPosition() - ox + 17, vehicle.getYPosition() - oy + vehicle.getBody().getHeight() / 2 - vehicle.getActiveGun().getImage().getHeight() / 2);
@@ -227,6 +234,14 @@ public class GameFrame extends JFrame {
         //Draw details
 
 
+    }
+
+    public void renderPrizes() {
+        int ox = GameLoop.getState().getTopLeftPoint().x;
+        int oy = GameLoop.getState().getTopLeftPoint().y;
+        for (Prize prize: GameState.getPrizes()) {
+            graphics.drawImage(prize.getImage(), prize.getXPosition() - ox, prize.getYPosition() - oy, this);
+        }
     }
 
     public void renderDetails() {

@@ -1,6 +1,7 @@
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * @author Mohammadhossein Naderi 9631815
@@ -8,7 +9,7 @@ import java.io.IOException;
  * the machine-gun bullet class inherits the bullet class
  */
 
-public class MachineGunBullet extends Bullet{
+public class MachineGunBullet extends Bullet implements Serializable{
 
     private static final int SPEED = 10;
     private static final int DAMAGE = 1;

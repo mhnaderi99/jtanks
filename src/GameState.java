@@ -11,12 +11,14 @@ import java.util.Random;
 public class GameState {
 
     private Tank tank;
+    private Tank tank2;
     private static ArrayList<CombatVehicle> enemies;
     private static ArrayList<Prize> prizes;
     private Map map;
     private Point topLeftPoint;
 
     public GameState() {
+        tank2 = null;
         enemies = new ArrayList<CombatVehicle>();
         prizes = new ArrayList<Prize>();
         map = new Map("res/maps/map1(27,27).txt");
@@ -46,6 +48,14 @@ public class GameState {
         return tank;
     }
 
+    public void setTank2(Tank tank2) {
+        this.tank2 = tank2;
+    }
+
+    public Tank getTank2() {
+        return tank2;
+    }
+
     public static ArrayList<CombatVehicle> getEnemies() {
         return enemies;
     }
@@ -59,13 +69,14 @@ public class GameState {
         while (iterator.hasNext()) {
             CombatVehicle vehicle = iterator.next();
             if (! vehicle.isAlive()) {
-                GameLoop.getCanvas().render(this, true);
                 Random random = new Random();
                 if (random.nextInt(100) % GameConstants.getPrizeChance() == 0) {
                     Prize prize = GameConstants.randomPrize();
                     map.placePrize(prize, vehicle.getXPosition() / GameConstants.getCellWidth(), vehicle.getYPosition() / GameConstants.getCellHeight());
                 }
                 iterator.remove();
+                GameLoop.getCanvas().render(this, true);
+
             }
             else {
                 vehicle.update();

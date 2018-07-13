@@ -1,6 +1,7 @@
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -8,9 +9,9 @@ import java.util.ArrayList;
  * @author Mahsa Bazzaz 9631405
  */
 
-public abstract class Bullet {
+public abstract class Bullet implements Serializable{
 
-    protected BufferedImage image;
+    protected transient BufferedImage image;
     private double x0;
     private double y0;
     private double x;

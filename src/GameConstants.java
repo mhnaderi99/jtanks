@@ -157,6 +157,30 @@ public class GameConstants {
         return PRIZE_CHANCE;
     }
 
+    public static BufferedImage getTankBody() {
+        try {
+            return ImageIO.read(new File("res/images/tanks/bodies/body1.png"));
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public static BufferedImage getCannonImage() {
+        try {
+            return ImageIO.read(new File("res/images/tanks/guns/cannon.png"));
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public static BufferedImage getMachineGunImage() {
+        try {
+            return ImageIO.read(new File("res/images/tanks/guns/machineGun.png"));
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
     public static BufferedImage getCannonNumber(boolean isGrayscale) {
         try {
             if (isGrayscale) {

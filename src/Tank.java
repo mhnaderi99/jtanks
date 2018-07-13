@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import java.io.Serializable;
 import java.util.*;
 import java.awt.*;
 import java.io.File;
@@ -13,17 +14,17 @@ import java.awt.event.MouseEvent;
  * @author Mahsa Bazzaz 9631405
  * this class inherits the combat vehicle
  */
-public class Tank extends CombatVehicle{
+public class Tank extends CombatVehicle implements Serializable{
 
     private static final int HEALTH = 100;
     private static final int SPEED = 2;
     private static final int DIAGONAL_SPEED = 2;
+    private int activeGunIndex = 0;
 
-    private Point direction;
     private boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
     private boolean keyW, keyS, keyD, keyA;
-    private KeyHandler keyHandler;
-    private MouseHandler mouseHandler;
+    private transient KeyHandler keyHandler;
+    private transient MouseHandler mouseHandler;
 
     /**
      * the constructor of the tank
@@ -37,7 +38,6 @@ public class Tank extends CombatVehicle{
         }
         catch (IOException e) {}
 
-        direction = new Point(1,0);
         setGuns(new ArrayList<Gun>());
         getGuns().add(GameConstants.getCannon());
         getGuns().add(GameConstants.getMachineGun());
@@ -52,6 +52,10 @@ public class Tank extends CombatVehicle{
         mouseHandler = new MouseHandler();
     }
 
+
+    public static int getHEALTH() {
+        return HEALTH;
+    }
 
     public static int getDefaultHealth() {
         return HEALTH;
@@ -69,14 +73,15 @@ public class Tank extends CombatVehicle{
             i=0;
         }
         setActiveGun(getGuns().get(i));
+        activeGunIndex = i;
         int x = GameLoop.getState().getTopLeftPoint().x / GameConstants.getCellWidth();
         int y = GameLoop.getState().getTopLeftPoint().y / GameConstants.getCellHeight();
         update();
 
     }
 
-    public Point getDirection() {
-        return direction;
+    public int getActiveGunIndex() {
+        return activeGunIndex;
     }
 
     public boolean isKeyUP() {
@@ -280,19 +285,15 @@ public class Tank extends CombatVehicle{
             {
                 case KeyEvent.VK_UP:
                     keyUP = true;
-                    direction.setLocation(0, -1);
                     break;
                 case KeyEvent.VK_DOWN:
                     keyDOWN = true;
-                    direction.setLocation(0, 1);
                     break;
                 case KeyEvent.VK_LEFT:
                     keyLEFT = true;
-                    direction.setLocation(-1, 0);
                     break;
                 case KeyEvent.VK_RIGHT:
                     keyRIGHT = true;
-                    direction.setLocation(1, 0);
                     break;
                 case KeyEvent.VK_D:
                     keyD = true;
@@ -403,5 +404,10 @@ public class Tank extends CombatVehicle{
                     getXPosition() - GameLoop.getState().getTopLeftPoint().x + getBody().getWidth()/2,
                     getYPosition() - GameLoop.getState().getTopLeftPoint().y + getBody().getHeight()/2, 0));
         }
+    }
+
+    @Override
+    public String toString() {
+        return getXPosition() + "," + getYPosition() + ": " + getGunAngle();
     }
 }

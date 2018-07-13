@@ -1,6 +1,7 @@
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * @author Mohammadhossein Naderi 9631815
@@ -8,7 +9,7 @@ import java.io.IOException;
  * the cannon bullet inherits the bullet class
  */
 
-public class CannonBullet extends Bullet {
+public class CannonBullet extends Bullet implements Serializable{
 
     private static final int SPEED = 5;
     private static final int DAMAGE = 10;
