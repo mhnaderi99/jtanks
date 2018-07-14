@@ -8,6 +8,12 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ * this class is for playing and stoping audios
+ */
+
 public class Audio {
 
     private Clip clip;
@@ -27,37 +33,38 @@ public class Audio {
         init(source);
     }
 
-    protected void init(File source) throws LineUnavailableException, MalformedURLException, IOException, UnsupportedAudioFileException {
-        init(source.toURI().toURL());
-    }
-
-    protected void init(URL source) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
-        init(source.openStream());
-    }
-
+    /**
+     * opens an audio
+     * @param source the file path
+     * @throws LineUnavailableException
+     * @throws IOException
+     * @throws UnsupportedAudioFileException
+     */
     protected void init(InputStream source) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         clip = AudioSystem.getClip();
         clip.open(AudioSystem.getAudioInputStream(source));
     }
 
+    /**
+     * to set repeats for the audio
+     * @param repeats true or false
+     */
     public void setRepeats(boolean repeats) {
         clip.loop(repeats ? Clip.LOOP_CONTINUOUSLY : 1);
     }
 
-    public void reset() {
-        clip.stop();
-        clip.setFramePosition(0);
-    }
-
+    /**
+     * for playing the audio
+     */
     public void play() {
         clip.start();
     }
 
+    /**
+     * for stopping the audio
+     */
     public void stop() {
         clip.stop();
     }
 
-    public boolean isPlaying() {
-        return clip.isActive();
-    }
 }

@@ -33,38 +33,65 @@ public class GameState {
         tank2 = new Tank(false);
     }
 
+    /**
+     * to get the prizes
+     * @return the prizes
+     */
     public static ArrayList<Prize> getPrizes() {
         return prizes;
     }
 
+    /**
+     * to set the map
+     * @param map the map
+     */
     public void setMap(Map map) {
         this.map = map;
     }
 
+    /**
+     * to get the map
+     * @return  the map
+     */
     public Map getMap() {
         return map;
     }
 
+    /**
+     * to get the top left point
+     * @return the top left point
+     */
     public Point getTopLeftPoint() {
         return topLeftPoint;
     }
 
+    /**
+     * to get tank 1
+     * @return tank 1
+     */
     public Tank getTank() {
         return tank;
     }
 
-    public void setTank2(Tank tank2) {
-        this.tank2 = tank2;
-    }
-
+    /**
+     * to get tank 2
+     * @return tank 2
+     */
     public Tank getTank2() {
         return tank2;
     }
 
+    /**
+     * to get enemies
+     * @return enemies
+     */
     public static ArrayList<CombatVehicle> getEnemies() {
         return enemies;
     }
 
+    /**
+     * updates the game
+     */
     public void update() {
         Iterator<CombatVehicle> iterator = enemies.iterator();
         if (! tank.isAlive()) {

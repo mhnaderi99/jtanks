@@ -24,8 +24,8 @@ public class GameLoop implements Runnable{
     private static int mode;
     private static int stage;
     private static String mapName;
-    private Timer timer, timer2;
-    private TimerTask task, task2;
+    private Timer timer;
+    private TimerTask task;
     private ExecutorService service;
     private Audio gameMusic;
     private Audio gameOverSound;
@@ -51,37 +51,62 @@ public class GameLoop implements Runnable{
         mode = mod;
     }
 
+    /**
+     * to get the difficulty
+     * @return the difficulty
+     */
     public static int getDifficulty() {
         return difficulty;
     }
 
+    /**
+     * to get the mode
+     * @return the mode
+     */
     public static int getMode() {
         return mode;
     }
 
+    /**
+     * to set if it's multi player
+     * @param multiplayer true or false
+     */
     public static void setMultiplayer(boolean multiplayer) {
         GameLoop.multiplayer = multiplayer;
     }
 
+    /**
+     * to check if it's multi player
+     * @return true or false
+     */
     public static boolean isMultiplayer() {
         return multiplayer;
     }
 
+    /**
+     * to get the stage
+     * @return the stage number
+     */
     public static int getStage() {
         return stage;
     }
 
+    /**
+     * to check if the game is over
+     * @return true or false
+     */
     public static boolean isGameOver() {
         return gameOver;
     }
 
+    /**
+     * to set exit
+     * @param e true or false
+     */
     public static void setExit(boolean e) {
         exit = e;
     }
 
-    public static boolean isExit() {
-        return exit;
-    }
 
     public void init(int mode, boolean first) {
         state = new GameState(mapName, difficulty);
@@ -110,34 +135,49 @@ public class GameLoop implements Runnable{
         }
     }
 
-    public static String getMapName() {
-        return mapName;
-    }
-
-    public static void setState(GameState state) {
-        GameLoop.state = state;
-    }
-
+    /**
+     * to get the state of the game
+     * @return the state
+     */
     public static GameState getState() {
         return state;
     }
 
+    /**
+     * to get the canvas of the game
+     * @return the canvas
+     */
     public static GameFrame getCanvas() {
         return canvas;
     }
 
+    /**
+     * to get the x of the canvas of the game
+     * @return the x of the canvas
+     */
     public static int getXOfCanvas() {
         return canvas.getXOfFrame();
     }
 
+    /**
+     * to get the y of the canvas of the game
+     * @return the y of the canvas
+     */
     public static int getYOfCanvas() {
         return canvas.getYOfFrame();
     }
 
+    /**
+     * to set the game is over
+     * @param gameOver true or false
+     */
     public static void setGameOver(boolean gameOver) {
         GameLoop.gameOver = gameOver;
     }
 
+    /**
+     * runs the game loop
+     */
     @Override
     public void run() {
         canvas.render(state, true, 0);
@@ -189,6 +229,9 @@ public class GameLoop implements Runnable{
         System.exit(0);
     }
 
+    /**
+     * for updating the map in multi player mode
+     */
     private class AlternativeUpdate extends TimerTask {
 
         @Override
@@ -208,11 +251,13 @@ public class GameLoop implements Runnable{
         }
     }
 
+    /**
+     * to play music and replay it
+     */
     private class MusicPlayer extends TimerTask {
 
         @Override
         public void run() {
-            //gameMusic.play();
         }
     }
     public static String nextLevel(String s) {
@@ -221,11 +266,4 @@ public class GameLoop implements Runnable{
         return s;
     }
 
-    private void pressAnyKeyToContinue() {
-        try {
-            System.in.read();
-        }
-        catch(Exception e)
-        {}
-    }
 }

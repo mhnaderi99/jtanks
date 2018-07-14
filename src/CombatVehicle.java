@@ -132,14 +132,6 @@ public abstract class CombatVehicle implements Serializable{
         return health;
     }
 
-    /**
-     * to check whether the vehicle is mobile or not
-     * @return true or false
-     */
-    public boolean isMobile() {
-        return isMobile;
-    }
-
     public BufferedImage getBody() {
         return body;
     }
@@ -200,14 +192,6 @@ public abstract class CombatVehicle implements Serializable{
         return health > 0;
     }
 
-    /**
-     * to get the diagonal speed of the vehicle
-     * @return the diagonal speed of the vehicle
-     */
-    public int getDiagonalSpeed() {
-        return diagonalSpeed;
-    }
-
     public abstract void update();
 
     /**
@@ -216,14 +200,6 @@ public abstract class CombatVehicle implements Serializable{
      */
     public boolean isInScreenBounds() {
         return true;
-        /*if (XPosition + body.getWidth() - GameLoop.getState().getTopLeftPoint().x >= 0 &&
-                XPosition - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenWidth() &&
-                YPosition + body.getHeight() - GameLoop.getState().getTopLeftPoint().y >= 0 &&
-                YPosition - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenHeight()) {
-            return true;
-        }
-
-        return false;*/
     }
 
     /**
@@ -242,6 +218,10 @@ public abstract class CombatVehicle implements Serializable{
         getActiveGun().shoot(theta);
     }
 
+    /**
+     * to send the shoot
+     * @param message the message
+     */
     private void sendShoot(String message) {
         String pre = "S-";
         String sender = "";
@@ -335,6 +315,11 @@ public abstract class CombatVehicle implements Serializable{
         return false;
     }
 
+    /**
+     * to check the prize
+     * @param prize the prize
+     * @return true or false
+     */
     public boolean checkPrize(Prize prize) {
         ArrayList<Point> corners = new ArrayList<>();
         corners.add(new Point(prize.getXPosition(), prize.getYPosition()));
@@ -350,12 +335,16 @@ public abstract class CombatVehicle implements Serializable{
         return false;
     }
 
+    /**
+     * to get the period of shoots
+     * @return the period
+     */
     public int getPeriod() {
         return (int) (GameConstants.getEnemyFiringPeroid() / getActiveGun().getType().getSpeed());
     }
 
     /**
-     * //todo
+     * updates the vehicles
      * @param SPEED
      */
     public void update(int SPEED) {

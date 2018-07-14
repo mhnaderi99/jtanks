@@ -5,6 +5,12 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ *
+ */
+
 public class Server implements Runnable{
 
     private int port = 2018;
@@ -13,6 +19,9 @@ public class Server implements Runnable{
         this.port = port;
     }
 
+    /**
+     * this method opens a connection between server and client and finally closes it
+     */
     public void run()  {
         ExecutorService pool = Executors.newCachedThreadPool();
 

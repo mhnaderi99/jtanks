@@ -189,7 +189,6 @@ public class GameFrame extends JFrame {
             for (Point p : refreshForeGround) {
                 int i = p.x, j = p.y;
                 graphics.drawImage(GameConstants.getCellByCode(4).getImage(), GameConstants.getCellWidth() * i - ox, GameConstants.getCellHeight() * j - oy, this);
-                //renderDetails(g2d);
             }
         }
 
@@ -236,19 +235,18 @@ public class GameFrame extends JFrame {
         //Draw Foreground Layer
         for (Point p : refreshForeGround) {
             int i = p.x, j = p.y;
-
             graphics.drawImage(map.getMap()[i][j].getImage(), GameConstants.getCellWidth() * i - ox, GameConstants.getCellHeight() * j - oy, this);
-            //
+
         }
 
         int rand = new Random().nextInt(Integer.MAX_VALUE);
         renderDetails();
 
-        //Draw details
-
-
     }
 
+    /**
+     * to render the prizes
+     */
     public void renderPrizes() {
         int ox = GameLoop.getState().getTopLeftPoint().x;
         int oy = GameLoop.getState().getTopLeftPoint().y;
@@ -257,6 +255,9 @@ public class GameFrame extends JFrame {
         }
     }
 
+    /**
+     * to render the details
+     */
     public void renderDetails() {
         try {
             BufferedImage cannon, machineGun;
@@ -323,6 +324,11 @@ public class GameFrame extends JFrame {
         }
     }
 
+    /**
+     * to render a map cell
+     * @param x the x of the point to be rendered
+     * @param y the y of the point to be rendered
+     */
     public void renderCell(int x, int y) {
         if (x < 0 || y < 0 || x >= Map.getWidth() || y >= Map.getHeight()) {
             return;
@@ -338,6 +344,10 @@ public class GameFrame extends JFrame {
         //renderDetails(g2d);
     }
 
+    /**
+     * to render new stage
+     * @param string the string to be drawn
+     */
     public void renderNewStage(String string) {
         graphics.setColor(Color.BLACK);
         graphics.fillRect(0, 0, GameConstants.getScreenWidth(), GameConstants.getScreenHeight());

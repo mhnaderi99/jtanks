@@ -69,6 +69,12 @@ public class SoftWallCell extends MapCell {
         }
     }
 
+    /**
+     * to send the revealed prizes
+     * @param i the x of the prize
+     * @param j the y of the prize
+     * @param code the code of the prize
+     */
     private void sendPrize(int i, int j, int code) {
         String pre = "P-";
         String message = "" + i + "," + "," + code;

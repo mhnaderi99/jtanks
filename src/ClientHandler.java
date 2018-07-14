@@ -3,6 +3,12 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ *
+ */
+
 public class ClientHandler implements Runnable{
 
     private Socket client;
@@ -13,6 +19,9 @@ public class ClientHandler implements Runnable{
         this.client = client;
     }
 
+    /**
+     * this method receives and sends data for updating the game
+     */
     @Override
     public void run() {
 
@@ -41,18 +50,10 @@ public class ClientHandler implements Runnable{
         }
     }
 
-    public Socket getClient() {
-        return client;
-    }
-
-    public static InputStream getIn() {
-        return in;
-    }
-
-    public static OutputStream getOut() {
-        return out;
-    }
-
+    /**
+     * write outs the string
+     * @param s the string to be written
+     */
     public static void writeOnStream(String s) {
         try {
             out.write(s.getBytes());
@@ -61,6 +62,10 @@ public class ClientHandler implements Runnable{
         catch (NullPointerException e) { }
     }
 
+    /**
+     * processes the data received
+     * @param rcv string that have been received
+     */
     private void processInput(String rcv) {
         if (rcv.equals("CLIENT-SW")) {
             GameLoop.getState().getTank2().switchGun(false);

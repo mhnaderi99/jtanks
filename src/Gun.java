@@ -42,7 +42,10 @@ public class Gun implements Serializable {
         }
     }
 
-
+    /**
+     * to set the image
+     * @param image the image
+     */
     public void setImage(BufferedImage image) {
         this.image = image;
     }
@@ -118,12 +121,8 @@ public class Gun implements Serializable {
         }
     }
 
-    public void setMovingBullets(ArrayList<Bullet> movingBullets) {
-        this.movingBullets = movingBullets;
-    }
-
     /**
-     * //todo
+     * to update the guns and bullets
      */
     public void update() {
         Iterator<Bullet> iter = movingBullets.iterator();
@@ -153,6 +152,10 @@ public class Gun implements Serializable {
 
     }
 
+    /**
+     * to reload the gun
+     * @param number number of bullets
+     */
     public void reload(int number) {
         if (number == (int)Double.POSITIVE_INFINITY) {
             return;

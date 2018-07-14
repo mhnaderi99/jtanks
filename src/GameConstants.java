@@ -13,13 +13,11 @@ import java.util.Random;
 
 public class GameConstants {
 
-    private static final double SCREEN_RATIO = 9/16;
     private static final int SCREEN_WIDTH = 1280;
     private static final int SCREEN_HEIGHT = 720;
     private static final int CELL_WIDTH = 120;
     private static final int CELL_HEIGHT = 120;
     private static final int STEP = 10;
-    //private static final int AMOUNT = 200;
     private static final int H_AMOUNT = 400;
     private static final int V_AMOUNt = 200;
     private static final int NUM = 4;
@@ -48,8 +46,6 @@ public class GameConstants {
     private static Gun smallEnemyGun;
     private static Gun bigEnemyGun;
 
-    private static Bullet cannonBullet;
-    private static Bullet machineGunBullet;
     private static final SoilCell soilCell = new SoilCell();
 
     /**
@@ -60,15 +56,6 @@ public class GameConstants {
         return STEP;
     }
 
-    /**
-     * //todo
-     * @return
-     */
-    /*
-    public static int getAmount() {
-        return AMOUNT;
-    }*/
-
     public static int gethAmount() {
         return H_AMOUNT;
     }
@@ -78,8 +65,8 @@ public class GameConstants {
     }
 
     /**
-     * //todo
-     * @return
+     * to get the num
+     * @return the num
      */
     public static int getNum() {
         return NUM;
@@ -126,81 +113,82 @@ public class GameConstants {
     }
 
     /**
-     * //todo
-     * @return
+     * to get the cannon period
+     * @return the cannon period
      */
     public static int getCannonPeriod() {
         return CANNON_PERIOD;
     }
 
     /**
-     * //todo
-     * @return
+     * to get the machine gun period
+     * @return the machine gun period
      */
     public static int getMachineGunPeriod() {
         return MACHINE_GUN_PERIOD;
     }
 
     /**
-     * //todo
-     * @return
+     * to get the enemy firing period
+     * @return the enemy firing period
      */
     public static int getEnemyFiringPeroid() {
         return ENEMY_FIRING_PEROID;
     }
 
     /**
-     * //todo
-     * @return
+     * to get enemy firing error
+     * @return enemy firing error
      */
     public static int getEnemyFiringError() {
         return ENEMY_FIRING_ERROR;
     }
 
+    /**
+     * to get border margin
+     * @return the border margin
+     */
     public static int getBorderMargin() {
         return BORDER_MARGIN;
     }
 
+    /**
+     * to get health cells
+     * @return the health cells
+     */
     public static int getHealthCells() {
         return HEALTH_CELLS;
     }
 
+    /**
+     * to get enemy types
+     * @return the  enemy types
+     */
     public static int getEnemyTypes() {
         return ENEMY_TYPES;
     }
 
+    /**
+     * to get the prize chance
+     * @return the prize chance
+     */
     public static int getPrizeChance() {
         return PRIZE_CHANCE;
     }
 
+    /**
+     * to get a random number
+     * @return a random number
+     */
     public static Random getRandom() {
         return random;
     }
 
-    public static BufferedImage getTankBody() {
-        try {
-            return ImageIO.read(new File("res/images/tanks/bodies/body1.png"));
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    public static BufferedImage getCannonImage() {
-        try {
-            return ImageIO.read(new File("res/images/tanks/guns/cannon.png"));
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
-    public static BufferedImage getMachineGunImage() {
-        try {
-            return ImageIO.read(new File("res/images/tanks/guns/machineGun.png"));
-        } catch (IOException e) {
-            return null;
-        }
-    }
-
+    /**
+     * to get the active bullet and disActive bullets of cannon gun
+     * @param isGrayscale if is disActive or not
+     * @return the image
+     */
     public static BufferedImage getCannonNumber(boolean isGrayscale) {
         try {
             if (isGrayscale) {
@@ -212,6 +200,11 @@ public class GameConstants {
         } catch (IOException e) { return null;}
     }
 
+    /**
+     * to get the active bullet and disActive bullets of machine gun
+     * @param isGrayscale if is disActive or not
+     * @return the image
+     */
     public static BufferedImage getMachineGunNumber(boolean isGrayscale) {
         try {
             if (isGrayscale) {
@@ -223,12 +216,20 @@ public class GameConstants {
         } catch (IOException e) { return null;}
     }
 
+    /**
+     * to get the full health image
+     * @return the image
+     */
     public static BufferedImage getHealth() {
         try {
             return ImageIO.read(new File("res/images/ui/health.png"));
         } catch (IOException e) { return null;}
     }
 
+    /**
+     * to get the empty health image
+     * @return the image
+     */
     public static BufferedImage getEmpty() {
         try {
             return ImageIO.read(new File("res/images/ui/empty.png"));
@@ -272,6 +273,10 @@ public class GameConstants {
         return enemyGun1;
     }
 
+    /**
+     * to get the enemy gun (2)
+     * @return  the enemy gun (2)
+     */
     public static Gun getEnemyGun2() {
 
         try {
@@ -294,6 +299,10 @@ public class GameConstants {
         return smallEnemyGun;
     }
 
+    /**
+     * to get the big enemy gun
+     * @return the big enemy gun
+     */
     public static Gun getBigEnemyGun() {
 
         try {
@@ -301,24 +310,6 @@ public class GameConstants {
         }
         catch (IOException e) { }
         return bigEnemyGun;
-    }
-
-    /**
-     * to get the cannon bullet
-     * @return the cannon bullet
-     */
-    public static Bullet getCannonBullet() {
-        cannonBullet = new CannonBullet();
-        return cannonBullet;
-    }
-
-    /**
-     * to get the machine-gun bullet
-     * @return the machine-gun bullet
-     */
-    public static Bullet getMachineGunBullet() {
-        machineGunBullet = new MachineGunBullet();
-        return machineGunBullet;
     }
 
     /**
@@ -375,6 +366,12 @@ public class GameConstants {
         }
         return null;
     }
+
+    /**
+     * to get a prize by code
+     * @param code the code
+     * @return the prize
+     */
     public static Prize getPrizeByCode(int code) {
         if (code == 5) {
             return new HealthPrize();
@@ -391,6 +388,10 @@ public class GameConstants {
         return null;
     }
 
+    /**
+     * generates a random prize
+     * @return the random prize
+     */
     public static Prize randomPrize() {
         int n = PRIZE_TYPES;
         int rand = new Random().nextInt(n) + 1;
@@ -409,6 +410,11 @@ public class GameConstants {
         return null;
     }
 
+    /**
+     * determines the prize code
+     * @param prize the prize
+     * @return the code
+     */
     public static int getPrizeCode(Prize prize) {
         if(prize instanceof HealthPrize) {
             return 5;
@@ -425,6 +431,11 @@ public class GameConstants {
         return 0;
     }
 
+    /**
+     * for processing the cheat codes
+     * @param tank the tank which cheat code is applied to
+     * @param cheatCode the cheat code
+     */
     public static void processCheatCode(Tank tank, String cheatCode) {
         cheatCode = cheatCode.toLowerCase();
 

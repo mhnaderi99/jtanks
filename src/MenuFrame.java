@@ -9,6 +9,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ *
+ */
+
 public class MenuFrame extends JFrame{
 
     private BufferStrategy bufferStrategy;
@@ -30,6 +36,10 @@ public class MenuFrame extends JFrame{
 
     private MouseHandler handler;
 
+    /**
+     * the constructor of menu frame
+     * @param title title of menu frame
+     */
     public MenuFrame(String title) {
         super(title);
         setSize(970 , 606);
@@ -43,11 +53,17 @@ public class MenuFrame extends JFrame{
         initImages();
     }
 
+    /**
+     * the buffer strategy
+     */
     public void initBufferstrategy() {
         createBufferStrategy(3);
         bufferStrategy = getBufferStrategy();
     }
 
+    /**
+     * draw menu frame
+     */
     public void draw() {
         do {
             do {
@@ -65,6 +81,10 @@ public class MenuFrame extends JFrame{
         bufferStrategy.show();
     }
 
+    /**
+     * render the menu frame
+     * @param g2d
+     */
     private void render(Graphics2D g2d) {
         int extraW = GameConstants.getScreenWidth() - getContentPane().getSize().width;
         int extraH = GameConstants.getScreenHeight() - getContentPane().getSize().height;
@@ -88,6 +108,9 @@ public class MenuFrame extends JFrame{
 
     }
 
+    /**
+     * load images of the menu
+     */
     private void initImages() {
         try {
             background = ImageIO.read(new File("res/images/menu/startup.png"));
@@ -104,6 +127,9 @@ public class MenuFrame extends JFrame{
         setVisible(true);
     }
 
+    /**
+     * mouse handler of the menu
+     */
     private class MouseHandler extends MouseAdapter {
 
         @Override
@@ -231,12 +257,25 @@ public class MenuFrame extends JFrame{
         catch (InterruptedException e) {}
     }
 
+    /**
+     * check if the mouse is in the bounds of easy icon
+     * @param x x position of mouse
+     * @param y y position of mouse
+     * @return true or false
+     */
     private boolean isInBoundsOfEasy(int x, int y) {
         if (x >= 100 && y >= 250 && x <= 210 && y <= 295 && flag && !isMultiplayer) {
             return true;
         }
         return false;
     }
+
+    /**
+     * check if the mouse is in the bounds of normal icon
+     * @param x x position of mouse
+     * @param y y position of mouse
+     * @return true or false
+     */
     private boolean isInBoundsOfNormal(int x, int y) {
         if (x >= 90 && y >= 310 && x <= 290 && y <= 355 && flag && !isMultiplayer) {
             return true;
@@ -244,6 +283,12 @@ public class MenuFrame extends JFrame{
         return false;
     }
 
+    /**
+     * check if the mouse is in the bounds of hard icon
+     * @param x x position of mouse
+     * @param y y position of mouse
+     * @return true or false
+     */
     private boolean isInBoundsOfHard(int x, int y) {
         if (x >= 100 && y >= 370 && x <= 220 && y <= 415 && flag && !isMultiplayer) {
             return true;
@@ -251,6 +296,12 @@ public class MenuFrame extends JFrame{
         return false;
     }
 
+    /**
+     * check if the mouse is in the bounds of single icon
+     * @param x x position of mouse
+     * @param y y position of mouse
+     * @return true or false
+     */
     private boolean isInBoundsOfSingle(int x, int y) {
         if (x >= 40 && x <= 304 && y >= 300 && y <= 336 && !flag && !isMultiplayer) {
             return true;
@@ -258,6 +309,12 @@ public class MenuFrame extends JFrame{
         return false;
     }
 
+    /**
+     * check if the mouse is in the bounds of multiPlayer icon
+     * @param x x position of mouse
+     * @param y y position of mouse
+     * @return true or false
+     */
     private boolean isInBoundsOfMulti(int x, int y) {
         if (x >= 40 && x <= 280 && y >= 360 && y <= 396 && ! flag && !isMultiplayer) {
             return true;
@@ -265,6 +322,12 @@ public class MenuFrame extends JFrame{
         return false;
     }
 
+    /**
+     * check if the mouse is in the bounds of create icon
+     * @param x x position of mouse
+     * @param y y position of mouse
+     * @return true or false
+     */
     private boolean isInBoundsOfCreate(int x, int y) {
         if (x >= 40 && x <=272 && y >= 300 && y <= 340 && !flag && isMultiplayer) {
             return true;
@@ -272,6 +335,12 @@ public class MenuFrame extends JFrame{
         return false;
     }
 
+    /**
+     * check if the mouse is in the bounds of join icon
+     * @param x x position of mouse
+     * @param y y position of mouse
+     * @return true or false
+     */
     private boolean isInBoundsOfJoin(int x, int y) {
         if (x >= 40 && x <= 224 && y >= 350 && y <= 390 && !flag && isMultiplayer) {
             return true;
@@ -279,6 +348,12 @@ public class MenuFrame extends JFrame{
         return false;
     }
 
+    /**
+     * draw easy,normal, hard icons
+     * @param e file path of easy icon file
+     * @param n file path of normal icon file
+     * @param h file path of hard icon file
+     */
     private void drawDiffButtons(String e, String n, String h) {
         try {
             easy = ImageIO.read(new File("res/images/menu/easy" + e + ".png"));
@@ -288,6 +363,11 @@ public class MenuFrame extends JFrame{
         catch (IOException e2) { }
     }
 
+    /***
+     * draw single, multi player icons
+     * @param s file path of single icon file
+     * @param m file path of multi player icon file
+     */
     private void drawSingleMulti(String s, String m) {
         try {
             single = ImageIO.read(new File("res/images/menu/single" + s + ".png"));
@@ -296,6 +376,11 @@ public class MenuFrame extends JFrame{
         catch (IOException e) { }
     }
 
+    /**
+     * draw join and create icons
+     * @param c file path of create icon file
+     * @param j file path of join icon file
+     */
     private void drawCreateJoin(String c, String j) {
         try {
             create = ImageIO.read(new File("res/images/menu/create" + c + ".png"));
@@ -304,6 +389,10 @@ public class MenuFrame extends JFrame{
         catch (IOException e) { }
     }
 
+    /**
+     * start the game
+     * @param mode the mode of the game
+     */
     private void startGame(int mode) {
         ThreadPool.init();
 
@@ -318,7 +407,6 @@ public class MenuFrame extends JFrame{
                 frame.setVisible(true);
                 frame.initBufferStrategy();
                 GameLoop game = new GameLoop(frame, mode, difficulty, "map1(27,27)");
-                //ThreadPool.execute(game);
             }
         });
     }

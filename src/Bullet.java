@@ -150,23 +150,15 @@ public abstract class Bullet implements Serializable{
 
         if (flag) {
             isOnTheWay = false;
-            /*int x = (int)getX() / GameConstants.getCellWidth();
-            int y = (int)getY() / GameConstants.getCellHeight();
-            for (int i = -1; i <= 1; i++) {
-                for (int j = -1; j <= 1; j++) {
-                    GameLoop.getCanvas().renderCell(x + i,y + j);
-                }
-            }
-            */
             GameLoop.getCanvas().render(GameLoop.getState(), true, 0);
         }
 
         if (x - xMargin >= GameConstants.getScreenWidth() || x - xMargin <= 0) {
-            //isOnTheWay = false;
+
         }
 
         if (y - yMargin >= GameConstants.getScreenHeight() || y - yMargin <= 0) {
-            //isOnTheWay = false;
+
         }
 
         time++;
@@ -208,21 +200,6 @@ public abstract class Bullet implements Serializable{
         this.reloadPeriod = reloadPeriod;
     }
 
-    /** to set the x position of the bullet
-     * @param x the x position
-     */
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    /**
-     * to set the y position of the bullet
-     * @param y the y position
-     */
-    public void setY(double y) {
-        this.y = y;
-    }
-
     /**
      * to set the initial x position of the bullet
      * @param x0 the initial x position
@@ -253,22 +230,6 @@ public abstract class Bullet implements Serializable{
      */
     public double getY() {
         return y;
-    }
-
-    /**
-     * to get the initial x position of the bullet
-     * @return the initial x position
-     */
-    public double getX0() {
-        return x0;
-    }
-
-    /**
-     * to get the initial y position of the bullet
-     * @return the initial y position
-     */
-    public double getY0() {
-        return y0;
     }
 
     /**
@@ -312,43 +273,11 @@ public abstract class Bullet implements Serializable{
     }
 
     /**
-     * to get the time of the bullet
-     * @return time
-     */
-    public double getTime() {
-        return time;
-    }
-
-    /**
-     * to get the x component of bullet's speed
-     * @return the x component of speed
-     */
-    public double getXSpeed() {
-        return XSpeed;
-    }
-
-    /**
-     * to get the y component of bullet's speed
-     * @return the y component of speed
-     */
-    public double getYSpeed() {
-        return YSpeed;
-    }
-
-    /**
      * to get the damage of the bullet
      * @return the damage
      */
     public int getDamage() {
         return damage;
-    }
-
-    /**
-     * to check if the bullet belongs to enemy or not
-     * @return true or false
-     */
-    public boolean isEnemyBullet() {
-        return isEnemyBullet;
     }
 
     /**
@@ -403,14 +332,6 @@ public abstract class Bullet implements Serializable{
     }
 
     /**
-     * to set the time of the bullet
-     * @param time the time of the bullet
-     */
-    public void setTime(double time) {
-        this.time = time;
-    }
-
-    /**
      * to set the x component of bullet's speed
      * @param XSpeed the x component of bullet's speed
      */
@@ -441,25 +362,8 @@ public abstract class Bullet implements Serializable{
     public abstract Bullet getBullet();
 
     public boolean isInScreenBounds() {
-        /*
-        if (getX() + image.getWidth() - GameLoop.getState().getTopLeftPoint().x >= 0 &&
-                getX() - GameLoop.getState().getTopLeftPoint().x <= GameConstants.getScreenWidth() &&
-                getY() + image.getHeight() - GameLoop.getState().getTopLeftPoint().y >= 0 &&
-                getY() - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenHeight()) {
-            return true;
-        }
-        */
 
         return true;
     }
 
-    public int getIndex() {
-        if (this instanceof CannonBullet) {
-            return 0;
-        }
-        if (this instanceof MachineGunBullet) {
-            return 1;
-        }
-        return 0;
-    }
 }

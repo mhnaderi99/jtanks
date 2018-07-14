@@ -37,7 +37,7 @@ public class EnemyTank1 extends CombatVehicle {
     }
 
     /**
-     * //todo
+     * calls the update of combat vehicle
      */
     @Override
     public void update() {

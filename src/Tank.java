@@ -55,35 +55,58 @@ public class Tank extends CombatVehicle implements Serializable{
         mouseHandler = new MouseHandler();
     }
 
-
-    public boolean isPlayer() {
-        return isPlayer;
-    }
-
+    /**
+     * to set if it's player
+     * @param player true or false
+     */
     public void setPlayer(boolean player) {
         isPlayer = player;
     }
 
+    /**
+     * to set if it's up key
+     * @param keyUP true or false
+     */
     public void setKeyUP(boolean keyUP) {
         this.keyUP = keyUP;
     }
 
+    /**
+     * to set if it's down key
+     * @param keyDOWN true or false
+     */
     public void setKeyDOWN(boolean keyDOWN) {
         this.keyDOWN = keyDOWN;
     }
 
+    /**
+     * to set if it's left key
+     * @param keyLEFT true or false
+     */
     public void setKeyLEFT(boolean keyLEFT) {
         this.keyLEFT = keyLEFT;
     }
 
+    /**
+     * to set if it's right key
+     * @param keyRIGHT true or false
+     */
     public void setKeyRIGHT(boolean keyRIGHT) {
         this.keyRIGHT = keyRIGHT;
     }
 
+    /**
+     * to get the health
+     * @return number of health
+     */
     public static int getHEALTH() {
         return HEALTH;
     }
 
+    /**
+     * to get the default health
+     * @return the default health
+     */
     public static int getDefaultHealth() {
         return HEALTH;
     }
@@ -111,6 +134,9 @@ public class Tank extends CombatVehicle implements Serializable{
 
     }
 
+    /**
+     * to send switch gun
+     */
     private void sendSwitchGun() {
         String message = "SW";
         String sender = "";
@@ -124,6 +150,10 @@ public class Tank extends CombatVehicle implements Serializable{
         }
     }
 
+    /**
+     * to send keyboard
+     * @param message the message
+     */
     private void sendKeyboard(String message) {
         String pre = "KB-";
         String sender = "";
@@ -137,6 +167,10 @@ public class Tank extends CombatVehicle implements Serializable{
         }
     }
 
+    /**
+     * to send the angle
+     * @param message the message
+     */
     private void sendAngle(String message) {
         String pre = "M-";
         String sender = "";
@@ -148,30 +182,6 @@ public class Tank extends CombatVehicle implements Serializable{
             sender = "CLIENT-";
             Client.writeOnStream(sender + pre + message);
         }
-    }
-
-    private void setShoot(String message) {
-
-    }
-
-    public int getActiveGunIndex() {
-        return activeGunIndex;
-    }
-
-    public boolean isKeyUP() {
-        return keyUP;
-    }
-
-    public boolean isKeyDOWN() {
-        return keyDOWN;
-    }
-
-    public boolean isKeyLEFT() {
-        return keyLEFT;
-    }
-
-    public boolean isKeyRIGHT() {
-        return keyRIGHT;
     }
 
     /**
@@ -191,7 +201,7 @@ public class Tank extends CombatVehicle implements Serializable{
     }
 
     /**
-     * //todo
+     * updates the tanks
      */
     @Override
     public void update() {

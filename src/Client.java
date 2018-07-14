@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Scanner;
 
+/**
+ * @author Mohammadhossein Naderi 9631815
+ * @author Mahsa Bazzaz 9631405
+ *
+ */
+
 public class Client implements Runnable{
 
     private String host;
@@ -17,6 +23,9 @@ public class Client implements Runnable{
         this.port = port;
     }
 
+    /**
+     * this method receives and sends data for updating the game
+     */
     @Override
     public void run() {
         try (Socket server = new Socket(host, port)) {
@@ -38,15 +47,10 @@ public class Client implements Runnable{
         catch (IOException e) { }
     }
 
-
-    public static OutputStream getOut() {
-        return out;
-    }
-
-    public static InputStream getIn() {
-        return in;
-    }
-
+    /**
+     * write outs the string
+     * @param s the string to be written
+     */
     public static void writeOnStream(String s) {
         try {
             out.write(s.getBytes());
@@ -55,6 +59,10 @@ public class Client implements Runnable{
         catch (NullPointerException e) { }
     }
 
+    /**
+     * processes the data received
+     * @param rcv string that have been received
+     */
     private void processInput(String rcv) {
         if (rcv.equals("SERVER-SW")) {
             GameLoop.getState().getTank2().switchGun(false);
