@@ -148,7 +148,7 @@ public class MenuFrame extends JFrame{
         public void mouseClicked(MouseEvent e) {
             int x = e.getX(), y = e.getY();
             if (flag) {
-                difficulty = 1;
+                difficulty = 0;
                 boolean f = true;
                 String e1 = "1", n = "1", h = "1";
                 if (isInBoundsOfEasy(x, y)) {
@@ -156,11 +156,11 @@ public class MenuFrame extends JFrame{
                 }
                 else if (isInBoundsOfNormal(x, y)) {
                     n = "3";
-                    difficulty = 2;
+                    difficulty = 1;
                 }
                 else if (isInBoundsOfHard(x, y)) {
                     h = "3";
-                    difficulty = 3;
+                    difficulty = 2;
                 }
                 else {
                     f = false;
@@ -317,7 +317,7 @@ public class MenuFrame extends JFrame{
                 dispose();
                 frame.setVisible(true);
                 frame.initBufferStrategy();
-                GameLoop game = new GameLoop(frame, mode);
+                GameLoop game = new GameLoop(frame, mode, difficulty);
                 //ThreadPool.execute(game);
             }
         });

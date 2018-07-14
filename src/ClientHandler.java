@@ -105,5 +105,17 @@ public class ClientHandler implements Runnable{
             }
             catch (NumberFormatException e) { }
         }
+        if (rcv.startsWith("CLIENT-P-")) {
+            String message = rcv.replaceFirst("CLIENT-P-", "");
+            try {
+                String[] array = message.split(",", -1);
+                int i = Integer.parseInt(array[0]);
+                int j = Integer.parseInt(array[1]);
+                int code = Integer.parseInt(array[2]);
+                Prize prize= GameConstants.getPrizeByCode(code);
+                System.out.println(i + "," + j + ": " + prize);
+            }
+            catch (NumberFormatException e) { }
+        }
     }
 }

@@ -248,7 +248,7 @@ public class Map {
      * to go right
      */
     private void goRight() {
-        for (int i = 0; i < GameConstants.getAmount() / GameConstants.getStep(); i++) {
+        for (int i = 0; i < GameConstants.gethAmount() / GameConstants.getStep(); i++) {
             if (GameLoop.getState().getTopLeftPoint().x + GameConstants.getStep() <= GameConstants.getCellWidth() * GameLoop.getState().getMap().width - GameConstants.getScreenWidth()) {
                 GameLoop.getState().getTopLeftPoint().x += GameConstants.getStep();
                 GameLoop.getCanvas().render(GameLoop.getState(), true);
@@ -261,7 +261,7 @@ public class Map {
      * to go left
      */
     private void goLeft() {
-        for (int i = 0; i < GameConstants.getAmount() / GameConstants.getStep(); i++) {
+        for (int i = 0; i < GameConstants.gethAmount() / GameConstants.getStep(); i++) {
             if (GameLoop.getState().getTopLeftPoint().x >= GameConstants.getStep()) {
                 GameLoop.getState().getTopLeftPoint().x -= GameConstants.getStep();
                 GameLoop.getCanvas().render(GameLoop.getState(), true);
@@ -274,7 +274,7 @@ public class Map {
      * to go up
      */
     private void goUp() {
-        for (int i = 0; i < GameConstants.getAmount() / GameConstants.getStep(); i++) {
+        for (int i = 0; i < GameConstants.getvAmount() / GameConstants.getStep(); i++) {
             if (GameLoop.getState().getTopLeftPoint().y >= GameConstants.getStep()) {
                 GameLoop.getState().getTopLeftPoint().y -= GameConstants.getStep();
                 GameLoop.getCanvas().render(GameLoop.getState(), true);
@@ -287,7 +287,7 @@ public class Map {
      * to go down
      */
     private void goDown() {
-        for (int i = 0; i < GameConstants.getAmount() / GameConstants.getStep(); i++) {
+        for (int i = 0; i < GameConstants.getvAmount() / GameConstants.getStep(); i++) {
             if (GameLoop.getState().getTopLeftPoint().y + GameConstants.getStep() <= GameLoop.getState().getMap().height * GameConstants.getCellHeight() - GameConstants.getScreenHeight()) {
                 GameLoop.getState().getTopLeftPoint().y += GameConstants.getStep();
                 GameLoop.getCanvas().render(GameLoop.getState(), true);

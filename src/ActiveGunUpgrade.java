@@ -4,8 +4,8 @@ import java.io.IOException;
 
 public class ActiveGunUpgrade extends Prize{
 
-    private static final int SPEED_UPGRADE = 5;
-    private static final int DAMAGE_UPGRADE = 5;
+    private static final int SPEED_UPGRADE = 1;
+    private static final int DAMAGE_UPGRADE = 1;
 
     public ActiveGunUpgrade() {
         try {

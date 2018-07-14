@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Random;
 
 /**
@@ -18,8 +19,10 @@ public class GameConstants {
     private static final int CELL_WIDTH = 120;
     private static final int CELL_HEIGHT = 120;
     private static final int STEP = 10;
-    private static final int AMOUNT = 300;
-    private static final int NUM = 8;
+    //private static final int AMOUNT = 200;
+    private static final int H_AMOUNT = 400;
+    private static final int V_AMOUNt = 200;
+    private static final int NUM = 4;
     private static final int INITIAL_NUMBER_OF_CANNON_BULLETS = 100;
     private static final int INITIAL_NUMBER_OF_MACHINE_GUN_BULLETS = 200;
     private static final int INITIAL_NUMBER_OF_ENEMY_GUN_BULLETS = Integer.MAX_VALUE;
@@ -61,8 +64,17 @@ public class GameConstants {
      * //todo
      * @return
      */
+    /*
     public static int getAmount() {
         return AMOUNT;
+    }*/
+
+    public static int gethAmount() {
+        return H_AMOUNT;
+    }
+
+    public static int getvAmount() {
+        return V_AMOUNt;
     }
 
     /**
@@ -395,6 +407,22 @@ public class GameConstants {
             return new ActiveGunUpgrade();
         }
         return null;
+    }
+
+    public static int getPrizeCode(Prize prize) {
+        if(prize instanceof HealthPrize) {
+            return 5;
+        }
+        if (prize instanceof  CannonFood) {
+            return 6;
+        }
+        if (prize instanceof  MachineGunFood) {
+            return 7;
+        }
+        if (prize instanceof  ActiveGunUpgrade) {
+            return 8;
+        }
+        return 0;
     }
 
     public static void processCheatCode(Tank tank, String cheatCode) {

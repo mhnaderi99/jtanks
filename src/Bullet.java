@@ -27,6 +27,7 @@ public abstract class Bullet implements Serializable{
     private int reloadPeriod;
     private String shootSound;
     private boolean isEnemyBullet;
+    private boolean serverBullet;
 
     /**
      * //the constructor of the bullet
@@ -161,11 +162,11 @@ public abstract class Bullet implements Serializable{
         }
 
         if (x - xMargin >= GameConstants.getScreenWidth() || x - xMargin <= 0) {
-            isOnTheWay = false;
+            //isOnTheWay = false;
         }
 
         if (y - yMargin >= GameConstants.getScreenHeight() || y - yMargin <= 0) {
-            isOnTheWay = false;
+            //isOnTheWay = false;
         }
 
         time++;
@@ -440,14 +441,16 @@ public abstract class Bullet implements Serializable{
     public abstract Bullet getBullet();
 
     public boolean isInScreenBounds() {
+        /*
         if (getX() + image.getWidth() - GameLoop.getState().getTopLeftPoint().x >= 0 &&
                 getX() - GameLoop.getState().getTopLeftPoint().x <= GameConstants.getScreenWidth() &&
                 getY() + image.getHeight() - GameLoop.getState().getTopLeftPoint().y >= 0 &&
                 getY() - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenHeight()) {
             return true;
         }
+        */
 
-        return false;
+        return true;
     }
 
     public int getIndex() {

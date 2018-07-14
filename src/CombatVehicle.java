@@ -215,14 +215,15 @@ public abstract class CombatVehicle implements Serializable{
      * @return true or false
      */
     public boolean isInScreenBounds() {
-        if (XPosition + body.getWidth() - GameLoop.getState().getTopLeftPoint().x >= 0 &&
+        return true;
+        /*if (XPosition + body.getWidth() - GameLoop.getState().getTopLeftPoint().x >= 0 &&
                 XPosition - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenWidth() &&
                 YPosition + body.getHeight() - GameLoop.getState().getTopLeftPoint().y >= 0 &&
                 YPosition - GameLoop.getState().getTopLeftPoint().y <= GameConstants.getScreenHeight()) {
             return true;
         }
 
-        return false;
+        return false;*/
     }
 
     /**
@@ -260,7 +261,7 @@ public abstract class CombatVehicle implements Serializable{
      * @return true or false
      */
     public boolean ifCanSee(CombatVehicle vehicle) {
-        if (vehicle.isInScreenBounds() && isInScreenBounds()) {
+        if (true) {
             Point a = new Point(getXPosition() - GameLoop.getState().getTopLeftPoint().x + getBody().getWidth() / 2,
                     getYPosition() - GameLoop.getState().getTopLeftPoint().y + getBody().getHeight() / 2);
             Point b = new Point(vehicle.getXPosition() - GameLoop.getState().getTopLeftPoint().x + vehicle.getBody().getWidth() / 2,
@@ -374,7 +375,7 @@ public abstract class CombatVehicle implements Serializable{
 
         for (Tank tank: tanks) {
             if (ifCanSee(tank)) {
-                if (distanceToVehicle(tank) < GameConstants.getAmount()) {
+                if (distanceToVehicle(tank) < GameConstants.getvAmount()) {
                     setSpeed(0);
                 }
                 else {
@@ -406,7 +407,7 @@ public abstract class CombatVehicle implements Serializable{
             }
         }
         for (Tank tank : tanks) {
-            if (isInScreenBounds() && tank.isInScreenBounds() && ifCanSee(tank)) {
+            if (ifCanSee(tank)) {
                 int r = GameConstants.getRandom().nextInt(Integer.MAX_VALUE);
                 if (r % getPeriod() == 0) {
                     getActiveGun().shoot(getGunAngle());

@@ -16,16 +16,22 @@ public class GameLoop implements Runnable{
     private static GameFrame canvas;
     private static boolean gameOver = false;
     private static boolean multiplayer = false;
+    private static int difficulty = 0;
     private static int mode;
     private Timer timer, timer2;
     private TimerTask task, task2;
 
     private static GameState state;
 
-    public GameLoop(GameFrame frame, int mod) {
+    public GameLoop(GameFrame frame, int mod, int diff) {
+        difficulty = diff;
         canvas = frame;
         init(mod);
         mode = mod;
+    }
+
+    public static int getDifficulty() {
+        return difficulty;
     }
 
     public static int getMode() {
@@ -92,7 +98,7 @@ public class GameLoop implements Runnable{
         if (isMultiplayer()) {
             timer = new Timer();
             task = new AlternativeUpdate();
-            timer.scheduleAtFixedRate(task, 0, 500);
+            timer.scheduleAtFixedRate(task, 0, 100);
         }
         AudioPlayer.playSound("gameSound1.wav");
         if (isMultiplayer()) {

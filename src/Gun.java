@@ -100,7 +100,7 @@ public class Gun implements Serializable {
         if (! isBulletsEmpty()) {
             if (infinityBullets) {
                 if (bullets.isEmpty()) {
-                    reload(GameConstants.getAmount());
+                    reload(GameConstants.getvAmount());
                 }
             }
             Bullet bullet = bullets.get(bullets.size() - 1);

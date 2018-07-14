@@ -54,7 +54,10 @@ public class SoftWallCell extends MapCell {
                 setTransparent(false);
                 if (random.nextInt(100) % GameConstants.getPrizeChance() == 0) {
                     Prize prize = GameConstants.randomPrize();
+                    int code = GameConstants.getPrizeCode(prize);
                     GameLoop.getState().getMap().placePrize(prize, i, j);
+                    sendPrize(i,j,code);
+                    System.out.println("OK");
                 }
             }
             try {
@@ -64,6 +67,20 @@ public class SoftWallCell extends MapCell {
             }
         }
         else {
+        }
+    }
+
+    private void sendPrize(int i, int j, int code) {
+        String pre = "P-";
+        String message = "" + i + "," + "," + code;
+        String sender = "";
+        if (GameLoop.getMode() == 1) {
+            sender = "SERVER-";
+            ClientHandler.writeOnStream(sender + pre + message);
+        }
+        if (GameLoop.getMode() == 2) {
+            sender = "CLIENT-";
+            Client.writeOnStream(sender + pre + message);
         }
     }
 }
