@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class EnemyTank1 extends CombatVehicle {
 
     private static final int HEALTH = 40 + 20*GameLoop.getDifficulty();
-    private static final int SPEED = 2;
+    private static final int SPEED = 3;
 
     /**
      * the constructor of the enemy tank (1)

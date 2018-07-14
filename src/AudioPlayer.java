@@ -14,6 +14,7 @@ public class AudioPlayer {
      * this function plays the audio sound
      * @param url the address of audio sound
      */
+
     public static synchronized void playSound(final String url) {
         new Thread(new Runnable() {
             public void run() {

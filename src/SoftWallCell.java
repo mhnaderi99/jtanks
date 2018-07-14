@@ -61,7 +61,7 @@ public class SoftWallCell extends MapCell {
             }
             try {
                 setImage(ImageIO.read(new File("res/images/map/softWallCell" + index + ".png")));
-                GameLoop.getCanvas().render(GameLoop.getState(), true, false);
+                GameLoop.getCanvas().render(GameLoop.getState(), true, 0);
             } catch (IOException e) {
             }
         }

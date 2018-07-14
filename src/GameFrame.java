@@ -59,7 +59,7 @@ public class GameFrame extends JFrame {
     /**
      * Game rendering with triple-buffering using BufferStrategy.
      */
-    public void render(GameState state, boolean isInitial, boolean isStage) {
+    public void render(GameState state, boolean isInitial, int mode) {
         // Render single frame
         do {
             // The following loop ensures that the contents of the drawing buffer
@@ -69,7 +69,7 @@ public class GameFrame extends JFrame {
                 // to make sure the strategy is validated
                 graphics = (Graphics2D) bufferStrategy.getDrawGraphics();
                 try {
-                    doRendering(state, isInitial, isStage);
+                    doRendering(state, isInitial, mode);
                 } finally {
                     // Dispose the graphics
                     graphics.dispose();
@@ -90,9 +90,13 @@ public class GameFrame extends JFrame {
     /**
      * Rendering all game elements based on the game state.
      */
-    private void doRendering(GameState state, boolean isInitial, boolean isStage) {
-        if (isStage) {
-            renderNewStage(GameLoop.getStage());
+    private void doRendering(GameState state, boolean isInitial, int mode) {
+        if (mode == 1) {
+            renderNewStage("STAGE " + GameLoop.getStage());
+            return;
+        }
+        if (mode == 2) {
+            renderNewStage("GAME OVER");
             return;
         }
         // Draw background
@@ -334,13 +338,13 @@ public class GameFrame extends JFrame {
         //renderDetails(g2d);
     }
 
-    public void renderNewStage(int stage) {
+    public void renderNewStage(String string) {
         graphics.setColor(Color.BLACK);
         graphics.fillRect(0, 0, GameConstants.getScreenWidth(), GameConstants.getScreenHeight());
         graphics.setColor(Color.WHITE);
         int x = 80, y = 0;
         graphics.setFont(new Font("Times New Roman", Font.PLAIN, 36));
-        graphics.drawString(("STAGE " + stage), GameConstants.getScreenWidth() / 2 - x, GameConstants.getScreenHeight() / 2 - y);
+        graphics.drawString(string, GameConstants.getScreenWidth() / 2 - x, GameConstants.getScreenHeight() / 2 - y);
     }
 
 }

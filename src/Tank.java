@@ -373,6 +373,10 @@ public class Tank extends CombatVehicle implements Serializable{
 
         @Override
         public void keyPressed(KeyEvent e) {
+            if (GameLoop.isGameOver()) {
+                GameLoop.setExit(true);
+                return;
+            }
             String u, d, l, r;
             u = keyUP ? "1" : "0";
             d = keyDOWN ? "1" : "0";

@@ -13,7 +13,7 @@ import java.util.Random;
 public class EnemyTank2 extends CombatVehicle {
 
     private static final int HEALTH = 50 + 20*GameLoop.getDifficulty();
-    private static final int SPEED = 3;
+    private static final int SPEED = 5;
 
 
     /**

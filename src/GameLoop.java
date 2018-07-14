@@ -1,5 +1,8 @@
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.TimerTask;
 import java.util.Timer;
@@ -24,11 +27,22 @@ public class GameLoop implements Runnable{
     private Timer timer, timer2;
     private TimerTask task, task2;
     private ExecutorService service;
-
+    private Audio gameMusic;
+    private Audio gameOverSound;
     private static GameState state;
+    private static boolean exit = false;
 
     public GameLoop(GameFrame frame, int mod, int diff, String map) {
         service = Executors.newFixedThreadPool(10);
+        try {
+            gameMusic = new Audio(new File("res/sounds/gameSound1.wav"));
+            gameMusic.setRepeats(true);
+            gameOverSound = new Audio(new File("res/sounds/gameOver.wav"));
+            gameOverSound.setRepeats(false);
+        }
+        catch (LineUnavailableException e) { }
+        catch (IOException e) { }
+        catch (UnsupportedAudioFileException e) { }
         mapName = map;
         stage = 1;
         difficulty = diff;
@@ -61,6 +75,14 @@ public class GameLoop implements Runnable{
         return gameOver;
     }
 
+    public static void setExit(boolean e) {
+        exit = e;
+    }
+
+    public static boolean isExit() {
+        return exit;
+    }
+
     public void init(int mode, boolean first) {
         state = new GameState(mapName, difficulty);
         Tank tank = state.getTank();
@@ -70,9 +92,9 @@ public class GameLoop implements Runnable{
         if (! first) {
             stage = Integer.parseInt(mapName.substring(3, 4));
             for (int i = 0; i < 1000; i++) {
-                canvas.render(state, false, true);
+                canvas.render(state, false, 1);
             }
-            canvas.render(state, true, false);
+            canvas.render(state, true, 0);
         }
         if (mode == 1) {
             setMultiplayer(true);
@@ -118,26 +140,20 @@ public class GameLoop implements Runnable{
 
     @Override
     public void run() {
-        timer2 = new Timer();
-        task2 = new MusicPlayer();
-        timer2.scheduleAtFixedRate(task2, 0, 33000);
-        canvas.render(state, true, false);
+        canvas.render(state, true, 0);
         if (isMultiplayer()) {
             timer = new Timer();
             task = new AlternativeUpdate();
             timer.scheduleAtFixedRate(task, 0, 200);
         }
-        AudioPlayer.playSound("gameSound1.wav");
-        if (isMultiplayer()) {
-
-        }
+        gameMusic.play();
         for (int i = 0; i < 1000; i++) {
-            canvas.render(state, true, true);
+            canvas.render(state, true, 1);
         }
-        canvas.render(state, true, false);
+        canvas.render(state, true, 0);
         while (!gameOver) {
             state.update();
-            canvas.render(state, false, false);
+            canvas.render(state, false, 0);
             if (gameOver) {
                 if (isMultiplayer()) {
                     if (state.getTank().isAlive() || state.getTank2().isAlive()) {
@@ -146,6 +162,7 @@ public class GameLoop implements Runnable{
                         init(mode, false);
                     }
                     else {
+                        gameOver = true;
                     }
                 }
                 else {
@@ -155,7 +172,7 @@ public class GameLoop implements Runnable{
                         init(mode, false);
                     }
                     else {
-
+                        gameOver = true;
                     }
                 }
             }
@@ -164,10 +181,12 @@ public class GameLoop implements Runnable{
             task.cancel();
             timer.cancel();
         }
-        task2.cancel();
-        timer2.cancel();
+        gameMusic.stop();
         AudioPlayer.playSound("gameOver.wav");
-
+        while (! exit) {
+            canvas.render(state, true, 2);
+        }
+        System.exit(0);
     }
 
     private class AlternativeUpdate extends TimerTask {
@@ -193,12 +212,20 @@ public class GameLoop implements Runnable{
 
         @Override
         public void run() {
-            AudioPlayer.playSound("gameSound1.wav");
+            //gameMusic.play();
         }
     }
     public static String nextLevel(String s) {
         String level = s.substring(3,4);
         s = s.substring(0, 3) + (Integer.parseInt(level) + 1) + s.substring(4, s.length());
         return s;
+    }
+
+    private void pressAnyKeyToContinue() {
+        try {
+            System.in.read();
+        }
+        catch(Exception e)
+        {}
     }
 }
