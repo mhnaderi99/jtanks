@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.util.TimerTask;
@@ -18,12 +19,16 @@ public class GameLoop implements Runnable{
     private static boolean multiplayer = false;
     private static int difficulty = 0;
     private static int mode;
+    private static String mapName;
     private Timer timer, timer2;
     private TimerTask task, task2;
+    private ExecutorService service;
 
     private static GameState state;
 
-    public GameLoop(GameFrame frame, int mod, int diff) {
+    public GameLoop(GameFrame frame, int mod, int diff, String map) {
+        service = Executors.newFixedThreadPool(10);
+        mapName = map;
         difficulty = diff;
         canvas = frame;
         init(mod);
@@ -51,22 +56,29 @@ public class GameLoop implements Runnable{
     }
 
     public void init(int mode) {
-        state = new GameState();
+        state = new GameState(mapName, difficulty);
         Tank tank = state.getTank();
         canvas.addKeyListener(tank.getKeyHandler());
         canvas.addMouseMotionListener(tank.getMouseHandler());
         canvas.addMouseListener(tank.getMouseHandler());
-        ExecutorService service = Executors.newFixedThreadPool(2);
         if (mode == 1) {
             setMultiplayer(true);
             service.execute(new Server(2018));
         }
         if (mode == 2) {
             setMultiplayer(true);
-            service.execute(new Client("localhost", 2018));
+            service.execute(new Client("172.26.6.219", 2018));
         }
 
         service.execute(this);
+    }
+
+    public static String getMapName() {
+        return mapName;
+    }
+
+    public static void setState(GameState state) {
+        GameLoop.state = state;
     }
 
     public static GameState getState() {
@@ -98,7 +110,7 @@ public class GameLoop implements Runnable{
         if (isMultiplayer()) {
             timer = new Timer();
             task = new AlternativeUpdate();
-            timer.scheduleAtFixedRate(task, 0, 100);
+            timer.scheduleAtFixedRate(task, 0, 200);
         }
         AudioPlayer.playSound("gameSound1.wav");
         if (isMultiplayer()) {
@@ -108,8 +120,32 @@ public class GameLoop implements Runnable{
             state.update();
             canvas.render(state, false);
         }
-        AudioPlayer.playSound("endOfGame.wav");
-        canvas.render(state, true);
+        if (isMultiplayer()) {
+            task.cancel();
+            timer.cancel();
+        }
+        task2.cancel();
+        timer2.cancel();
+        boolean victory = false;
+        if (isMultiplayer()) {
+            if (state.getTank().isAlive() || state.getTank2().isAlive()) {
+                victory = true;
+            } else {
+                victory = false;
+            }
+        } else {
+            if (state.getTank().isAlive()) {
+                victory = true;
+            } else {
+                victory = false;
+            }
+        }
+        if (victory) {
+            AudioPlayer.playSound("endOfGame.wav");
+        }
+        else {
+            AudioPlayer.playSound("gameOver.wav");
+        }
     }
 
     private class AlternativeUpdate extends TimerTask {
@@ -137,5 +173,10 @@ public class GameLoop implements Runnable{
         public void run() {
             AudioPlayer.playSound("gameSound1.wav");
         }
+    }
+    public static String nextLevel(String s) {
+        String level = s.substring(3,4);
+        s = s.substring(0, 3) + (Integer.parseInt(level) + 1) + s.substring(4, s.length());
+        return s;
     }
 }

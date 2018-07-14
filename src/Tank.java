@@ -263,7 +263,8 @@ public class Tank extends CombatVehicle implements Serializable{
         int h = (getYPosition() + dy) / GameConstants.getCellHeight();
 
         if (w == Map.getEndPoint().x && h == Map.getEndPoint().y) {
-            GameLoop.setGameOver(true);
+            GameLoop.setState(new GameState(GameLoop.nextLevel(GameLoop.getMapName()), GameLoop.getDifficulty()));
+            //GameLoop.setGameOver(true);
         }
 
         Iterator<Prize> iterator = GameState.getPrizes().iterator();

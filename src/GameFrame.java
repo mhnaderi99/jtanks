@@ -102,14 +102,15 @@ public class GameFrame extends JFrame {
 
         int ox = state.getTopLeftPoint().x;
         int oy = state.getTopLeftPoint().y;
+
         int x1 = ox / GameConstants.getCellWidth();
         int y1 = oy / GameConstants.getCellHeight();
+
         int x2 = Math.min(((ox + GameConstants.getScreenWidth()) / GameConstants.getCellWidth() + 1), state.getMap().getWidth());
         int y2 = Math.min(((oy + GameConstants.getScreenHeight()) / GameConstants.getCellHeight() + 1), state.getMap().getHeight());
 
 
         if (isInitial) {
-
             for (int i = x1; i <= Math.min(x2, map.getWidth() - 1); i++) {
                 for (int j = y1; j <= Math.min(y2, map.getHeight() - 1); j++) {
                     renderCell(i, j);
@@ -134,6 +135,7 @@ public class GameFrame extends JFrame {
 
         HashSet<Point> refreshBackground = new HashSet<Point>();
         HashSet<Point> refreshForeGround = new HashSet<Point>();
+
         for (CombatVehicle vehicle : allVehicles) {
             int x = vehicle.getXPosition(), y = vehicle.getYPosition();
             int w = x / GameConstants.getCellWidth(), h = y / GameConstants.getCellHeight();
@@ -155,6 +157,7 @@ public class GameFrame extends JFrame {
                         int yy = (int) bullet.getY();
                         int ww = xx / GameConstants.getCellWidth();
                         int hh = yy / GameConstants.getCellHeight();
+
                         for (int i = Math.max(x1, ww - 1); i < Math.min(ww + 3, x2); i++) {
                             for (int j = Math.max(y1, hh - 1); j < Math.min(hh + 3, y2); j++) {
                                 if (!map.getMap()[i][j].isTransparent()) {
@@ -247,67 +250,69 @@ public class GameFrame extends JFrame {
     }
 
     public void renderDetails() {
-        BufferedImage cannon, machineGun;
-        boolean isCannonActive;
-        if (GameLoop.getState().getTank().getGuns().get(0) == GameLoop.getState().getTank().getActiveGun()) {
-            isCannonActive = true;
-        } else {
-            isCannonActive = false;
-        }
-
-        int extraW = GameConstants.getScreenWidth() - getContentPane().getSize().width;
-        int extraH = GameConstants.getScreenHeight() - getContentPane().getSize().height;
-        int cannonNumber = GameLoop.getState().getTank().getGuns().get(0).getBullets().size();
-        int machineGunNumber = GameLoop.getState().getTank().getGuns().get(1).getBullets().size();
-        graphics.setFont(new Font("Gadugi", Font.PLAIN, 22));
-        if (isCannonActive) {
-            cannon = GameConstants.getCannonNumber(false);
-            machineGun = GameConstants.getMachineGunNumber(true);
-            graphics.drawImage(cannon, GameConstants.getBorderMargin() + extraW, GameConstants.getBorderMargin() + extraH, null);
-            graphics.setColor(Color.CYAN);
-            if (cannonNumber == 0) {
-                graphics.setColor(Color.RED);
-            }
-            graphics.drawString("" + cannonNumber, GameConstants.getBorderMargin() + extraW, GameConstants.getBorderMargin() + extraH + cannon.getHeight());
-            graphics.drawImage(machineGun, GameConstants.getBorderMargin() + extraW, 2 * GameConstants.getBorderMargin() + cannon.getHeight() + extraH, null);
-            graphics.setColor(Color.GRAY);
-            graphics.drawString("" + machineGunNumber, GameConstants.getBorderMargin() + extraW, 2 * GameConstants.getBorderMargin() + extraH + machineGun.getHeight() + machineGun.getHeight());
-        } else {
-            cannon = GameConstants.getCannonNumber(true);
-            machineGun = GameConstants.getMachineGunNumber(false);
-            graphics.drawImage(cannon, GameConstants.getBorderMargin() + extraW, GameConstants.getBorderMargin() + extraH, null);
-            graphics.setColor(Color.GRAY);
-            graphics.drawString("" + cannonNumber, GameConstants.getBorderMargin() + extraW, GameConstants.getBorderMargin() + extraH + cannon.getHeight());
-            graphics.drawImage(machineGun, GameConstants.getBorderMargin() + extraW, 2 * GameConstants.getBorderMargin() + cannon.getHeight() + extraH, null);
-            graphics.setColor(Color.CYAN);
-            if (machineGunNumber == 0) {
-                graphics.setColor(Color.RED);
-            }
-            graphics.drawString("" + machineGunNumber, GameConstants.getBorderMargin() + extraW, 2 * GameConstants.getBorderMargin() + extraH + machineGun.getHeight() + machineGun.getHeight());
-        }
-
-
-        int h = GameLoop.getState().getTank().getHealth();
-        int dh = Tank.getDefaultHealth();
-        int healthPercentage = (int) ((double) h / (double) dh * 100);
-        int num = (int) Math.round((double) healthPercentage / ((double) 100 / (double) GameConstants.getHealthCells()));
-
-        int mid = GameConstants.getHealthCells() / 2;
-        for (int i = 0; i < GameConstants.getHealthCells(); i++) {
-            BufferedImage image;
-            if (i < num) {
-                image = GameConstants.getHealth();
+        try {
+            BufferedImage cannon, machineGun;
+            boolean isCannonActive;
+            if (GameLoop.getState().getTank().getGuns().get(0) == GameLoop.getState().getTank().getActiveGun()) {
+                isCannonActive = true;
             } else {
-                image = GameConstants.getEmpty();
+                isCannonActive = false;
             }
 
-            int x, y;
-            x = GameConstants.getScreenWidth() / 2 - (mid - i) * (GameConstants.getBorderMargin() + image.getWidth()) - image.getWidth() / 2;
-            y = GameConstants.getBorderMargin() + extraH;
+            int extraW = GameConstants.getScreenWidth() - getContentPane().getSize().width;
+            int extraH = GameConstants.getScreenHeight() - getContentPane().getSize().height;
+            int cannonNumber = GameLoop.getState().getTank().getGuns().get(0).getBullets().size();
+            int machineGunNumber = GameLoop.getState().getTank().getGuns().get(1).getBullets().size();
+            graphics.setFont(new Font("Gadugi", Font.PLAIN, 22));
+            if (isCannonActive) {
+                cannon = GameConstants.getCannonNumber(false);
+                machineGun = GameConstants.getMachineGunNumber(true);
+                graphics.drawImage(cannon, GameConstants.getBorderMargin() + extraW, GameConstants.getBorderMargin() + extraH, null);
+                graphics.setColor(Color.CYAN);
+                if (cannonNumber == 0) {
+                    graphics.setColor(Color.RED);
+                }
+                graphics.drawString("" + cannonNumber, GameConstants.getBorderMargin() + extraW, GameConstants.getBorderMargin() + extraH + cannon.getHeight());
+                graphics.drawImage(machineGun, GameConstants.getBorderMargin() + extraW, 2 * GameConstants.getBorderMargin() + cannon.getHeight() + extraH, null);
+                graphics.setColor(Color.GRAY);
+                graphics.drawString("" + machineGunNumber, GameConstants.getBorderMargin() + extraW, 2 * GameConstants.getBorderMargin() + extraH + machineGun.getHeight() + machineGun.getHeight());
+            } else {
+                cannon = GameConstants.getCannonNumber(true);
+                machineGun = GameConstants.getMachineGunNumber(false);
+                graphics.drawImage(cannon, GameConstants.getBorderMargin() + extraW, GameConstants.getBorderMargin() + extraH, null);
+                graphics.setColor(Color.GRAY);
+                graphics.drawString("" + cannonNumber, GameConstants.getBorderMargin() + extraW, GameConstants.getBorderMargin() + extraH + cannon.getHeight());
+                graphics.drawImage(machineGun, GameConstants.getBorderMargin() + extraW, 2 * GameConstants.getBorderMargin() + cannon.getHeight() + extraH, null);
+                graphics.setColor(Color.CYAN);
+                if (machineGunNumber == 0) {
+                    graphics.setColor(Color.RED);
+                }
+                graphics.drawString("" + machineGunNumber, GameConstants.getBorderMargin() + extraW, 2 * GameConstants.getBorderMargin() + extraH + machineGun.getHeight() + machineGun.getHeight());
+            }
 
-            graphics.drawImage(image, x, y, this);
+
+            int h = GameLoop.getState().getTank().getHealth();
+            int dh = Tank.getDefaultHealth();
+            int healthPercentage = (int) ((double) h / (double) dh * 100);
+            int num = (int) Math.round((double) healthPercentage / ((double) 100 / (double) GameConstants.getHealthCells()));
+
+            int mid = GameConstants.getHealthCells() / 2;
+            for (int i = 0; i < GameConstants.getHealthCells(); i++) {
+                BufferedImage image;
+                if (i < num) {
+                    image = GameConstants.getHealth();
+                } else {
+                    image = GameConstants.getEmpty();
+                }
+
+                int x, y;
+                x = GameConstants.getScreenWidth() / 2 - (mid - i) * (GameConstants.getBorderMargin() + image.getWidth()) - image.getWidth() / 2;
+                y = GameConstants.getBorderMargin() + extraH;
+
+                graphics.drawImage(image, x, y, this);
+            }
         }
-
+        catch (NullPointerException e ) { }
     }
 
     public void renderCell(int x, int y) {

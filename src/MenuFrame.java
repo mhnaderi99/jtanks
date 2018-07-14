@@ -317,7 +317,7 @@ public class MenuFrame extends JFrame{
                 dispose();
                 frame.setVisible(true);
                 frame.initBufferStrategy();
-                GameLoop game = new GameLoop(frame, mode, difficulty);
+                GameLoop game = new GameLoop(frame, mode, difficulty, "map1(27,27)");
                 //ThreadPool.execute(game);
             }
         });

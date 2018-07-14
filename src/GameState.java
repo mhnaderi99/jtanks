@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -17,10 +18,10 @@ public class GameState {
     private Map map;
     private Point topLeftPoint;
 
-    public GameState() {
+    public GameState(String mapName, int diff) {
         enemies = new ArrayList<CombatVehicle>();
         prizes = new ArrayList<Prize>();
-        map = new Map("res/maps/map1(27,27).txt");
+        map = new Map("res/maps/" + mapName + diff + ".txt");
 
         int width = (int)Math.ceil((double)GameConstants.getScreenWidth() / (double) GameConstants.getCellWidth());
         int height = (int)Math.ceil((double)GameConstants.getScreenHeight() / (double) GameConstants.getCellHeight());
@@ -34,6 +35,10 @@ public class GameState {
 
     public static ArrayList<Prize> getPrizes() {
         return prizes;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
     }
 
     public Map getMap() {
@@ -70,20 +75,22 @@ public class GameState {
             tank2.update();
         }
         while (iterator.hasNext()) {
-            CombatVehicle vehicle = iterator.next();
-            if (! vehicle.isAlive()) {
-                Random random = GameConstants.getRandom();
-                if (random.nextInt(100) % GameConstants.getPrizeChance() == 0) {
-                    Prize prize = GameConstants.randomPrize();
-                    map.placePrize(prize, vehicle.getXPosition() / GameConstants.getCellWidth(), vehicle.getYPosition() / GameConstants.getCellHeight());
-                }
-                iterator.remove();
-                GameLoop.getCanvas().render(this, true);
+            try {
+                CombatVehicle vehicle = iterator.next();
+                if (!vehicle.isAlive()) {
+                    Random random = GameConstants.getRandom();
+                    if (random.nextInt(100) % GameConstants.getPrizeChance() == 0) {
+                        Prize prize = GameConstants.randomPrize();
+                        map.placePrize(prize, vehicle.getXPosition() / GameConstants.getCellWidth(), vehicle.getYPosition() / GameConstants.getCellHeight());
+                    }
+                    iterator.remove();
+                    GameLoop.getCanvas().render(this, true);
 
+                } else {
+                    vehicle.update();
+                }
             }
-            else {
-                vehicle.update();
-            }
+            catch (ConcurrentModificationException e ) { break;}
         }
         map.update();
     }
