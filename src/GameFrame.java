@@ -28,7 +28,7 @@ public class GameFrame extends JFrame {
         setSize(GameConstants.getScreenWidth(), GameConstants.getScreenHeight());
         setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
                 new ImageIcon("res/images/ui/cursor.png").getImage(),
-                new Point(0,0),"cursor"));
+                new Point(0, 0), "cursor"));
     }
 
     /**
@@ -59,7 +59,7 @@ public class GameFrame extends JFrame {
     /**
      * Game rendering with triple-buffering using BufferStrategy.
      */
-    public void render(GameState state, boolean isInitial) {
+    public void render(GameState state, boolean isInitial, boolean isStage) {
         // Render single frame
         do {
             // The following loop ensures that the contents of the drawing buffer
@@ -69,7 +69,7 @@ public class GameFrame extends JFrame {
                 // to make sure the strategy is validated
                 graphics = (Graphics2D) bufferStrategy.getDrawGraphics();
                 try {
-                    doRendering(state, isInitial);
+                    doRendering(state, isInitial, isStage);
                 } finally {
                     // Dispose the graphics
                     graphics.dispose();
@@ -90,7 +90,11 @@ public class GameFrame extends JFrame {
     /**
      * Rendering all game elements based on the game state.
      */
-    private void doRendering(GameState state, boolean isInitial) {
+    private void doRendering(GameState state, boolean isInitial, boolean isStage) {
+        if (isStage) {
+            renderNewStage(GameLoop.getStage());
+            return;
+        }
         // Draw background
         Map map = state.getMap();
         ArrayList<CombatVehicle> allVehicles = new ArrayList<CombatVehicle>(state.getEnemies());
@@ -207,7 +211,7 @@ public class GameFrame extends JFrame {
                             if (bullet.isShoot() && !bullet.isOnTheWay()) {
                                 continue;
                             }
-                            if (! bullet.isInScreenBounds()) {
+                            if (!bullet.isInScreenBounds()) {
                                 continue;
                             }
                             if (bullet.isShoot() && bullet.isOnTheWay()) {
@@ -244,7 +248,7 @@ public class GameFrame extends JFrame {
     public void renderPrizes() {
         int ox = GameLoop.getState().getTopLeftPoint().x;
         int oy = GameLoop.getState().getTopLeftPoint().y;
-        for (Prize prize: GameState.getPrizes()) {
+        for (Prize prize : GameState.getPrizes()) {
             graphics.drawImage(prize.getImage(), prize.getXPosition() - ox, prize.getYPosition() - oy, this);
         }
     }
@@ -263,7 +267,7 @@ public class GameFrame extends JFrame {
             int extraH = GameConstants.getScreenHeight() - getContentPane().getSize().height;
             int cannonNumber = GameLoop.getState().getTank().getGuns().get(0).getBullets().size();
             int machineGunNumber = GameLoop.getState().getTank().getGuns().get(1).getBullets().size();
-            graphics.setFont(new Font("Gadugi", Font.PLAIN, 22));
+            graphics.setFont(new Font("Times New Roman", Font.PLAIN, 22));
             if (isCannonActive) {
                 cannon = GameConstants.getCannonNumber(false);
                 machineGun = GameConstants.getMachineGunNumber(true);
@@ -311,8 +315,8 @@ public class GameFrame extends JFrame {
 
                 graphics.drawImage(image, x, y, this);
             }
+        } catch (NullPointerException e) {
         }
-        catch (NullPointerException e ) { }
     }
 
     public void renderCell(int x, int y) {
@@ -330,8 +334,13 @@ public class GameFrame extends JFrame {
         //renderDetails(g2d);
     }
 
-    public void renderTanks() {
-
+    public void renderNewStage(int stage) {
+        graphics.setColor(Color.BLACK);
+        graphics.fillRect(0, 0, GameConstants.getScreenWidth(), GameConstants.getScreenHeight());
+        graphics.setColor(Color.WHITE);
+        int x = 80, y = 0;
+        graphics.setFont(new Font("Times New Roman", Font.PLAIN, 36));
+        graphics.drawString(("STAGE " + stage), GameConstants.getScreenWidth() / 2 - x, GameConstants.getScreenHeight() / 2 - y);
     }
 
 }

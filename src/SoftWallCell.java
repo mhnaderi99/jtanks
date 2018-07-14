@@ -57,12 +57,11 @@ public class SoftWallCell extends MapCell {
                     int code = GameConstants.getPrizeCode(prize);
                     GameLoop.getState().getMap().placePrize(prize, i, j);
                     sendPrize(i,j,code);
-                    System.out.println("OK");
                 }
             }
             try {
                 setImage(ImageIO.read(new File("res/images/map/softWallCell" + index + ".png")));
-                GameLoop.getCanvas().render(GameLoop.getState(), true);
+                GameLoop.getCanvas().render(GameLoop.getState(), true, false);
             } catch (IOException e) {
             }
         }

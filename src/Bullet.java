@@ -158,7 +158,7 @@ public abstract class Bullet implements Serializable{
                 }
             }
             */
-            GameLoop.getCanvas().render(GameLoop.getState(), true);
+            GameLoop.getCanvas().render(GameLoop.getState(), true, false);
         }
 
         if (x - xMargin >= GameConstants.getScreenWidth() || x - xMargin <= 0) {

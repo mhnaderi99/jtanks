@@ -84,7 +84,7 @@ public class GameState {
                         map.placePrize(prize, vehicle.getXPosition() / GameConstants.getCellWidth(), vehicle.getYPosition() / GameConstants.getCellHeight());
                     }
                     iterator.remove();
-                    GameLoop.getCanvas().render(this, true);
+                    GameLoop.getCanvas().render(this, true, false);
 
                 } else {
                     vehicle.update();
