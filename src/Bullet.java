@@ -379,6 +379,9 @@ public abstract class Bullet implements Serializable{
      * @param damage the damage of the bullet
      */
     public void setDamage(int damage) {
+        if (damage > this.damage && !isEnemyBullet) {
+            AudioPlayer.playSound("repair.wav");
+        }
         this.damage = damage;
     }
 

@@ -30,6 +30,9 @@ public abstract class CombatVehicle implements Serializable{
      * @param health the health of the combat vehicle
      */
     public void setHealth(int health) {
+        if (health > this.health && ! isEnemy) {
+            AudioPlayer.playSound("repair.wav");
+        }
         this.health = health;
     }
 

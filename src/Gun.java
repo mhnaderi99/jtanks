@@ -160,6 +160,9 @@ public class Gun implements Serializable {
         for (int i = 0; i < number; i++) {
             bullets.add(getType().getBullet());
         }
+        if (! infinityBullets) {
+            AudioPlayer.playSound("recosh.wav");
+        }
     }
 
 

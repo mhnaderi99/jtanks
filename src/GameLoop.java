@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.io.IOException;
+import java.util.TimerTask;
+import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,6 +17,8 @@ public class GameLoop implements Runnable{
     private static boolean gameOver = false;
     private static boolean multiplayer = false;
     private static int mode;
+    private Timer timer, timer2;
+    private TimerTask task, task2;
 
     private static GameState state;
 
@@ -81,13 +85,51 @@ public class GameLoop implements Runnable{
 
     @Override
     public void run() {
+        timer2 = new Timer();
+        task2 = new MusicPlayer();
+        timer2.scheduleAtFixedRate(task2, 0, 33000);
         canvas.render(state, true);
+        if (isMultiplayer()) {
+            timer = new Timer();
+            task = new AlternativeUpdate();
+            timer.scheduleAtFixedRate(task, 0, 500);
+        }
         AudioPlayer.playSound("gameSound1.wav");
+        if (isMultiplayer()) {
+
+        }
         while (!gameOver) {
             state.update();
             canvas.render(state, false);
         }
         AudioPlayer.playSound("endOfGame.wav");
         canvas.render(state, true);
+    }
+
+    private class AlternativeUpdate extends TimerTask {
+
+        @Override
+        public void run() {
+            if (mode == 1) {
+                int x = state.getTank().getXPosition(), y = state.getTank().getYPosition();
+                String sender = "SERVER-", pre = "ALL-";
+                String message = x + "," + y;
+                ClientHandler.writeOnStream(sender + pre + message);
+            }
+            if (mode == 2) {
+                int x = state.getTank().getXPosition(), y = state.getTank().getYPosition();
+                String sender = "CLIENT-", pre = "ALL-";
+                String message = x + "," + y;
+                Client.writeOnStream(sender + pre + message);
+            }
+        }
+    }
+
+    private class MusicPlayer extends TimerTask {
+
+        @Override
+        public void run() {
+            AudioPlayer.playSound("gameSound1.wav");
+        }
     }
 }

@@ -21,6 +21,7 @@ public class Tank extends CombatVehicle implements Serializable{
     private static final int DIAGONAL_SPEED = 2;
     private int activeGunIndex = 0;
     private boolean isPlayer;
+    private String cheatCode = "";
 
     private transient boolean keyUP, keyDOWN, keyRIGHT, keyLEFT;
     private transient boolean keyW, keyS, keyD, keyA;
@@ -270,12 +271,6 @@ public class Tank extends CombatVehicle implements Serializable{
             Prize prize = iterator.next();
             if (checkPrize(prize)) {
                 prize.work(this);
-                if (prize instanceof CannonFood || prize instanceof MachineGunFood) {
-                    AudioPlayer.playSound("recosh.wav");
-                }
-                else {
-                    AudioPlayer.playSound("repair.wav");
-                }
                 iterator.remove();
             }
         }
@@ -310,6 +305,10 @@ public class Tank extends CombatVehicle implements Serializable{
         YPosition = Math.max(YPosition, 0);
         YPosition = Math.min(YPosition, GameConstants.getScreenHeight() - body.getHeight());
         */
+    }
+
+    private void processCheat(String cheatCode) {
+        GameConstants.processCheatCode(this, cheatCode);
     }
 
     /**
@@ -360,6 +359,17 @@ public class Tank extends CombatVehicle implements Serializable{
      * the key handler
      */
     class KeyHandler extends KeyAdapter {
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            if(e.getKeyChar() == '\n') {
+                processCheat(cheatCode);
+                cheatCode = "";
+            }
+            else {
+                cheatCode = cheatCode + e.getKeyChar();
+            }
+        }
 
         @Override
         public void keyPressed(KeyEvent e) {

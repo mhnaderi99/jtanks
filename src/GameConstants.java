@@ -34,6 +34,9 @@ public class GameConstants {
     private static final int PRIZE_TYPES = 4;
     private static final int PRIZE_CHANCE = 4;
     private static final Random random = new Random(2018);
+    private static final String HEALTH_REPAIR_CODE = "jun";
+    private static final String CANNON_FOOD = "tup";
+    private static final String MACHINE_GUN_FOOD = "ragbar";
 
     private static Gun cannon;
     private static Gun machineGun;
@@ -392,5 +395,19 @@ public class GameConstants {
             return new ActiveGunUpgrade();
         }
         return null;
+    }
+
+    public static void processCheatCode(Tank tank, String cheatCode) {
+        cheatCode = cheatCode.toLowerCase();
+
+        if (cheatCode.equals(HEALTH_REPAIR_CODE)) {
+            tank.setHealth(Tank.getHEALTH());
+        }
+        if (cheatCode.equals(CANNON_FOOD)) {
+            tank.getGuns().get(0).reload(100);
+        }
+        if (cheatCode.equals(MACHINE_GUN_FOOD)) {
+            tank.getGuns().get(1).reload(200);
+        }
     }
 }

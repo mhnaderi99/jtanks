@@ -94,5 +94,16 @@ public class ClientHandler implements Runnable{
             }
             catch (NumberFormatException e) { }
         }
+        if (rcv.startsWith("CLIENT-ALL-")) {
+            String message = rcv.replaceFirst("CLIENT-ALL-", "");
+            try {
+                int commaIndex = message.lastIndexOf(",");
+                int x = Integer.parseInt(message.substring(0, commaIndex));
+                int y = Integer.parseInt(message.substring(commaIndex + 1, message.length()));
+                GameLoop.getState().getTank2().setXPosition(x);
+                GameLoop.getState().getTank2().setYPosition(y);
+            }
+            catch (NumberFormatException e) { }
+        }
     }
 }
